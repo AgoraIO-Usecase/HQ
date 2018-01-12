@@ -5,7 +5,7 @@
 The AgoraHQ Windows Sample App is an open-source demo that will help you get live video chat integrated directly into your windows applications using the Agora Video SDK.
 
 With this sample app, you can:
-
+-Role: host guide broadcast
 -Media section: Live Speaker; yy partner to achieve video effects
 -Signaling part: control the answer
 
