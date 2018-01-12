@@ -72,63 +72,6 @@ BOOL CDlgAnswer::OnInitDialog()
 	
 	initCtrl();
 	initAgoraSignal();
-
-#if 0
-	//std::string msg = "{\"data\" : {\"id\" : 1,\"options\" : [\"anwser1\", \"anwser2\", \"anwser3\", \"anwser4\"],	\"question\" : \"i'm a question 1\",\"type\" : \"multi\"	},	\"type\" : \"quiz\"}";
-	std::string msg = "{\"type\":\"result\",\"data\":{\"correct\":0,\"total\":0,\"sid\":0,\"result\":1}}";
-	msg = "{\"type\":\"info\",\"data\":{\"err\" : \"quiz_going_on\"}}";
-	//msg = "{\"type\":\"info\",\"data\":{}}";
-	msg = "{\"type\":\"info\",\"data\":\"game closed, waiting for summary info...\"}";
-
-	rapidjson::Document document;
-	if (document.Parse<0>(msg.data()).HasParseError()){
-		return FALSE;
-	}
-	std::string msgType((document["type"].GetString()));
-	if ("quiz" == msgType){
-
-		tagQuestionAnswer answerTemp;
-		int questionId(document["data"]["id"].GetInt());
-		std::string strQuestion(document["data"]["question"].GetString());
-		std::vector<std::string > vecQuestionChoose;
-		rapidjson::Document::ValueIterator it = document["data"]["options"].Begin();
-		for (; document["data"]["options"].End() != it; it++){
-			vecQuestionChoose.push_back((*it).GetString());
-		}
-		answerTemp.questionId = questionId;
-		answerTemp.strQuestion = strQuestion;
-		answerTemp.vecQuestionAnswers = vecQuestionChoose;
-
-		switchNewQuestion(answerTemp);
-	}
-	else if ("result" == msgType){
-
-		tagQuestionStatics questionStaticsTemp;
-		int nCorrectNum = document["data"]["correct"].GetInt();
-		int nTotalNuum = document["data"]["total"].GetInt();
-		int sid = document["data"]["sid"].GetInt();
-		int nresult = document["data"]["result"].GetInt();
-		questionStaticsTemp.ncorrectNum = nCorrectNum;
-		questionStaticsTemp.nTotal = nTotalNuum;
-		questionStaticsTemp.nsid = sid;
-		questionStaticsTemp.nresult = nresult;
-
-		notifyQuestionAnswerStatics(questionStaticsTemp);
-	}
-	else if ("info" == msgType){
-		
-			std::string str = document["data"].GetString();
-			if (string::npos != str.find("err")){
-
-				if (document["data"]["err"].IsString()){
-
-					std::string errMsg = document["data"]["err"].GetString();
-					AfxMessageBox(s2cs(errMsg), MB_OK);
-				}
-			}
-		//}
-	}
-#endif
 	
 	return TRUE;
 }

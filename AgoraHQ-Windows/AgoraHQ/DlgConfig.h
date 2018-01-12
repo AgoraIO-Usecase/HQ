@@ -3,6 +3,7 @@
 
 // CDlgConfig ¶Ô»°¿ò
 
+#include "AgoraCameraManager.h"
 class CDlgConfig : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDlgConfig)
@@ -34,9 +35,18 @@ private:
 	CEdit m_edAppId;
 	CEdit m_edAppcertificatId;
 	CEdit m_edMediaUid;
+	CEdit m_edChannelName;
 
+	CButton m_btnSatrtPreview;
 	CButton m_btnAppcertificateEnable;
 	CComboBox m_comSolutionIndex;
 	CComboBox m_comCamera;
+	CStatic m_trlTestVideo;
 
+	CAgoraCameraManager CameraManager; 
+	IRtcEngine* pRtcEngine;
+
+public:
+	afx_msg void OnBnClickedButtonVideotest();
+	afx_msg void OnCbnSelchangeComboCamera();
 };

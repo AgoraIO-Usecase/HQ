@@ -6,7 +6,6 @@
 #include "DlgConfig.h"
 #include "afxdialogex.h"
 #include "commonFun.h"
-#include "AgoraCameraManager.h"
 
 
 // CDlgConfig 对话框
@@ -14,13 +13,16 @@
 IMPLEMENT_DYNAMIC(CDlgConfig, CDialogEx)
 
 CDlgConfig::CDlgConfig(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CDlgConfig::IDD, pParent)
+	: CDialogEx(CDlgConfig::IDD, pParent),
+	pRtcEngine(NULL)
 {
 
 }
 
 CDlgConfig::~CDlgConfig()
 {
+	CameraManager.TestCameraDevice(nullptr, FALSE);
+	CameraManager.Close();
 }
 
 void CDlgConfig::DoDataExchange(CDataExchange* pDX)
@@ -32,12 +34,17 @@ void CDlgConfig::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_VideoSolution, m_comSolutionIndex);
 	DDX_Control(pDX, IDC_COMBO_CAMERA, m_comCamera);
 	DDX_Control(pDX, IDC_EDIT_MediaUID, m_edMediaUid);
+	DDX_Control(pDX, IDC_EDIT_ChannelName, m_edChannelName);
+	DDX_Control(pDX, IDC_BUTTON_VIDEOTEST, m_btnSatrtPreview);
+	DDX_Control(pDX, IDC_STATIC_VIDEOTEST, m_trlTestVideo);
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgConfig, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CONFIG_SAVE, &CDlgConfig::OnBnClickedButtonConfigSave)
 	ON_BN_CLICKED(IDC_BUTTON_CONFIG_CANCLE, &CDlgConfig::OnBnClickedButtonConfigCancle)
+	ON_BN_CLICKED(IDC_BUTTON_VIDEOTEST, &CDlgConfig::OnBnClickedButtonVideotest)
+	ON_CBN_SELCHANGE(IDC_COMBO_CAMERA, &CDlgConfig::OnCbnSelchangeComboCamera)
 END_MESSAGE_MAP()
 
 
@@ -81,6 +88,8 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 	gHQConfig.setAppCertEnable(strCheck);
 	int nVideoIndexCurSel = m_comSolutionIndex.GetCurSel();
 	gHQConfig.setVideoSolutinIndex(int2str(nVideoIndexCurSel));
+	m_edChannelName.GetWindowTextW(strParam);
+	gHQConfig.setChannelName(cs2s(strParam));
 	
 	int nCurSel = m_comCamera.GetCurSel();
 	CAgoraCameraManager CameraManager;
@@ -96,7 +105,9 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 		std::string strDeviceIdUtf8 = gbk2utf8(cs2s(strDeviceId));
 		CameraManager.SetCurDevice(s2cs(strDeviceIdUtf8));
 	}
-	
+
+//	CameraManager.TestCameraDevice(nullptr, FALSE);
+
 	CDlgConfig::OnOK();
 }
 
@@ -104,6 +115,7 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 void CDlgConfig::OnBnClickedButtonConfigCancle()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	CameraManager.TestCameraDevice(nullptr, FALSE);
 	CDlgConfig::OnCancel();
 }
 
@@ -200,6 +212,8 @@ void CDlgConfig::initCtrl()
 	m_btnAppcertificateEnable.SetCheck(res);
 	std::string strMediaUid = gHQConfig.getLoginUid();
 	m_edMediaUid.SetWindowTextW(s2cs(strMediaUid));
+	std::string strChannelName = gHQConfig.getChannelName();
+	m_edChannelName.SetWindowTextW(s2cs(strChannelName));
 
 	std::string strVideoIndex = gHQConfig.getVideoSolutinIndex();
 	if ("" == strVideoIndex)
@@ -210,23 +224,25 @@ void CDlgConfig::initCtrl()
 	CString strDefCameraId = s2cs(strCameraID);
 
 	int nDefSel = CB_ERR;
-	CAgoraCameraManager CameraManager;
-	IRtcEngine* pRtcEngine = CAgoraObject::GetEngine();
+	pRtcEngine = CAgoraObject::GetEngine();
 	if (pRtcEngine){
 
-		CameraManager.Create(pRtcEngine);
-		
-		CString strDeviceName; CString strDeviceId;
-		int nCameraCount = CameraManager.GetDeviceCount();
-		for (int nDeviceId = 0; nDeviceId < nCameraCount; nDeviceId++){
-			
-			CameraManager.GetDevice(nDeviceId, strDeviceName, strDeviceId);
-			m_comCamera.AddString(strDeviceName);
-			if (strDefCameraId == strDeviceId){
-				nDefSel = nDeviceId;
-				CameraManager.SetCurDevice(strDeviceId);
+		if (CameraManager.Create(pRtcEngine)){
+			CameraManager.TestCameraDevice(NULL, FALSE);
+
+			CString strDeviceName; CString strDeviceId;
+			int nCameraCount = CameraManager.GetDeviceCount();
+			for (int nDeviceId = 0; nDeviceId < nCameraCount; nDeviceId++){
+
+				CameraManager.GetDevice(nDeviceId, strDeviceName, strDeviceId);
+				m_comCamera.AddString(strDeviceName);
+				if (strDefCameraId == strDeviceId){
+					nDefSel = nDeviceId;
+					CameraManager.SetCurDevice(s2cs(gbk2utf8(cs2s(strDeviceId))));
+				}
 			}
 		}
+		
 	}
 
 	m_comCamera.SetCurSel(nDefSel);
@@ -235,4 +251,39 @@ void CDlgConfig::initCtrl()
 void CDlgConfig::uninitCtrl()
 {
 
+}
+
+void CDlgConfig::OnBnClickedButtonVideotest()
+{
+	// TODO:  在此添加控件通知处理程序代码
+
+	if (pRtcEngine){
+		if (CameraManager.IsTesting()){
+
+			CameraManager.TestCameraDevice(m_trlTestVideo, FALSE);
+			m_btnSatrtPreview.SetWindowTextW(_T("startPreview"));
+		}
+		else{
+
+			CameraManager.TestCameraDevice(m_trlTestVideo, TRUE);
+			m_btnSatrtPreview.SetWindowTextW(_T("stopPreview"));
+		}
+	}
+}
+
+
+void CDlgConfig::OnCbnSelchangeComboCamera()
+{
+	// TODO:  在此添加控件通知处理程序代码
+
+	int nCurSel = m_comCamera.GetCurSel();
+	if (CB_ERR != nCurSel){
+		CString strDeviceName, strDeviceId;
+		if (CameraManager.GetDevice(nCurSel, strDeviceName, strDeviceId)){
+			if (_T("") != strDeviceId){
+
+				CameraManager.SetCurDevice( s2cs(gbk2utf8(cs2s(strDeviceId))));
+			}
+		}
+	}
 }

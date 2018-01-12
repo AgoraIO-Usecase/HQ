@@ -5,6 +5,7 @@
 CAgoraCameraManager::CAgoraCameraManager()
 	: m_ptrDeviceManager(NULL)
 	, m_lpCollection(NULL)
+	, m_bTestingOn(FALSE)
 {
 }
 
@@ -43,6 +44,7 @@ void CAgoraCameraManager::Close()
 		delete m_ptrDeviceManager;
 		m_ptrDeviceManager = NULL;
 	}
+	m_bTestingOn = FALSE;
 }
 
 UINT CAgoraCameraManager::GetDeviceCount()

@@ -42,6 +42,7 @@ public:
 	std::string read(const std::string &section, const std::string &key);
 	bool getSectionName(std::vector<std::string> &vecSection);
 	bool getSection(const std::string &section, std::map<std::string, std::string> &mapKeyValue);
+	std::string getFilePah(){ return iniFile_; }
 
 private:
 	std::string iniFile_;
@@ -53,6 +54,7 @@ class CIniBase
 public:
 	CIniBase(const std::string &filePath);
 	virtual ~CIniBase();
+	std::string getFilePah(){ return pIniInstance_->getFilePah(); }
 
 #define __DECLARE_INICONFIG_FUN(CMDID)\
 		std::string get##CMDID();\

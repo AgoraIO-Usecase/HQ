@@ -53,7 +53,8 @@ CAgoraHQDlg::CAgoraHQDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CAgoraHQDlg::IDD, pParent),
 	m_pDlgAnswer(NULL),
 	m_lpAgoraObject(NULL),
-	m_pDlgConfig(nullptr)
+	m_pDlgConfig(nullptr),
+	m_nLastmileQuality(-1)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -124,12 +125,15 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化代码
 	SetBackgroundColor(RGB(0xff,0xff,0xff),TRUE);
 
-	int a = 2; int b = 3;
-	double dd = a *1.0 / b;
-	tagQuestionStatics questionStatics;
-	questionStatics.ncorrectNum = 2;
-	questionStatics.nTotal = 3;
-	double dCorrertPercent = (questionStatics.ncorrectNum) * 1.0 / (questionStatics.nTotal);
+	m_strAppId = gHQConfig.getAppId();
+	if ("" == m_strAppId){
+		AfxMessageBox(_T("APPID 为空.请重新配置"));
+		std::string iniFilePath = gHQConfig.getFilePah();
+		gHQConfig.setAppId("");
+		ShellExecute(NULL, _T("open"), s2cs(iniFilePath), NULL, NULL, SW_SHOW);
+		::PostQuitMessage(0);
+		return FALSE;
+	}
 
 	initCtrl();
 	initAgoraMediaRtc();
@@ -190,8 +194,8 @@ void CAgoraHQDlg::OnClose()
 		m_lpRtcEngine->stopPreview();
 	}
 
-	uninitAgoraMediaRtc();
 	uninitCtrl();
+	uninitAgoraMediaRtc();
 
 	CDialogEx::OnCancel();
 }
@@ -284,13 +288,6 @@ void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 
 void CAgoraHQDlg::initCtrl()
 {
-	m_strAppId = gHQConfig.getAppId();
-	if ("" == m_strAppId){
-		AfxMessageBox(_T("APPID 为空.请重新配置"));
-		::PostQuitMessage(0);
-		return;
-	}
-
 	std::string appcertEnable = gHQConfig.getAppCertEnable();
 	if("1" == appcertEnable){
 		m_strAppCertificatId = gHQConfig.getAppCertificateId();
@@ -331,6 +328,9 @@ void CAgoraHQDlg::uninitCtrl()
 
 void CAgoraHQDlg::initAgoraMediaRtc()
 {
+	if ("" == m_strAppId){
+		return;
+	}
 	m_lpAgoraObject = CAgoraObject::GetAgoraObject(s2cs(m_strAppId));
 	ASSERT(m_lpAgoraObject);
 	m_lpAgoraObject->SetMsgHandlerWnd(m_hWnd);
@@ -364,7 +364,10 @@ void CAgoraHQDlg::uninitAgoraMediaRtc()
 
 void CAgoraHQDlg::DrawClient(CDC *lpDC)
 {
-	m_imgNetQuality.Draw(lpDC, m_nLastmileQuality, CPoint(16, 16), ILD_NORMAL);
+	if (0 <= m_nLastmileQuality){
+
+		m_imgNetQuality.Draw(lpDC, m_nLastmileQuality, CPoint(16, 16), ILD_NORMAL);
+	}
 }
 
 LRESULT CAgoraHQDlg::onJoinChannelSuccess(WPARAM wParam, LPARAM lParam)
