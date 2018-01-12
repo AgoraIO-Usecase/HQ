@@ -11,7 +11,7 @@
 
 本开源项目使用 **C++** 语言
 
-AgoraHQ视频SDK支持 iOS / Android / Windows / macOS 等多个平台，你可以查看对应各平台的示例项目：
+AgoraHQ视频SDK支持 iOS / NodeJs / Windows  等多个平台，你可以查看对应各平台的示例项目：
 
 - [OpenLive-Nodejs](https://github.com/AgoraIO/HQ/tree/master/AgoraHQ-Server-Nodejs)
 - [OpenLive-iOS](https://github.com/AgoraIO/HQ/tree/master/AgoraHQ-iOS-Swift)
