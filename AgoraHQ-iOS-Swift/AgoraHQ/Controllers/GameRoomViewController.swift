@@ -196,7 +196,7 @@ extension GameRoomViewController {
         hostView?.removeFromSuperview()
         rtcEngine.leaveChannel(nil)
         RCIMClient.shared().quitChatRoom(RoomName.RCIMQuestionRoom, success: nil, error: nil)
-        RCIMClient.shared().quitChatRoom(RoomName.RCIMChatRoom, success: nil, error: nil)
+//        RCIMClient.shared().quitChatRoom(RoomName.RCIMChatRoom, success: nil, error: nil)
     }
 }
 
@@ -255,12 +255,12 @@ extension GameRoomViewController {
             AlertUtil.showAlert(message: "Join question room error :\(status.rawValue)")
             print("error :\(status.rawValue)")
         }
-        RCIMClient.shared().joinChatRoom(RoomName.RCIMChatRoom, messageCount: -1, success: {
-            print("======================Join chat room seccess: chatroom=====================")
-        }) { (status: RCErrorCode) in
-            AlertUtil.showAlert(message: "Join chat room error :\(status.rawValue)")
-            print("error :\(status.rawValue)")
-        }
+//        RCIMClient.shared().joinChatRoom(RoomName.RCIMChatRoom, messageCount: -1, success: {
+//            print("======================Join chat room seccess: chatroom=====================")
+//        }) { (status: RCErrorCode) in
+//            AlertUtil.showAlert(message: "Join chat room error :\(status.rawValue)")
+//            print("error :\(status.rawValue)")
+//        }
         RCIMClient.shared().setReceiveMessageDelegate(self, object: nil)
     }
 }
@@ -348,6 +348,7 @@ extension GameRoomViewController: ServerHelperDelagate {
     }
 }
 
+// MARK: - UITextFieldDelegate
 extension GameRoomViewController: UITextFieldDelegate {
     // send chat message
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -359,7 +360,7 @@ extension GameRoomViewController: UITextFieldDelegate {
         let messageJson = "{\"type\":\"chat\",\"data\":\"\(message)\",\"name\":\"\(UserDefaults.standard.string(forKey: "name")!)\"}"
         let content = RCTextMessage(content: messageJson)
         RCIMClient.shared().sendMessage(.ConversationType_CHATROOM,
-                                        targetId: RoomName.RCIMChatRoom,
+                                        targetId: RoomName.RCIMQuestionRoom,
                                         content: content,
                                         pushContent: nil,
                                         pushData: nil,
