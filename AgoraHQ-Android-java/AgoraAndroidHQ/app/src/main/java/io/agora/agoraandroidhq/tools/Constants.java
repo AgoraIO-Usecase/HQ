@@ -35,7 +35,7 @@ public class Constants {
     //app_id
     //public static final String APP_ID = "80e54398fed94ae8a010acf782f569b7";
     //public static final String APP_SECRET = "hLcD4dtADpPs4";
-    public static final String AGORA_APP_ID = "0279f083791444fc835764dfedd614ce";
+    public static final String AGORA_APP_ID = #Your_APPID;
 
 
     //public static final String AGORA_APP_ID = "b3f09afc7af3496f872e805f03bf262c";
