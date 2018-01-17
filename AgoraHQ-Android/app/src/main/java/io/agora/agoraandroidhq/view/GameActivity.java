@@ -761,8 +761,10 @@ public class GameActivity extends Activity {
 
     // Tutorial Step 6
     private void leaveChannel() {
-        rtcEngine.leaveChannel();
-        RtcEngine.destroy();
+        if(rtcEngine!=null) {
+            rtcEngine.leaveChannel();
+            RtcEngine.destroy();
+        }
     }
 
     // Tutorial Step 7
