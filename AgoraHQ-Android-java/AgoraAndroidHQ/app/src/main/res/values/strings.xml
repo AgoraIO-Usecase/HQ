@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AgoraAndroidHQ</string>
+    <drawable name="button_press">#8888</drawable>
+</resources>
