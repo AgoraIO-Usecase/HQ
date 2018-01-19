@@ -1,0 +1,21 @@
+/* right answer */
+"Bingo" = "答对了";
+
+/* title for cannot play */
+"Can not play" = "不能回答";
+
+/* title fot introduction */
+"Please contact" = "请联系";
+
+/* title fot game going */
+"The game is going, cannot play" = "来晚了，下次早点吧";
+
+/* wrong answer */
+"Wrong" = "答错了";
+
+/* title for relive */
+"You are still alive" = "你还活在呢";
+
+/* title for relive */
+"You can play now" = "可以开始玩啦~";
+

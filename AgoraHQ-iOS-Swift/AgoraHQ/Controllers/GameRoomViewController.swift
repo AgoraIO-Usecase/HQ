@@ -22,8 +22,8 @@ class GameRoomViewController: UIViewController {
     @IBOutlet weak var chatContainerView: UIView!
     
     var hostView: UIView?
-    var question: String! = "Q1.jdklfasjfdaslk"
-    var answers = ["dfsfasdf","dasfadsfas","fdsafasdf","dhaskfh"]//[String]()
+    var question: String! //= "Q1.jdklfasjfdaslk"
+    var answers = [String]() // ["dfsfasdf","dasfadsfas","fdsafasdf","dhaskfh"]//[String]()
 //    var s: NSDictionary = ["0": 20, "1": 24, "2": 30, "3": 20]
     var result: NSDictionary!
     
@@ -84,7 +84,7 @@ class GameRoomViewController: UIViewController {
     // 终极大招：复活 ！！
     @IBAction func doReLiveButtonPressed(_ sender: UIButton) {
         if UserDefaults.standard.bool(forKey: "status") {
-            AlertUtil.showAlert(message: "你还活着啊！不要乱点😫")
+            AlertUtil.showAlert(message: NSLocalizedString("You are still alive", comment: "title for relive"))
             return
         }
         
@@ -116,7 +116,7 @@ class GameRoomViewController: UIViewController {
         questionView.backgroundColor = UIColor.white
         
         if !status {
-            questionView.answerTimeLabel.text = "不可以答题"
+            questionView.answerTimeLabel.text = NSLocalizedString("Can not play", comment: "title for cannot play")
             questionView.answerTimeLabel.textColor = wrongColor
         }
         self.view.addSubview(questionView)
@@ -233,7 +233,7 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
                 let time = data["timeStamp"] as! Double
                 let date = NSDate().timeIntervalSince1970
                 
-                print("==================延迟\(date) - \(time) = \(date - time)======================")
+                print("==================delay \(date) - \(time) = \(date - time)======================")
                 if self.questionId == self.seiId {
                     self.addQusetionViewWith(qusetin: question, answers: answers)
                 }
@@ -334,12 +334,18 @@ extension GameRoomViewController: ServerHelperDelagate {
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! NSDictionary
             print(jsonData)
+            if let err = jsonData["err"] {
+                AlertUtil.showAlert(message: err as! String)
+                UserDefaults.standard.set(false, forKey: "status")
+                print("===================Check status failed with: \(err)=======================")
+                return
+            }
             let status = jsonData["result"] as! Bool
             UserDefaults.standard.set(status, forKey: "status")
             if !status {
-                AlertUtil.showAlert(message: "错过了答题时间，下次早点吧")
+                AlertUtil.showAlert(message: NSLocalizedString("The game is going, cannot play", comment: "title fot game going"))
             } else {
-                AlertUtil.showAlert(message: "你可以开始答题了")
+                AlertUtil.showAlert(message: NSLocalizedString("You can play now", comment: "title for relive"))
             }
         } catch  {
             AlertUtil.showAlert(message: "Connect server error!")
@@ -354,9 +360,6 @@ extension GameRoomViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let message = chatMessgaeTestField.text else { return false }
         
-        if message.isEmpty {
-            AlertUtil.showAlert(message: "请输入点东西吧")
-        }
         let messageJson = "{\"type\":\"chat\",\"data\":\"\(message)\",\"name\":\"\(UserDefaults.standard.string(forKey: "name")!)\"}"
         let content = RCTextMessage(content: messageJson)
         RCIMClient.shared().sendMessage(.ConversationType_CHATROOM,

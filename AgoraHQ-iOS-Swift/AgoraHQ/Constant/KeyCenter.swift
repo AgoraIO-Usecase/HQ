@@ -7,9 +7,9 @@
 //
 
 struct KeyCenter {
-    static let AppId: String = <#Agora App ID#>
-    static let AppcertificateID:  String = <#Agora App Certificate#>
-    static let RCAppKey: String = <#RC App Key#>
+    static let AppId: String = "0279f083791444fc835764dfedd614ce"
+    static let AppcertificateID:  String = ""
+    static let RCAppKey: String = "mgb7ka1nmwzxg"
 }
 
 struct RoomName {
