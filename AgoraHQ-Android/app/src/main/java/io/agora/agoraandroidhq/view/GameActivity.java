@@ -311,14 +311,14 @@ public class GameActivity extends Activity {
                             int res = result.result;
                             if (GameControl.currentQuestion != null) {
                                 if (correct == 0) {
-                                    time_reduce.setText("选择错误 , 正确答案是 " + res);
+                                    time_reduce.setText(getString(R.string.answer_error_message) + res);
 
                                     time_reduce.setTextColor(Color.RED);
                                     time_reduce.setVisibility(View.VISIBLE);
                                     //game_title.setVisibility(View.INVISIBLE);
                                     GameControl.clientWheatherCanPlay = false;
                                 } else {
-                                    time_reduce.setText("选择正确");
+                                    time_reduce.setText(R.string.answer_correct_message);
                                     time_reduce.setTextColor(Color.RED);
                                     time_reduce.setVisibility(View.VISIBLE);
                                     //game_title.setVisibility(View.INVISIBLE);
@@ -356,7 +356,7 @@ public class GameActivity extends Activity {
                             }
 
                             logD("quiz   showQuestion");
-                            // showQuestion();
+                            //showQuestion();
                             //showquestionView(GameControl.currentQuestion);
                             break;
 
@@ -437,7 +437,7 @@ public class GameActivity extends Activity {
         AgoraLinkToCloud.quitChatRoom(new RongIMClient.OperationCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(GameActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GameActivity.this, R.string.logout_success_message, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -511,7 +511,6 @@ public class GameActivity extends Activity {
             super.onReceiveSEI(info);
 
             logD("onReceiveSEI" + info);
-
             logD("length " + info.length());
             JSONObject jsonObject = null;
             int sid = -1;
@@ -534,7 +533,6 @@ public class GameActivity extends Activity {
                 }
             }
         }
-
     };
 
 
@@ -567,7 +565,7 @@ public class GameActivity extends Activity {
                 case 1:
                     if (game_layout.getVisibility() == View.VISIBLE) {
                         game_layout.setVisibility(View.GONE);
-                        time_reduce.setText(10+"");
+                        time_reduce.setText(10 + "");
                     }
                     break;
             }
@@ -761,7 +759,7 @@ public class GameActivity extends Activity {
 
     // Tutorial Step 6
     private void leaveChannel() {
-        if(rtcEngine!=null) {
+        if (rtcEngine != null) {
             rtcEngine.leaveChannel();
             RtcEngine.destroy();
         }
@@ -862,9 +860,9 @@ public class GameActivity extends Activity {
         }
 
         if (a == -1) {
-            Toast.makeText(GameActivity.this, "答案为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GameActivity.this, R.string.answer_is_null_message, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(GameActivity.this, "选择成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GameActivity.this, R.string.choose_success_message, Toast.LENGTH_SHORT).show();
         }
 
         //  Toast.makeText(GameActivity.this, builder.toString(), Toast.LENGTH_SHORT).show();
@@ -961,7 +959,7 @@ public class GameActivity extends Activity {
         wheath_canPlay_TextView.setVisibility(View.VISIBLE);
         wheath_canPlay_TextView.setText("you can not play,because you are already die!");
         wheath_canPlay_TextView.setTextColor(Color.RED);
-        submit_btn.setText("复活");
+        submit_btn.setText(R.string.relive_message);
         game_layout.setVisibility(View.VISIBLE);
         game_title.setVisibility(View.VISIBLE);
     }
@@ -975,7 +973,7 @@ public class GameActivity extends Activity {
                 logD(data + "");
 
                 if (data.equals(Constants.MESSAGE_TOAST)) {
-                    System.out.println(Toast.makeText(GameActivity.this, "网络连接失败或服务器连接失败", Toast.LENGTH_SHORT));
+                    System.out.println(Toast.makeText(GameActivity.this, R.string.connect_net_error_or_server_error, Toast.LENGTH_SHORT));
                 }
 
                 if (data.equals("{}")) {
@@ -987,15 +985,15 @@ public class GameActivity extends Activity {
                         @Override
                         public void run() {
                             wheath_canPlay_TextView.setVisibility(View.GONE);
-                            submit_btn.setText("提交");
-                            Toast.makeText(GameActivity.this, "复活成功", Toast.LENGTH_SHORT).show();
+                            submit_btn.setText(R.string.submit_message);
+                            Toast.makeText(GameActivity.this, R.string.relive_success_message, Toast.LENGTH_SHORT).show();
                             showquestionView(GameControl.currentQuestion);
                             logD("GameControl CurrentQuestion:  " + GameControl.currentQuestion.getAnswerString().toString());
                         }
                     });
                 } else {
-                    GameControl.serverWheatherCanPlay =false;
-                    Toast.makeText(GameActivity.this, "复活失败", Toast.LENGTH_SHORT).show();
+                    GameControl.serverWheatherCanPlay = false;
+                    Toast.makeText(GameActivity.this, R.string.fail_to_relive_message, Toast.LENGTH_SHORT).show();
                 }
             }
         });

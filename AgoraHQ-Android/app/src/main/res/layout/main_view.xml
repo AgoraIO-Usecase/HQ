@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="下一期开始时间"
+        android:text="@string/next_game_time"
         android:textSize="25sp"
         android:textColor="#fff"
         android:layout_gravity="center_horizontal"/>
@@ -54,7 +54,7 @@
             android:textStyle="bold"
 
             android:layout_height="wrap_content"
-            android:text="今天 13:00  ¥50000 奖金"/>
+            android:text="@string/the_day_and_the_money"/>
 
     </LinearLayout>
 
@@ -62,7 +62,7 @@
         android:layout_width="120dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:text="开始答题"
+        android:text="@string/start_play_game"
 
         android:textStyle="bold"
         android:textColor="#de3"

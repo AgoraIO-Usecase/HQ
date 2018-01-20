@@ -68,7 +68,7 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="发送"
+            android:text="@string/btn_send_message"
             android:textColor="#ffffff"
             android:textSize="14sp" />
     </LinearLayout>
@@ -137,7 +137,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="提交"
+            android:text="@string/submit_string"
             android:id="@+id/submit_button"/>
     </LinearLayout>
 

@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
                 String token;
 
                 if (body == null) {
-                    Toast.makeText(MainActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.net_error, Toast.LENGTH_SHORT).show();
 
                     playGame.setClickable(true);
                     return;
@@ -167,7 +167,7 @@ public class MainActivity extends Activity {
                     token = jsonObject.getString("token");
                     logD("token  = " + token);
                 } catch (JSONException e) {
-                    Toast.makeText(MainActivity.this, "Token 解析失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.error_to_resolve_token, Toast.LENGTH_SHORT).show();
                     logD("token   catchException" + e);
                     playGame.setClickable(true);
                     return;
