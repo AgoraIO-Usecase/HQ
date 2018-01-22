@@ -28,8 +28,8 @@ public class Constants {
     public static final String UID = "295042";
     //public static final String UID = "24324242";
 
-    public static final String APP_KEY = "mgb7ka1nmwzxg";
-
+    //public static final String APP_KEY = "mgb7ka1nmwzxg";
+	public static final String APP_KEY = "p5tvi9dsphuz4";
 
     public static final String APP_SECRET = "TKtTyIfVW8Wuva";
     // app_id

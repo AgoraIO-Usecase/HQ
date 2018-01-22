@@ -17,4 +17,5 @@
     <string name="fail_to_relive_message">Fail to relive!</string>
     <string name="submit_string">Submit</string>
     <string name="btn_send_message">Send</string>
+    <string name="token_incorrect_text">Token Incorrect</string>
 </resources>

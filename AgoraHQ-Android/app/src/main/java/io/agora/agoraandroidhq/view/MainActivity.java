@@ -179,7 +179,14 @@ public class MainActivity extends Activity {
                 AgoraLinkToCloud.connect(token, new RongIMClient.ConnectCallback() {
                     @Override
                     public void onTokenIncorrect() {
-                        logD("onTokenIncorrect");
+                       // logD("onTokenIncorrect");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, R.string.token_incorrect_text,Toast.LENGTH_SHORT).show();
+                                playGame.setClickable(true);
+                            }
+                        });
                     }
 
                     @Override
