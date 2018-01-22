@@ -7,8 +7,8 @@
 //
 
 struct KeyCenter {
-    static let AppId: String = <#Agora App ID#>
-    static let AppcertificateID:  String = <#Agora App Certificate#>
+    static let AppId: String = <#Your App Id#>
+    static let AppcertificateID:  String = <#Your App Certificate#>
     static let RCAppKey: String = <#RC App Key#>
 }
 

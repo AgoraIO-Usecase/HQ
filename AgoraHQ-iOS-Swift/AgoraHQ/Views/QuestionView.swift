@@ -96,13 +96,13 @@ class QuestionView: UIView {
         if status {
             let myResult = result["result"] as! Int == myAnswer
             let ratio = result["total"] as!Int == 0 ? 0.0 : (result["correct"] as! Double) / (result["total"] as! Double)
-            self.answerTimeLabel.text = myResult ? "答对了" : "答错了"
+            self.answerTimeLabel.text = myResult ? NSLocalizedString("Bingo", comment: "right answer") : NSLocalizedString("Wrong", comment: "wrong answer")
             self.answerTimeLabel.textColor = myResult ? rightColor : wrongColor
             setBackground(color: rightColor, of: answerViews[result["result"] as! Int], with: ratio)
             answerViews[result["result"] as! Int].layer.borderColor = UIColor.lightGray.cgColor
             UserDefaults.standard.set(myResult, forKey: "status")
         } else {
-            self.answerTimeLabel.text = "不可以答题"
+            self.answerTimeLabel.text = NSLocalizedString("Can not play", comment: "title for cannot play")
             self.answerTimeLabel.textColor = wrongColor
             let ratio = result["total"] as!Int == 0 ? 0.0 : (result["correct"] as! Double) / (result["total"] as! Double)
             setBackground(color: rightColor, of: answerViews[result["result"] as! Int], with: ratio)
@@ -124,7 +124,16 @@ class QuestionView: UIView {
 
 extension QuestionView: ServerHelperDelagate {
     func serverHelper(_ serverHelper: ServerHelper, data: Data, error: Error?)  {
-        let jsonData:NSDictionary = try! JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! NSDictionary
-        print(jsonData)
+        do {
+            let jsonData:NSDictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! NSDictionary
+            print(jsonData)
+            if let err = jsonData["err"] {
+                AlertUtil.showAlert(message: err as! String)
+                print("===================send answer failed with: \(err)=======================")
+                return
+            }
+        } catch {
+            AlertUtil.showAlert(message: "Connect server error!")
+        }
     }
 }

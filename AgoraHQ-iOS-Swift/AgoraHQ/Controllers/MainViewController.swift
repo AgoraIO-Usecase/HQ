@@ -47,7 +47,7 @@ class MainViewController: UIViewController{
     }
     
     @IBAction func showIntroduction(_ sender: UIButton) {
-        AlertUtil.showAlert(message: "请联系\n\n400 632 6626")
+        AlertUtil.showAlert(message: NSLocalizedString("Please contact", comment: "title fot introduction") + "\n\n400 632 6626")
     }
     
     @IBAction func doLoginButtonPressed(_ sender: UIButton) {
@@ -56,13 +56,13 @@ class MainViewController: UIViewController{
     
     func connectRCIM(withToken token: String) {
         RCIMClient.shared().connect(withToken: token, success: { (uid: String?) in
-            print("join seccess =========\(uid!)=========")
+            print("================join seccess \(uid!)=========")
         } , error: { (status: RCConnectErrorCode) in
-            AlertUtil.showAlert(message: "登录失败，错误码\(status.rawValue)")
-            print("登录失败，错误码\(status.rawValue)")
+            AlertUtil.showAlert(message: "RCloud Login Failed ecode: \(status.rawValue)")
+            print("RCloud Login Failed ecode: \(status.rawValue)")
         }) {
-            AlertUtil.showAlert(message: "token 错误")
-            print("token错误")
+            AlertUtil.showAlert(message: "Token Wrong!")
+            print("token Wrong")
             self.requestToken()
         }
     }
@@ -80,7 +80,7 @@ extension MainViewController: RCConnectionStatusChangeDelegate {
         if status.rawValue == 0 {
             self.beginButton.isEnabled = true
             self.uidLabel.text = UserDefaults.standard.string(forKey: "name")!
-//            self.loginButton.isEnabled = false
+            self.loginButton.isEnabled = false
         } else {
             self.beginButton.isEnabled = false
             self.uidLabel.text = "Login"
@@ -93,6 +93,12 @@ extension MainViewController: ServerHelperDelagate {
     func serverHelper(_ serverHelper: ServerHelper, data: Data, error: Error?) {
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! NSDictionary
+            if let err = jsonData["err"] {
+                AlertUtil.showAlert(message: err as! String)
+                self.loginButton.isEnabled = true
+                print("===================Request token failed with: \(err)=======================")
+                return
+            }
             let token: String = jsonData["token"] as! String
             UserDefaults.standard.set(token, forKey: "token")
             connectRCIM(withToken: token)
