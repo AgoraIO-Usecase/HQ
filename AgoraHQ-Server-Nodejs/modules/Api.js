@@ -1,7 +1,19 @@
-const rongcloudSDK = require("./sig_rongyun");
 const logger = require("./logger").get("hq");
+const QuizFactory = require("./QuizFactory");
 
 function MasterApi(maker, app) {
+    app.get("/v1/vendor", (req, res) => {
+        let vid = req.query.vid || null;
+        if (!vid) {
+            res.json({ err: "missing_vendor_id" });
+            return;
+        }
+        res.json({
+            err: "",
+            ry_appid: "dummy_id"
+        });
+    });
+
     app.post("/v1/token", (req, res) => {
         let query = req.body;
         let uid = query.uid || null;
@@ -100,6 +112,32 @@ function MasterApi(maker, app) {
         }
     });
 
+    app.post("/v1/quiz", (req, res) => {
+        let query = req.body;
+        let gid = query.gid || null;
+        let quiz = query.quiz || null;
+
+        if(!gid || !quiz){
+            res.json({err: "info_missing"});
+            return;
+        }
+
+        let parsed = QuizFactory.parse(quiz);
+        if(parsed.err){
+            res.json({err: parsed.err});
+        } else {
+            //good quiz, set to channel
+            let game = maker.get(gid);
+            if(!game){
+                res.json({err: "room_not_found"});
+            } else {
+                game.quizSet = parsed.data;
+                game.reset();
+                res.json({err: null});
+            }
+        }
+    });
+
     app.post("/v1/answer", (req, res) => {
         let query = req.body;
         let uid = query.uid || null;
@@ -109,10 +147,12 @@ function MasterApi(maker, app) {
 
         logger.info(`will answer: ${uid} ${gid} ${sid} ${answer}`);
         if(!gid || sid === undefined || answer === undefined){
+            logger.info("info_missing");
             res.json({err: "info_missing"});
         } else {
             let game = maker.get(gid);
             if(!game){
+                logger.info("room_not_found");
                 res.json({err: "room_not_found"});
             } else {
                 if(parseInt(sid) !== parseInt(game.sequence)){
@@ -121,18 +161,22 @@ function MasterApi(maker, app) {
                     return;
                 }
                 if(!game.open){
+                    logger.info(`game_closed`);
                     res.json({err: "game_closed"});
                     return;
                 }
                 if(!game.canplay(uid)){
+                    logger.info(`cannot_play`);
                     res.json({err: "cannot_play"});
                     return;
                 }
                 if(game.answerCommited(uid)){
+                    logger.info(`answer_given`);
                     res.json({err: "answer_given"});
                     return;
                 }
 
+                logger.info(`passed check..`);
                 game.commitanswer(uid, parseInt(answer));
                 res.json({});
             }

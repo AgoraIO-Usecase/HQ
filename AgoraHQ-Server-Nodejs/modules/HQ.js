@@ -1,9 +1,10 @@
-const rongcloudSDK = require("./sig_rongyun");
 const Signal = require("./sig_agora");
 const logger = require("./logger").get("hq");
 const config = require("./config");
 const sig_appid = config.agora_appid;
-const mc_id = config.mc_id;
+const cc_id = config.cc_id;
+const QuizFactory = require("./QuizFactory");
+const request = require("request");
 
 let HQ = {};
 
@@ -23,6 +24,7 @@ function parseResult(err, resultText) {
 HQ.GameMaker = function () {
     let server = this;
     this.__games = [];
+    this.sig_session = null;
 
     /*------------------------------------------------
     |   class : Game
@@ -54,31 +56,6 @@ HQ.GameMaker = function () {
 
         this.setLive = live => {
             game.live = live;
-            game.sig_session.onMessageInstantReceive = (account, uid, msg) => {
-                logger.info(`received msg: ${msg}`);
-                let json = JSON.parse(msg);
-                switch (json.type) {
-                    case "publish":
-                        game.publish(result => {
-                            logger.info(JSON.stringify(result));
-                            game.sig_session.messageInstantSend(mc_id, JSON.stringify({type: "info", data: result}));
-                        });
-                        break;
-                    case "stopAnswer":
-                        if(game.open){
-                            game.closeQuiz();
-                            game.sig_session.messageInstantSend(mc_id, JSON.stringify({type: "info", data: {err:"game closed, waiting for summary info..."}}));
-                        } else {
-                            logger.info("try to stop a quiz which is already closed");
-                            game.sig_session.messageInstantSend(mc_id, JSON.stringify({type: "info", data: {err:"try to stop a quiz which is already closed"}}));
-                        }
-                        break;
-                    case "reset":
-                        game.reset();
-                        game.sig_session.messageInstantSend(mc_id, JSON.stringify({type: "info", data: {}}));
-                        break;
-                }
-            };
         }
 
         this.hasNext = function () {
@@ -89,13 +66,13 @@ HQ.GameMaker = function () {
             return game.quizSet[game.sequence];
         };
 
-        this.publish = function(cb) {
-            if(game.open){
-                cb({err: "quiz_going_on"});
+        this.publish = function (cb) {
+            if (game.open) {
+                cb({ err: "quiz_going_on" });
                 return;
             }
-            if(!game.hasNext()){
-                cb({err: "no_more_quiz"});
+            if (!game.hasNext()) {
+                cb({ err: "no_more_quiz" });
                 return;
             }
             game.publishNextQuiz().then(_ => {
@@ -103,24 +80,24 @@ HQ.GameMaker = function () {
             });
         }
 
-        this.canplay = function(uid) {
-            if(game.sequence === 0){
-                return {result: true};
+        this.canplay = function (uid) {
+            if (game.sequence === 0) {
+                return { result: true };
             }
-            if(!game.players[uid]){
+            if (!game.players[uid]) {
                 logger.info(`not a player ${uid}`);
-                return {result: false, err: `not a player ${uid}`};
+                return { result: false, err: `not a player ${uid}` };
             } else {
-                if(game.gameovers[uid]){
+                if (game.gameovers[uid]) {
                     logger.info(`${uid} is already game over`);
-                    return {result: false, err: `${uid} is already game over`};
+                    return { result: false, err: `${uid} is already game over` };
                 } else {
-                    return {result: true};
+                    return { result: true };
                 }
             }
         };
 
-        this.closeQuiz = function() {
+        this.closeQuiz = function () {
             logger.info(`quiz closed for ${game.gid}`);
             game.open = false;
             game.summaryResult(game.sequence++);
@@ -131,23 +108,25 @@ HQ.GameMaker = function () {
             return new Promise((resolve, reject) => {
                 let quiz = Object.assign({}, game.nextQuiz());
                 delete quiz.answer;
+                game.answers[quiz.id] = {};
                 quiz = JSON.stringify({ type: "quiz", data: quiz });
-                game.sig_session.messageInstantSend(mc_id, quiz);
-                rongcloudSDK.message.chatroom.publish(game.gid, game.gid, "RC:TxtMsg", JSON.stringify({ content: quiz, extra: "" }), (err, resultText) => {
-                    let result = parseResult(err, resultText);
-                    if (result) {
-                        logger.info(`quiz published: ${quiz}`);
-                        game.answers[game.sequence] = {};
-                        resolve(result);
+                server.sig.messageInstantSend(game.gid, quiz);
+                var options = {
+                    uri: `http://125.88.159.173:8000/signaling/v1/${sig_appid}/sendChannelMessage`,
+                    method: 'POST',
+                    json: { "m": quiz, "channel": game.gid }
+                };
+                request(options, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        resolve();
                     } else {
-                        logger.error(`quiz publish failed: ${quiz}`);
-                        reject(err);
+                        reject(error);
                     }
                 });
             });
         };
 
-        this.relive = function(uid){
+        this.relive = function (uid) {
             logger.info(`god bless ${uid}....now your life has returned`);
             game.gameovers[uid] = undefined;
             game.players[uid] = true;
@@ -174,52 +153,58 @@ HQ.GameMaker = function () {
 
             logger.info(`anwser collected from ${uid}, ${answer}`);
             game.answers[game.sequence][uid] = answer;
-            if(game.sequence === 0){
+            if (game.sequence === 0) {
                 game.players[uid] = true;
             }
         };
 
         this.summaryResult = function (sequence) {
-            let results = game.answers[sequence];
-            let quiz = game.quizSet[sequence];
-            let options = quiz.options;
-            let answer = game.quizSet[sequence].answer;
-            let rightUids = [];
-            let wrongUids = [];
-            let resultSpread = {};
+            return new Promise((resolve, reject) => {
+                let results = game.answers[sequence] || {};
+                let quiz = game.quizSet[sequence];
+                let options = quiz.options;
+                let answer = game.quizSet[sequence].answer;
+                let rightUids = [];
+                let wrongUids = [];
+                let resultSpread = {};
 
-            for(let i = 0; i < options.length; i++){
-                resultSpread[i] = 0;
-            }
+                for (let i = 0; i < options.length; i++) {
+                    resultSpread[i] = 0;
+                }
 
-            Object.keys(results).forEach(uid => {
-                let commited = results[uid];
-                if (commited === answer) {
-                    rightUids.push(uid);
-                } else {
-                    wrongUids.push(uid);
-                }
-                (resultSpread[commited] !== undefined) && resultSpread[commited]++;
-            });
-            logger.info(`right: ${rightUids.length}, wrong: ${wrongUids.length}, total: ${Object.keys(results).length}`);
-            let data = JSON.stringify({
-                type: "result",
-                data: {
-                    correct: rightUids.length,
-                    total: Object.keys(results).length,
-                    sid: sequence,
-                    result: answer,
-                    spread: resultSpread
-                }
-            });
-            game.sig_session.messageInstantSend(mc_id, data);
-            rongcloudSDK.message.chatroom.publish(game.gid, game.gid, "RC:TxtMsg", JSON.stringify({ content: data, extra: "" }), (err, resultText) => {
-                let result = parseResult(err, resultText);
-                if (result) {
-                    logger.info(`result published for ${data}`);
-                } else {
-                    logger.error(`result publish failed for ${data}`);
-                }
+                Object.keys(results).forEach(uid => {
+                    let commited = results[uid];
+                    if (commited === answer) {
+                        rightUids.push(uid);
+                    } else {
+                        wrongUids.push(uid);
+                    }
+                    (resultSpread[commited] !== undefined) && resultSpread[commited]++;
+                });
+                logger.info(`right: ${rightUids.length}, wrong: ${wrongUids.length}, total: ${Object.keys(results).length}`);
+                let data = JSON.stringify({
+                    type: "result",
+                    data: {
+                        correct: rightUids.length,
+                        total: Object.keys(results).length,
+                        sid: sequence,
+                        result: answer,
+                        spread: resultSpread
+                    }
+                });
+                server.sig.messageInstantSend(game.gid, data);
+                let request_options = {
+                    uri: `http://125.88.159.173:8000/signaling/v1/${sig_appid}/sendChannelMessage`,
+                    method: 'POST',
+                    json: { "m": data, "channel": game.gid }
+                };
+                request(request_options, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        resolve();
+                    } else {
+                        reject(error);
+                    }
+                });
             });
         };
     };
@@ -228,55 +213,15 @@ HQ.GameMaker = function () {
     |   function : GameMaker
     \*----------------------------------------------*/
     this.add = function (game) {
+
         return new Promise((resolve, reject) => {
-            let rc_promise = new Promise((rc_resolve, rc_reject) => {
-                rongcloudSDK.chatroom.query(game.gid, (err, resultText) => {
-                    let res = parseResult(err, resultText);
-                    if (res) {
-                        if (res.chatRooms.length === 0) {
-                            logger.info(`room ${game.gid} not exist, try to create one`);
-                            rongcloudSDK.chatroom.create({
-                                id: game.gid,
-                                name: game.name
-                            }, (err, retText) => {
-                                let ret = parseResult(err, retText);
-                                if (ret) {
-                                    logger.info("rongyun room " + game.gid + " added");
-                                    server.__games.push(game);
-                                    rc_resolve();
-                                } else {
-                                    rc_reject(err);
-                                }
-                            });
-                        } else {
-                            logger.info("rongyun room " + game.gid + " added");
-                            server.__games.push(game);
-                            rc_resolve();
-                        }
-                    }
-                });
-            });
-            let agora_promise = new Promise((agora_resovle, agora_reject) => {
-                let signal = new Signal(sig_appid);
-                // game.sig_session = signal.login(game.gid, sig_token.get(sig_appid, sig_appcert, game.gid, 1));
-                // game.sig_session = signal.login(game.gid, sig_calc_token);
-                game.sig_session = signal.login(game.gid, "_no_need_token");
-                game.sig_session.onLoginSuccess = function () {
-                    logger.info(`agora signal login successful ${game.gid}`);
-                    agora_resovle();
-                };
-                game.sig_session.onLoginFailed = function () {
-                    logger.error(`agora signal login failed ${game.gid}`);
-                    agora_reject("failed");
-                };
-            });
-
-
-            Promise.all([rc_promise, agora_promise]).then(_ => {
-                game.setLive(true);
-                logger.info(`game ${game.gid} is now live`);
+            let g = server.get(game.gid);
+            if (g) {
                 resolve();
-            }).catch(e => { });
+                return;
+            }
+
+            server.__games.push(game);
         });
     };
 
@@ -285,6 +230,68 @@ HQ.GameMaker = function () {
             return `${item.gid}` === `${gid}`;
         });
         return game.length > 0 ? game[0] : null;
+    };
+
+    this.init = () => {
+        return new Promise((resolve, reject) => {
+            let signal = new Signal(sig_appid);
+            server.sig = signal.login(cc_id, "_no_need_token");
+            server.sig.onLoginSuccess = function () {
+                logger.info(`agora cm login successful`);
+
+                server.sig.onMessageInstantReceive = (account, uid, msg) => {
+                    logger.info(`cm received msg: ${msg} ${uid} ${account}`);
+                    let json = JSON.parse(msg);
+                    let game = server.get(account);
+
+                    switch (json.type) {
+                        case "publish":
+                            if (!game) {
+                                server.sig.messageInstantSend(account, { type: "info", data: { err: "game not created yet" } })
+                                return;
+                            }
+                            game.publish(result => {
+                                logger.info(JSON.stringify(result));
+                                server.sig.messageInstantSend(game.gid, JSON.stringify({ type: "info", data: result }));
+                            });
+                            break;
+                        case "stopAnswer":
+                            if (!game) {
+                                server.sig.messageInstantSend(account, { type: "info", data: { err: "game not created yet" } })
+                                return;
+                            }
+                            if (game.open) {
+                                game.closeQuiz();
+                                server.sig.messageInstantSend(game.gid, JSON.stringify({ type: "info", data: { err: "game closed, waiting for summary info..." } }));
+                            } else {
+                                logger.info("try to stop a quiz which is already closed");
+                                server.sig.messageInstantSend(game.gid, JSON.stringify({ type: "info", data: { err: "try to stop a quiz which is already closed" } }));
+                            }
+                            break;
+                        case "reset":
+                            if (!game) {
+                                server.sig.messageInstantSend(account, { type: "info", data: { err: "game not created yet" } })
+                                return;
+                            }
+                            game.reset();
+                            server.sig.messageInstantSend(game.gid, JSON.stringify({ type: "info", data: {} }));
+                            break;
+                        case "RequestChannelName":
+                            QuizFactory.load("quiz-1").then(result => {
+                                server.add(new HQ.Game(account, "Test Game1", result)).catch(_ => { });
+                                logger.info(`game ${account} added`);
+                                server.sig.messageInstantSend(account, JSON.stringify({ type: "channel", data: account }));
+                            });
+                            break;
+                    }
+                };
+                resolve();
+            };
+            server.sig.onLoginFailed = function () {
+                logger.error(`agora cm login failed`);
+                reject("failed");
+            };
+        });
     };
 };
 
