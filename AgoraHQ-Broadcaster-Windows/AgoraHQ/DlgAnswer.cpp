@@ -78,8 +78,8 @@ BOOL CDlgAnswer::OnInitDialog()
 
 void CDlgAnswer::initCtrl()
 {
-	m_account = "10002";
-	m_serverAccount = "10001";
+	m_account = gHQConfig.getSignalAccount();
+	m_serverAccount = "agora_hq_cc_server";
 
 	m_btnUpdateQuestion.EnableWindow(FALSE);
 	m_btnStartAnswer.EnableWindow(FALSE);
@@ -243,6 +243,12 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(__FUNCTION__);
 	OutputDebugStringA("\r\n");
 
+	char cJsonStr[512] = { '\0' };
+	sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\"}");
+	OutputDebugStringA(cJsonStr);
+	OutputDebugStringA("\r\n");
+	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+
 	return TRUE;
 }
 
@@ -342,7 +348,15 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 		return FALSE;
 	}
 	std::string msgType((document["type"].GetString()));
-	if ("quiz" == msgType){
+	if ("channel" == msgType){
+		std::string channelName = document["data"].GetString();
+
+		LPAG_SIGNAL_NEWCHANNELNAME lpData = new  AG_SIGNAL_NEWCHANNELNAME;
+		lpData->account = m_account;
+		lpData->channelname = channelName;
+		::PostMessage(theApp.GetMainWnd()->m_hWnd, (WM_NewChannelName), (WPARAM)lpData, NULL);
+	}
+	else if ("quiz" == msgType){
 		tagQuestionAnswer answerTemp;
 		int questionId(document["data"]["id"].GetInt());
 		std::string strQuestion(document["data"]["question"].GetString());

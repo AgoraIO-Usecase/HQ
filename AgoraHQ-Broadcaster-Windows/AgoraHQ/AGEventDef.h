@@ -310,8 +310,15 @@ namespace SingleDesc
 		std::string strParam;
 	}AG_INPUTPARAM, *PAG_INPUTPARAM, *LPAG_INPUTPARAM;
 
+	typedef struct AGTagNewChannelName
+	{
+		std::string account;
+		std::string channelname;
+	}AG_SIGNAL_NEWCHANNELNAME, *PAG_SIGNAL_NEWCHANNELNAME, *LPAG_SIGNAL_NEWCHANNELNAME;
+
 #define 	WM_InviteReceived_ChannelName  (WM_BCCall_result + 1)
 #define WM_UpdateInputParam (WM_BCCall_result + 2)
+#define WM_NewChannelName (WM_BCCall_result + 3)
 
 	typedef struct AGTagStructReconnecting
 	{

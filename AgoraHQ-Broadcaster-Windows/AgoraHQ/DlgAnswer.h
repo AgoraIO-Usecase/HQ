@@ -59,6 +59,7 @@ protected:
 
 	void DrawClient();
 
+	int getChannelName();
 	void switchNewQuestion(const tagQuestionAnswer &newQuestion);
 	void notifyQuestionAnswerStatics(const tagQuestionStatics &QuestionStatics);
 

@@ -93,6 +93,7 @@ protected:
 #define INI_LoginInfo_VideoSolutionIndex					"VideoSolutinIndex"
 #define INI_LoginInfo_CameraDeviceId						"CameraDeviceID"
 #define INI_LoginInfo_CameraDeviceName				"CameraDeviceName"
+#define INI_LoginInfo_SignalAccount								"SignalAccount"
 
 #define INI_DeviceInfoFront												"DeviceInfoFront"
 #define INI_DeviceInfoBack												"DeviceInfoBack"
@@ -142,6 +143,7 @@ public:
 	__DECLARE_INICONFIG_FUN(VideoSolutinIndex)
 	__DECLARE_INICONFIG_FUN(CameraDeviceID)
 	__DECLARE_INICONFIG_FUN(CameraDeviceName)
+	__DECLARE_INICONFIG_FUN(SignalAccount)
 
 	__DECLARE_INICONFIG_SIMILAR_FUN(ProcessEnable)
 	__DECLARE_INICONFIG_SIMILAR_FUN(LoginUid)

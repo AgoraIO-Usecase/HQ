@@ -330,6 +330,7 @@ __IMPLEMENT_INICONFIG_FUN(CConfigHQ, LoginUid, INI_LoginInfo, INI_LoginInfo_Logi
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, VideoSolutinIndex, INI_LoginInfo, INI_LoginInfo_VideoSolutionIndex)
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, CameraDeviceID, INI_LoginInfo, INI_LoginInfo_CameraDeviceId)
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, CameraDeviceName, INI_LoginInfo, INI_LoginInfo_CameraDeviceName)
+__IMPLEMENT_INICONFIG_FUN(CConfigHQ, SignalAccount, INI_LoginInfo, INI_LoginInfo_SignalAccount)
 
 __IMPLEMENT_INICONFIG_SIMILAR_FUN(CConfigHQ, ProcessEnable, INI_PROCESSID_Enable)
 __IMPLEMENT_INICONFIG_SIMILAR_FUN(CConfigHQ, LoginUid, INI_LoginInfo_UID)
