@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import AgoraHQSigKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,7 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UIApplication.shared.statusBarStyle = .lightContent
         
-        RCIMClient.shared().initWithAppKey(KeyCenter.RCAppKey)
+        
+        
+//        RCIMClient.shared().initWithAppKey(KeyCenter.RCAppKey)
         
         return true
     }

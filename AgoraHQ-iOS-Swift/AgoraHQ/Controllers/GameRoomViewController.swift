@@ -8,6 +8,7 @@
 
 import UIKit
 import AgoraRtcEngineKit
+import AgoraHQSigKit
 
 class GameRoomViewController: UIViewController {
 
@@ -21,14 +22,15 @@ class GameRoomViewController: UIViewController {
     @IBOutlet weak var remoteContainerView: UIView!
     @IBOutlet weak var chatContainerView: UIView!
     
+    var channelName: String!
     var hostView: UIView?
-    var question: String! //= "Q1.jdklfasjfdaslk"
-    var answers = [String]() // ["dfsfasdf","dasfadsfas","fdsafasdf","dhaskfh"]//[String]()
-//    var s: NSDictionary = ["0": 20, "1": 24, "2": 30, "3": 20]
+    var question: String!
+    var answers = [String]()
     var result: NSDictionary!
     
     // AgoraEngine
     var rtcEngine: AgoraRtcEngineKit!
+    var agoraHQSigKit: AgoraHQSigKit!
     
     var questionView: QuestionView!
     var timer: Timer!
@@ -44,15 +46,22 @@ class GameRoomViewController: UIViewController {
     let geter = ServerHelper()
     let poster = ServerHelper()
     
+    var msgId = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if agoraHQSigKit == nil {
+            agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
+        }
+        agoraHQSigKit.delegate = self
         
         chatTableView.rowHeight = UITableViewAutomaticDimension
         chatTableView.estimatedRowHeight = 44
         addKeyboardObserver()
-        joinChannel()
-        joinRCChatRoom()
+        joinMediaChannel()
         addgradientLayer()
+        checkStatus()
     }
     
     // 设置消息view背景渐变
@@ -69,6 +78,10 @@ class GameRoomViewController: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    deinit {
+        print("===============deinit===================")
     }
     
     @IBAction func doBackPressed(_ sender: UIButton) {
@@ -90,7 +103,7 @@ class GameRoomViewController: UIViewController {
         
         poster.delegate = self
         let paramDic = ["uid": UserDefaults.standard.string(forKey: "RCUid")! ,
-                        "gid": RoomName.RCIMQuestionRoom]
+                        "gid": channelName!]
         poster.postAction(to: reliveUrl, with: paramDic)
     }
     
@@ -109,6 +122,7 @@ class GameRoomViewController: UIViewController {
         isAnswering = true
         let status = UserDefaults.standard.bool(forKey: "status")
         questionView = QuestionView.newQuestionView(with: qusetin)
+        questionView.channelName = self.channelName
         questionView.frame = CGRect(x: 20, y: 30, width: ScreenWidth - 40, height: CGFloat(160 + 50 * answers.count))
         questionView.setAnswers(answers, enable: status)
         questionView.layer.cornerRadius = 30
@@ -162,7 +176,7 @@ class GameRoomViewController: UIViewController {
     func checkStatus() {
         geter.delegate = self
         let paramDic = ["uid": UserDefaults.standard.string(forKey: "RCUid")! ,
-                        "gid": RoomName.RCIMQuestionRoom]
+                        "gid": channelName!]
         geter.getAction(to: getStatusUrl, with: paramDic)
     }
 }
@@ -173,15 +187,15 @@ extension GameRoomViewController {
         UIApplication.shared.isIdleTimerDisabled = !active
     }
     
-    func joinChannel() {
+    func joinMediaChannel() {
         rtcEngine = AgoraRtcEngineKit.sharedEngine(withAppId: KeyCenter.AppId, delegate: self)
         rtcEngine.setChannelProfile(.channelProfile_LiveBroadcasting)
         rtcEngine.setClientRole(.clientRole_Audience, withKey: nil)
         rtcEngine.enableVideo()
         
-        let key = KeyCenter.AppcertificateID.isEmpty ? nil : DynamicKey.generateMediaChannelKeyby(KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, channelName: RoomName.AgoraChannelName, uid: 0)
+        let key = KeyCenter.AppcertificateID.isEmpty ? nil : DynamicKey.generateMediaChannelKeyby(KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, channelName: channelName, uid: 0)
         
-        let code = rtcEngine.joinChannel(byKey: key, channelName: RoomName.AgoraChannelName, info: nil, uid: 0, joinSuccess: nil)
+        let code = rtcEngine.joinChannel(byKey: key, channelName: channelName, info: nil, uid: 0, joinSuccess: nil)
         
         if code == 0 {
             setIdleTimerActive(false)
@@ -191,19 +205,24 @@ extension GameRoomViewController {
         }
     }
     
+    func joinSigChannel() {
+        agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
+        agoraHQSigKit?.delegate = self
+        
+    }
+    
     func leaveChannel() {
         setIdleTimerActive(true)
         hostView?.removeFromSuperview()
         rtcEngine.leaveChannel(nil)
-        RCIMClient.shared().quitChatRoom(RoomName.RCIMQuestionRoom, success: nil, error: nil)
-//        RCIMClient.shared().quitChatRoom(RoomName.RCIMChatRoom, success: nil, error: nil)
+        agoraHQSigKit.logout()
     }
 }
 
 // MARK: - Agora Delegate
 extension GameRoomViewController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
-        print("=========================join agora channel success")
+        print("=========================join agora media channel success===============")
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
@@ -245,32 +264,19 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
     }
 }
 
-// MARK: -RCIMCLient
-extension GameRoomViewController {
-    func joinRCChatRoom() {
-        RCIMClient.shared().joinChatRoom(RoomName.RCIMQuestionRoom, messageCount: -1, success: {
-            print("======================Join chat room seccess: 10001=====================")
-            self.checkStatus()
-        }) { (status: RCErrorCode) in
-            AlertUtil.showAlert(message: "Join question room error :\(status.rawValue)")
-            print("error :\(status.rawValue)")
-        }
-//        RCIMClient.shared().joinChatRoom(RoomName.RCIMChatRoom, messageCount: -1, success: {
-//            print("======================Join chat room seccess: chatroom=====================")
-//        }) { (status: RCErrorCode) in
-//            AlertUtil.showAlert(message: "Join chat room error :\(status.rawValue)")
-//            print("error :\(status.rawValue)")
-//        }
-        RCIMClient.shared().setReceiveMessageDelegate(self, object: nil)
+// MARK: - AgoraHQSigDelegate
+extension GameRoomViewController: AgoraHQSigDelegate{
+    func agoraHQSigDidLoginSuccess(_ agoraHQSig: AgoraHQSigKit!) {
+        print("=========================join agora sig channel success===============")
     }
-}
-
-// MARK: -RCIMCLient Delegate
-extension GameRoomViewController: RCIMClientReceiveMessageDelegate {
-    func onReceived(_ message: RCMessage!, left nLeft: Int32, object: Any!) {
-        let testMessage = message.content as! RCTextMessage
-        print(testMessage.content)
-        let data = testMessage.content.data(using: String.Encoding.utf8)
+    
+    func agoraHQSig(_ agoraHQSi: AgoraHQSigKit!, didOccurError error: Error!) {
+        AlertUtil.showAlert(message: "Agora Sig error: \(error!)")
+    }
+    
+    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedChannelMessage channel: String!, message: String!, messageId: Int64) {
+        print(message!)
+        let data = message.data(using: String.Encoding.utf8)
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
             if jsonData["type"] as! String == "quiz" {
@@ -283,10 +289,7 @@ extension GameRoomViewController: RCIMClientReceiveMessageDelegate {
             } else if jsonData["type"] as! String == "result" {
                 print(jsonData)
                 self.result = jsonData["data"] as! NSDictionary
-                
-                DispatchQueue.main.sync(execute: {
-                    showResult(result: self.result)
-                })
+                showResult(result: self.result)
             } else if jsonData["type"] as! String == "chat" {
                 print(jsonData["data"] as! String)
                 let chatMsg = (jsonData["name"] as! String) + ": " + (jsonData["data"] as! String)
@@ -296,32 +299,16 @@ extension GameRoomViewController: RCIMClientReceiveMessageDelegate {
                 
                 msg.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
                 messageList.append(msg)
-                DispatchQueue.main.sync(execute: {
-                    updateChatView()
-                })
+                updateChatView()
             }
         } catch  {
             AlertUtil.showAlert(message: "Receive message error")
             print("Error: \(error)")
         }
-        
     }
     
-    func updateChatView() {
-        guard let tableView = chatTableView else {
-            return
-        }
+    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedMessageFromAccount account: String!, message: String!, messageId: Int64) {
         
-        tableView.beginUpdates()
-        if messageList.count > 100 {
-            messageList.removeFirst()
-            tableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-        }
-        let insertIndexPath = IndexPath(row: messageList.count - 1, section: 0)
-        tableView.insertRows(at: [insertIndexPath], with: .none)
-        tableView.endUpdates()
-        
-        tableView.scrollToRow(at: insertIndexPath, at: .bottom, animated: false)
     }
 }
 
@@ -359,32 +346,23 @@ extension GameRoomViewController: UITextFieldDelegate {
     // send chat message
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let message = chatMessgaeTestField.text else { return false }
-        
+
         let messageJson = "{\"type\":\"chat\",\"data\":\"\(message)\",\"name\":\"\(UserDefaults.standard.string(forKey: "name")!)\"}"
-        let content = RCTextMessage(content: messageJson)
-        RCIMClient.shared().sendMessage(.ConversationType_CHATROOM,
-                                        targetId: RoomName.RCIMQuestionRoom,
-                                        content: content,
-                                        pushContent: nil,
-                                        pushData: nil,
-                                        success: { (msgId: Int) in
-                                            let chatMsg = UserDefaults.standard.string(forKey: "name")! + ": " + message
-                                            let msg = NSMutableAttributedString(string: chatMsg)
-                                            let originalNSString = chatMsg as NSString
-                                            let nameRange = originalNSString.range(of: UserDefaults.standard.string(forKey: "name")!)
-                                            
-                                            msg.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
-                                            self.messageList.append(msg)
-                                            DispatchQueue.main.sync(execute: {
-                                                self.updateChatView()
-                                                self.chatMessgaeTestField.text = ""
-                                            })
-                                            
-                                            print("==============message send success=================")
-        }) { (error: RCErrorCode, msgId: Int) in
-            AlertUtil.showAlert(message: "message send error with ecode: \(error)")
-            print("==============message send error with ecode: \(error)=================")
-        }
+        agoraHQSigKit.sendChannelMessage(messageJson, messageId: Int64(self.msgId))
+        msgId += 1
+        
+        let chatMsg = UserDefaults.standard.string(forKey: "name")! + ": " + message
+        let msg = NSMutableAttributedString(string: chatMsg)
+        let originalNSString = chatMsg as NSString
+        let nameRange = originalNSString.range(of: UserDefaults.standard.string(forKey: "name")!)
+        
+        msg.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+        self.messageList.append(msg)
+        self.updateChatView()
+        self.chatMessgaeTestField.text = ""
+        
+        print("==============message send success=================")
+
         return true
     }
 }
@@ -400,6 +378,23 @@ extension GameRoomViewController: UITableViewDataSource {
         cell.messageLabel.attributedText = messageList[indexPath.row]
         
         return cell
+    }
+    
+    func updateChatView() {
+        guard let tableView = chatTableView else {
+            return
+        }
+        
+        tableView.beginUpdates()
+        if messageList.count > 100 {
+            messageList.removeFirst()
+            tableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+        }
+        let insertIndexPath = IndexPath(row: messageList.count - 1, section: 0)
+        tableView.insertRows(at: [insertIndexPath], with: .none)
+        tableView.endUpdates()
+        
+        tableView.scrollToRow(at: insertIndexPath, at: .bottom, animated: false)
     }
 }
 

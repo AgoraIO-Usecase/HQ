@@ -18,6 +18,7 @@ class QuestionView: UIView {
     @IBOutlet weak var questionLable: UILabel!
     @IBOutlet weak var answerTimeLabel: UILabel!
     
+    var channelName: String!
     var buttons = [UIButton]()
     var answerViews = [UIView]()
     var myAnswer: Int = -1
@@ -67,7 +68,7 @@ class QuestionView: UIView {
         button.superview?.backgroundColor = selectedColor
         let poster = ServerHelper()
         let paramDic = ["uid": UserDefaults.standard.string(forKey: "RCUid")!,
-                        "gid": "10001",
+                        "gid": channelName!,
                         "sid": Int(UserDefaults.standard.string(forKey: "sid")!)!,
                         "result": button.tag] as [String : Any]
         myAnswer = button.tag

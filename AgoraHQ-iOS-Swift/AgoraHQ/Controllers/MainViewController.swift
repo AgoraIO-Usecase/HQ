@@ -7,43 +7,82 @@
 //
 
 import UIKit
+import AgoraHQSigKit
 
 class MainViewController: UIViewController{
 
     @IBOutlet weak var beginButton: UIButton!
     @IBOutlet weak var uidLabel: UILabel!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var channelNameTextField: UITextField!
+    var userStatus = false
+    var agoraHQSigKit : AgoraHQSigKit!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        RCIMClient.shared().setRCConnectionStatusChangeDelegate(self)
-        loadRCIMClient()
+        
+        checkUserStatus()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if agoraHQSigKit == nil {
+            agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
+            
+            // 测试环境需要调用下面API设置测试服务器，如需上线不需要调用，请联系商务开通生产环境
+            agoraHQSigKit.dbg("lbss", b: "125.88.159.173")
+        }
+        agoraHQSigKit?.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func loadRCIMClient() {
-        var uid = UserDefaults.standard.string(forKey: "RCUid")
-        let token = UserDefaults.standard.string(forKey: "token")
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let segueId = segue.identifier else {
+            return
+        }
+        
+        switch segueId {
+        case "startgame":
+            let GameRoomVC = segue.destination as! GameRoomViewController
+            GameRoomVC.channelName = self.channelNameTextField.text
+            GameRoomVC.agoraHQSigKit = self.agoraHQSigKit
+        default:
+            return
+        }
+    }
+    
+    func checkUserStatus() {
+        var account = UserDefaults.standard.string(forKey: "account")
         var name = UserDefaults.standard.string(forKey: "name")
-        if uid == nil {
-            uid = UIDevice.current.identifierForVendor?.uuidString
-            UserDefaults.standard.set(uid!, forKey: "RCUid")
-            name = String(uid![uid!.startIndex..<uid!.index(uid!.startIndex, offsetBy: 6)])
+        if account == nil {
+            account = UIDevice.current.identifierForVendor?.uuidString
+            UserDefaults.standard.set(account!, forKey: "account")
+            name = String(account![account!.startIndex..<account!.index(account!.startIndex, offsetBy: 6)])
             UserDefaults.standard.set(name, forKey: "name")
         }
         if name == nil {
-            name = String(uid![uid!.startIndex..<uid!.index(uid!.startIndex, offsetBy: 6)])
+            name = String(account![account!.startIndex..<account!.index(account!.startIndex, offsetBy: 6)])
             UserDefaults.standard.set(name, forKey: "name")
         }
-        
-        if token != nil {
-            connectRCIM(withToken: token!)
-        } else {
-            requestToken()
-        }
+        userStatus = true
+        self.uidLabel.text = name!
+    }
+    
+    func compTokenBy(appID: String, certificate: String, account: String, expirtdTime: UInt32) -> String {
+        let sign = (account + appID + certificate + String(expirtdTime)).MD5()
+        return ("1:" + appID + ":" + String(expirtdTime) + ":" + sign)
+    }
+
+    @IBAction func doStartButtonPressed(_ sender: UIButton) {
+        let time = NSDate().timeIntervalSince1970 + 3600
+        let token = KeyCenter.AppcertificateID.isEmpty ? "_no_need_token" : compTokenBy(appID: KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, account: UserDefaults.standard.string(forKey: "account")!, expirtdTime: UInt32(time))
+        agoraHQSigKit.login(UserDefaults.standard.string(forKey: "account")!, token: token, channel: self.channelNameTextField.text)
     }
     
     @IBAction func showIntroduction(_ sender: UIButton) {
@@ -51,59 +90,30 @@ class MainViewController: UIViewController{
     }
     
     @IBAction func doLoginButtonPressed(_ sender: UIButton) {
-        loadRCIMClient()
-    }
-    
-    func connectRCIM(withToken token: String) {
-        RCIMClient.shared().connect(withToken: token, success: { (uid: String?) in
-            print("================join seccess \(uid!)=========")
-        } , error: { (status: RCConnectErrorCode) in
-            AlertUtil.showAlert(message: "RCloud Login Failed ecode: \(status.rawValue)")
-            print("RCloud Login Failed ecode: \(status.rawValue)")
-        }) {
-            AlertUtil.showAlert(message: "Token Wrong!")
-            print("token Wrong")
-            self.requestToken()
-        }
-    }
-    
-    func requestToken() {
-        let poster = ServerHelper()
-        poster.delegate = self
-        let paramDic = ["uid": UserDefaults.standard.string(forKey: "RCUid")!]
-        poster.postAction(to: tokenUrl, with: paramDic)
+        checkUserStatus()
     }
 }
 
-extension MainViewController: RCConnectionStatusChangeDelegate {
-    func onConnectionStatusChanged(_ status: RCConnectionStatus) {
-        if status.rawValue == 0 {
+// MARK: - AgoraHQSigDelegate
+extension MainViewController: AgoraHQSigDelegate{
+    func agoraHQSigDidLoginSuccess(_ agoraHQSig: AgoraHQSigKit!) {
+        print("=========================join agora sig channel success===============")
+        
+        self.performSegue(withIdentifier: "startgame", sender: self)
+    }
+    
+    func agoraHQSig(_ agoraHQSi: AgoraHQSigKit!, didOccurError error: Error!) {
+        AlertUtil.showAlert(message: "Agora Sig error: \(error!)")
+    }
+}
+
+extension MainViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if !string.isEmpty && userStatus {
             self.beginButton.isEnabled = true
-            self.uidLabel.text = UserDefaults.standard.string(forKey: "name")!
-            self.loginButton.isEnabled = false
         } else {
             self.beginButton.isEnabled = false
-            self.uidLabel.text = "Login"
-//            self.loginButton.isEnabled = true
         }
-    }
-}
-
-extension MainViewController: ServerHelperDelagate {
-    func serverHelper(_ serverHelper: ServerHelper, data: Data, error: Error?) {
-        do {
-            let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! NSDictionary
-            if let err = jsonData["err"] {
-                AlertUtil.showAlert(message: err as! String)
-                self.loginButton.isEnabled = true
-                print("===================Request token failed with: \(err)=======================")
-                return
-            }
-            let token: String = jsonData["token"] as! String
-            UserDefaults.standard.set(token, forKey: "token")
-            connectRCIM(withToken: token)
-        } catch  {
-            AlertUtil.showAlert(message: "Request token error!")
-        }
+        return true
     }
 }
