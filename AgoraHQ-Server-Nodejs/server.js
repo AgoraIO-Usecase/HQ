@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const http_server = require("http").Server(app);
 const logger = require("./modules/logger").get("hq");
 const HQ = require("./modules/HQ");
-const QuizFactory = require("./modules/QuizFactory");
 const cluster = require("cluster");
 const numCPUs = require("os").cpus().length;
 
@@ -43,18 +42,19 @@ if (cluster.isMaster) {
     const api = require("./modules/Api").master;
     initProcess(app);
     let maker = new HQ.GameMaker();
-    
-    api(maker, app);
-
-    QuizFactory.load("quiz-1").then(result => {
-        maker.add(new HQ.Game("10001", "Test Game1", result)).catch(_ => { });
-        logger.info(`Master cluster setting up ${numCPUs}`);
-
-        // for (var i = 0; i < numCPUs; i++) {
-        //     cluster.fork();
-        // }
+    let init = maker.init();
+    init.then(() => {
+        api(maker, app);
+        http_server.listen(9000);
+    }).catch((e) => {
+        logger.error(e);
     });
-    http_server.listen(8000);
+
+
+    // QuizFactory.load("quiz-1").then(result => {
+    //     maker.add(new HQ.Game("10001", "Test Game1", result)).catch(_ => { });
+    //     logger.info(`Master cluster setting up ${numCPUs}`);
+    // });
 } else {
     //cluster node
     // const api = require("./modules/Api").cluster;

@@ -403,3 +403,23 @@ CString getSdkLogPath()
 	
 	return strRet;
 }
+
+std::string getChannelName()
+{
+	int nNumMin = 1000000000;
+	int nNumMax = 9999999999;
+	int nNum = 0;
+
+	if ("" == gHQConfig.getChannelName()){
+
+		srand(time(NULL));
+		nNum = nNumMin + MAKELONG(rand(), rand()) % (nNumMax - nNumMin);
+		char logMsg[48] = { '\0' };
+		sprintf_s(logMsg, "LoginUID: %d\n", nNum);
+		OutputDebugStringA(logMsg);
+		gHQConfig.setChannelName(int2str(nNum));
+		gHQConfig.setSignalAccount(int2str(nNum));	
+	}
+
+	return (nNum > 0)?  int2str(nNum):"";
+}

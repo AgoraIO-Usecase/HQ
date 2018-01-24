@@ -51,6 +51,8 @@ public:
 	LRESULT onUserOff(WPARAM wParam, LPARAM lParam);
 	LRESULT onConnectionLost(WPARAM wParam, LPARAM lParam);
 
+	LRESULT onNewChannelName(WPARAM wParam, LPARAM lParam);
+
 protected:
 	void initCtrl();
 	void uninitCtrl();

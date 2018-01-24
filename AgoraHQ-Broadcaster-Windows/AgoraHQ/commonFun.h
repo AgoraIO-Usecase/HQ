@@ -46,5 +46,6 @@ bool registerStartUp();
 DWORD openProcess(const std::string &processName,const std::string &cmdLine);
 
 CString getSdkLogPath();
+std::string getChannelName();
 
 #endif

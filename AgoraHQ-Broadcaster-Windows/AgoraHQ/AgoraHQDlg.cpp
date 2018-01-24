@@ -88,6 +88,7 @@ BEGIN_MESSAGE_MAP(CAgoraHQDlg, CDialogEx)
 	ON_MESSAGE(WM_MSGID(EID_USER_JOINED), onUserJoined)
 	ON_MESSAGE(WM_MSGID(EID_USER_OFFLINE), onUserOff)
 	ON_MESSAGE(WM_MSGID(EID_CONNECTION_LOST), onConnectionLost)
+	ON_MESSAGE((WM_NewChannelName), onNewChannelName)
 END_MESSAGE_MAP()
 
 
@@ -125,6 +126,8 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化代码
 	SetBackgroundColor(RGB(0xff,0xff,0xff),TRUE);
 
+	gHQConfig.setAppId("363f97d9690e4c0a9780499ab14a16c0");
+	getChannelName();
 	m_strAppId = gHQConfig.getAppId();
 	if ("" == m_strAppId){
 		AfxMessageBox(_T("APPID 为空.请重新配置"));
@@ -451,9 +454,11 @@ LRESULT CAgoraHQDlg::onLastMileQuality(WPARAM wParam, LPARAM lParam)
 	case QUALITY_TYPE::QUALITY_EXCELLENT:
 	case QUALITY_TYPE::QUALITY_GOOD:
 	case QUALITY_TYPE::QUALITY_POOR:
+		if ("" !=m_strChannelName)
 		m_btnJoinChannel.EnableWindow(TRUE);
 		break;
 	default:
+		if ("" != m_strChannelName)
 		m_btnJoinChannel.EnableWindow(FALSE);
 		break;
 	}
@@ -483,5 +488,29 @@ LRESULT CAgoraHQDlg::onUserOff(WPARAM wParam, LPARAM lParam)
 
 LRESULT CAgoraHQDlg::onConnectionLost(WPARAM wParam, LPARAM lParam)
 {
+	return TRUE;
+}
+
+LRESULT CAgoraHQDlg::onNewChannelName(WPARAM wParam, LPARAM lParam)
+{
+	LPAG_SIGNAL_NEWCHANNELNAME lpData = (LPAG_SIGNAL_NEWCHANNELNAME)wParam;
+	if (lpData){
+
+		m_strChannelName = lpData->channelname;
+		if ("" != m_strChannelName){
+
+			gHQConfig.setChannelName(m_strChannelName);
+			gHQConfig.setSignalAccount(lpData->account);
+			if (m_nLastmileQuality == QUALITY_EXCELLENT ||
+				QUALITY_GOOD == m_nLastmileQuality ||
+				QUALITY_POOR == m_nLastmileQuality){
+
+				m_btnJoinChannel.EnableWindow(TRUE);
+			}
+		}
+	}
+
+	delete lpData; lpData = nullptr;
+
 	return TRUE;
 }
