@@ -30,10 +30,8 @@ let wrongColor = UIColor(hex: 0xFF0000, alpha: 0.8)
 
 let selectedColor = UIColor(hex: 0xff6600, alpha: 0.8)
 
-let tokenUrl = "http://123.155.153.87:8000/v1/token"
+let answerUrl = "http://123.155.153.87:9000/v1/answer"
 
-let answerUrl = "http://123.155.153.87:8000/v1/answer"
+let getStatusUrl = "http://123.155.153.87:9000/v1/canplay"
 
-let getStatusUrl = "http://123.155.153.87:8000/v1/canplay"
-
-let reliveUrl = "http://123.155.153.87:8000/v1/relive"
+let reliveUrl = "http://123.155.153.87:9000/v1/relive"
