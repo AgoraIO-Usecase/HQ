@@ -58,6 +58,7 @@ class GameRoomViewController: UIViewController {
         
         chatTableView.rowHeight = UITableViewAutomaticDimension
         chatTableView.estimatedRowHeight = 44
+        addTouchEventToTableView(chatTableView)
         addKeyboardObserver()
         joinMediaChannel()
         addgradientLayer()
@@ -396,6 +397,18 @@ extension GameRoomViewController: UITableViewDataSource {
         tableView.endUpdates()
         
         tableView.scrollToRow(at: insertIndexPath, at: .bottom, animated: false)
+    }
+    
+    func addTouchEventToTableView(_ tableView: UITableView) {
+        let tableViewGesture = UITapGestureRecognizer(target: self, action: #selector(tableViewTouchInSide))
+        tableViewGesture.numberOfTapsRequired = 1
+        tableViewGesture.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(tableViewGesture)
+    }
+    
+    @objc func tableViewTouchInSide() {
+        self.chatMessgaeTestField.resignFirstResponder()
+        inputContainerView.isHidden = true
     }
 }
 
