@@ -9,7 +9,12 @@ QuizFactory.load = function (name) {
                 reject(err);
             } else {
                 let json = JSON.parse(data.toString("utf8"));
-                resolve(json);
+                let parsed = QuizFactory.parse(json);
+                if(parsed.err){
+                    resolve([]);
+                } else {
+                    resolve(parsed.data);
+                }
             }
         });
     });

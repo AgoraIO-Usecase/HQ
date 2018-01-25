@@ -7,6 +7,7 @@ const logger = require("./modules/logger").get("hq");
 const HQ = require("./modules/HQ");
 const cluster = require("cluster");
 const numCPUs = require("os").cpus().length;
+const QuizFactory = require("./modules/QuizFactory")
 
 
 logger.info(`start in ${process.env.NODE_ENV} mode`);

@@ -213,10 +213,11 @@ HQ.GameMaker = function () {
     |   function : GameMaker
     \*----------------------------------------------*/
     this.add = function (game) {
-
         return new Promise((resolve, reject) => {
             let g = server.get(game.gid);
             if (g) {
+                g.quizSet = game.quizSet;
+                g.reset();
                 resolve();
                 return;
             }
@@ -243,6 +244,8 @@ HQ.GameMaker = function () {
                     logger.info(`cm received msg: ${msg} ${uid} ${account}`);
                     let json = JSON.parse(msg);
                     let game = server.get(account);
+                    let quiz = "quiz-1";
+                    let lang = 0;
 
                     switch (json.type) {
                         case "publish":
@@ -277,7 +280,9 @@ HQ.GameMaker = function () {
                             server.sig.messageInstantSend(game.gid, JSON.stringify({ type: "info", data: {} }));
                             break;
                         case "RequestChannelName":
-                            QuizFactory.load("quiz-1").then(result => {
+                            quiz = json.QuestionLanguage === "0" ? "quiz-2" : "quiz-1";
+                            logger.info(`using quiz set ${quiz}`);
+                            QuizFactory.load(quiz).then(result => {
                                 server.add(new HQ.Game(account, "Test Game1", result)).catch(_ => { });
                                 logger.info(`game ${account} added`);
                                 server.sig.messageInstantSend(account, JSON.stringify({ type: "channel", data: account }));
