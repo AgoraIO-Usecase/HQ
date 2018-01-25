@@ -780,7 +780,7 @@ public class GameActivity extends Activity {
 
         SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
         container.addView(surfaceView);
-        rtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
+        rtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
 
         surfaceView.setTag(uid); // for mark purpose
        /* View tipMsg = findViewById(R.id.quick_tips_when_use_agora_sdk); // optional UI
