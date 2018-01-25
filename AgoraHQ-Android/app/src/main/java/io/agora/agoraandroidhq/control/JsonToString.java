@@ -87,11 +87,12 @@ public class JsonToString {
         GameControl.logD("sendString  =  "+stringBuilder.toString());
 
         try {
-            return new String(stringBuilder.toString().getBytes("GBK"));
+            return new String(stringBuilder.toString().getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
         }
+       // return stringBuilder.toString();
     }
 
     public static String sendMessageSelf(String message) throws JSONException {

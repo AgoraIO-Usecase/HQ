@@ -88,7 +88,7 @@ public class AgoraSignal {
 
     private void loginAgoraSignal(String account) {
 
-        GameControl.logD("loginAgoraSignal");
+        GameControl.logD("loginAgoraSignal =  "+ account + "  channelName  "+ channelName);
         agoraHQSigSDK.login(account,channelName, token, new AgoraHQSigSDK.EventHandler() {
             @Override
             public void onLoginSuccess() {
@@ -129,6 +129,7 @@ public class AgoraSignal {
         GameControl.logD("sendChannelMessage  = " +message);
         if(agoraHQSigSDK!=null){
             GameControl.logD("sendChannelMessage  =");
+            GameControl.logD("agoraHQSigSDK  =  " + agoraHQSigSDK);
             agoraHQSigSDK.sendChannelMessage(GameControl.a++, message);
             if(selfMessage!=null) {
                 handlerEvent(io.agora.agoraandroidhq.tools.Constants.AGORA_SIGNAL_SEND, selfMessage);
@@ -137,8 +138,12 @@ public class AgoraSignal {
     }
 
     public void onLogoutSDKClick() {
+        GameControl.logD("onLogoutSDKClick  11 ");
         if (agoraHQSigSDK != null) {
             agoraHQSigSDK.logout();
+            agoraHQSigSDK = null;
+            agoraSignal = null;
+            GameControl.logD("onLogoutSDKClick  22");
         }
     }
 

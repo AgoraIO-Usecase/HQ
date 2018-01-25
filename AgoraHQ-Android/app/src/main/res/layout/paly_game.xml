@@ -97,15 +97,16 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="350dp"
+        android:layout_width="340dp"
         android:id="@+id/game_layout"
         android:layout_height="wrap_content"
         android:orientation="vertical"
 
-        android:layout_marginTop="40dp"
-        android:background="#aaa"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/question_layout"
         android:layout_gravity="center_horizontal">
         <TextView
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -119,10 +120,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:id="@+id/game_title"
+            android:textColor="@color/black"
             android:text="title"
-            android:layout_gravity="center_horizontal"
             android:gravity="center"/>
         <TextView
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -132,12 +134,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/question_layout"
+            android:layout_marginTop="15dp"
             android:orientation="vertical"></LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"></LinearLayout>
         <Button
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/submit_string"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:background="@drawable/submit_btn"
             android:id="@+id/submit_button"/>
     </LinearLayout>
 

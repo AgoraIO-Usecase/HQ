@@ -39,7 +39,7 @@ public class Constants {
     public static final int MESSAGE_TOAST = 10;
 
 
-    public static final String AGORA_APP_ID = #APPID;
+    public static final String AGORA_APP_ID = #APP_ID;
     public static final int LOGIN_AGORA_SIGNAL_SUCCESS = 100;
     public static final int LOGIN_AGORA_SIGNAL_FAIL = 101;
     public static final int AGORA_SIGNAL_RECEIVE = 102;
