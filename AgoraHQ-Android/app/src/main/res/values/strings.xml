@@ -12,10 +12,14 @@
     <string name="choose_success_message">选择成功</string>
     <string name="relive_message">复活</string>
     <string name="connect_net_error_or_server_error">网络连接失败或服务器连接失败</string>
-    <string name="Submit_message">提交</string>
+    <string name="submit_message">提交</string>
     <string name="relive_success_message">复活成功</string>
     <string name="fail_to_relive_message">复活失败</string>
     <string name="submit_string">提交</string>
     <string name="btn_send_message">发送</string>
+    <string name="token_incorrect_text">Token Incorrect</string>
+    <string name="login_agora_signal_fail">登陆失败</string>
+    <string name="login_agora_signal_success">登陆成功</string>
+
     <drawable name="button_press">#8888</drawable>
 </resources>

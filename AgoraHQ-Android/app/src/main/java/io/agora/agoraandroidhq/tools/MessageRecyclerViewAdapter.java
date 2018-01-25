@@ -2,9 +2,7 @@ package io.agora.agoraandroidhq.tools;
 
 import android.app.Activity;
 import android.content.Context;
-
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import io.agora.agoraandroidhq.R;
-import io.agora.agoraandroidhq.control.AgoraLinkToCloud;
 import io.agora.agoraandroidhq.module.Message;
 
 /**
@@ -56,8 +53,8 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         MessageHolder myHolder = (MessageHolder) holder;
         String sender = msg.getSender();
-        Log.d("zhang ","sender "+sender +"   currentUser  = "+AgoraLinkToCloud.currentUser.getName());
-        if (sender.equals(AgoraLinkToCloud.currentUser.getName().toString())) {
+        Log.d("zhang ","sender "+sender +"   currentUser  = "+ GameControl.currentUser.getName());
+        if (sender.equals(GameControl.currentUser.getName().toString())) {
             myHolder.itemView.setBackgroundResource(R.drawable.rounded_bg_blue);
             myHolder.msgContent.setText("[" + sender + "] " + msg.getContent());
             myHolder.msgContent.setAlpha(0.5f);
