@@ -7,35 +7,23 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
 import io.agora.agoraandroidhq.R;
-import io.agora.agoraandroidhq.control.AgoraLinkToCloud;
-import io.agora.agoraandroidhq.tools.Constants;
-import io.agora.agoraandroidhq.tools.HttpUrlUtils;
-import io.rong.imlib.RongIMClient;
-import io.rong.imlib.model.UserInfo;
+
 
 public class MainActivity extends Activity {
 
@@ -61,8 +49,11 @@ public class MainActivity extends Activity {
 
     private Button playGame;
     private ImageButton questionImage;
+    private EditText channelNameEditText;
+
 
     private void findButton() {
+        channelNameEditText = findViewById(R.id.channel_name_editText);
         questionImage = findViewById(R.id.image_question);
         questionImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,17 +96,37 @@ public class MainActivity extends Activity {
 
         playGame = findViewById(R.id.btnStartPlayGame);
 
-        playGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+       /* playGame.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
 
-                try {
+               *//* try {
                     playGame.setClickable(false);
                     loginAndConnect("yourid", "password", "http://yourImageUrl");
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*//*
+                                            // playGame.setClickable(false);
+
+                                        }}
+        );*/
+
+        playGame.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
                // playGame.setClickable(false);
+                String ChannelName = channelNameEditText.getText().toString();
+                if(TextUtils.isEmpty(ChannelName)){
+                    Toast.makeText(MainActivity.this,"Channel Name不能为空",Toast.LENGTH_SHORT).show();
+
+                }else{
+                    playGame.setClickable(false);
+                    Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                    intent.putExtra("ChannelName",ChannelName);
+                    startActivity(intent);
+                   // logD("onConnectSuccess");
+
+                }
             }
         });
     }
@@ -126,8 +137,8 @@ public class MainActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 200) {
-            Log.d("zhangpermission  " , grantResults[0]+"");
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d("zhangpermission  ", grantResults[0] + "");
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:400 632 6626"));
                 startActivity(intent);
             }
@@ -138,10 +149,10 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
-
     }
 
-    private void loginAndConnect(String id, String password, String url) throws JSONException {
+
+    /*private void loginAndConnect(String id, String password, String url) throws JSONException {
 
         final UserInfo userInfo = AgoraLinkToCloud.getLoginUser(id, password);
 
@@ -179,7 +190,14 @@ public class MainActivity extends Activity {
                 AgoraLinkToCloud.connect(token, new RongIMClient.ConnectCallback() {
                     @Override
                     public void onTokenIncorrect() {
-                        logD("onTokenIncorrect");
+                       // logD("onTokenIncorrect");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, R.string.token_incorrect_text,Toast.LENGTH_SHORT).show();
+                                playGame.setClickable(true);
+                            }
+                        });
                     }
 
                     @Override
@@ -201,8 +219,8 @@ public class MainActivity extends Activity {
                         playGame.setClickable(true);
                     }
                 });
-    /*}
-        });*/
+    *//*}
+        });*//*
             }
 
             private void logD(String message) {
@@ -210,5 +228,5 @@ public class MainActivity extends Activity {
                 Log.d("zhangHQ  ", message);
             }
         });
-    }
+    }*/
 }

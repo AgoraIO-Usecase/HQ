@@ -1,12 +1,7 @@
 package io.agora.agoraandroidhq.module;
 
-import android.net.Uri;
-import android.provider.Settings;
+import java.util.Random;
 
-import java.net.URI;
-import java.util.ArrayList;
-
-import io.rong.imlib.model.UserInfo;
 
 /**
  * Created by zhangtao on 2018/1/12.
@@ -14,26 +9,34 @@ import io.rong.imlib.model.UserInfo;
 
 public class User {
 
+    public   Random random = new Random();
     //public static String uid = "232894";
-    public static String uid = "2424252";
-    public static String name = "Test";
+    public  String account = "24"+random.nextInt(100);
+    public  String name = "Test" + random.nextInt(1000);
+    public String channelName;
 
     // public static String name = "Agora";
-    public static Uri portUri = Uri.parse("http://7xs9j5.com1.z0.glb.clouddn.com/liveapp/anlingrong.jpg");
+   // public static Uri portUri = Uri.parse("http://7xs9j5.com1.z0.glb.clouddn.com/liveapp/anlingrong.jpg");
 
-    public String password;
-    public String imageUrl;
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public String getAccount(){
+        return account;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+
+   public String getName(){
+        return name;
+   }
+
+
+
+
+    public void setChannelName(String channelName){
+        this.channelName = channelName;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public String getChannelName(){
+        return channelName;
     }
 
 }

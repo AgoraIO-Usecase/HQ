@@ -58,19 +58,35 @@
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/start_play_game"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_height="wrap_content">
 
-        android:textStyle="bold"
-        android:textColor="#de3"
-        android:textSize="20sp"
-        android:id="@+id/btnStartPlayGame"
-        android:layout_gravity="center"
-        android:alpha="0.4"
-        android:background="@drawable/button_select"/>
+        <EditText
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="Channel Name"
+            android:layout_gravity="bottom"
+            android:textSize="18sp"
+            android:id="@+id/channel_name_editText"/>
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/start_play_game"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="#de3"
+            android:textSize="20sp"
+            android:id="@+id/btnStartPlayGame"
+
+            android:alpha="0.4"
+            android:background="@drawable/button_select"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="350dp"

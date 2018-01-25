@@ -28,6 +28,7 @@ android {
 }
 
 dependencies {
+    compile project(path: ':agora-hq-sig-sdk')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:26.1.0'

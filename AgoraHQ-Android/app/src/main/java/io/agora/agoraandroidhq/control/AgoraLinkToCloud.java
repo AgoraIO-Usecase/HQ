@@ -1,32 +1,7 @@
 package io.agora.agoraandroidhq.control;
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
-import android.util.ArrayMap;
-import android.util.Log;
-
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import io.agora.agoraandroidhq.module.User;
-import io.agora.agoraandroidhq.tools.Constants;
-import io.agora.agoraandroidhq.tools.HttpUrlUtils;
-import io.rong.imlib.RongIMClient;
-import io.rong.imlib.model.Conversation;
-import io.rong.imlib.model.Message;
-import io.rong.imlib.model.MessageContent;
-import io.rong.imlib.model.UserInfo;
-
-import android.os.Handler;
 
 /**
  * Created by zhangtao on 2018/1/12.
@@ -36,9 +11,9 @@ import android.os.Handler;
 public class AgoraLinkToCloud {
 
 
-    //public static final ArrayMap<String, String> randomName;
+    /*//public static final ArrayMap<String, String> randomName;
     public static String currentRoomId;
-    public static UserInfo currentUser;
+  //  public static UserInfo currentUser;
 
     public static ArrayList<Handler> messageHandler = new ArrayList<Handler>();
 
@@ -95,10 +70,10 @@ public class AgoraLinkToCloud {
         String url = "http://123.155.153.87:8000/v1/canplay?gid=10001&uid=24324242";
 
 
-       /* HttpUrlUtils utils = new HttpUrlUtils();
+       *//* HttpUrlUtils utils = new HttpUrlUtils();
 
         utils.execHttpAsyncTask(url, false, callback, null);
-*/
+*//*
     }
 
     public static void checkRelive(HttpUrlUtils.OnResponse callback) throws JSONException {
@@ -172,7 +147,7 @@ public class AgoraLinkToCloud {
     }
 
 
-    public static UserInfo getLoginUser(String id, String password) {
+   *//* public static UserInfo getLoginUser(String id, String password) {
 
         long time = System.currentTimeMillis();
         //Random ran = new Random(time);
@@ -182,11 +157,11 @@ public class AgoraLinkToCloud {
         Uri imageUri = User.portUri;
 
         return new UserInfo(uid, name, imageUri);
-    }
+    }*//*
 
     private static void logD(String message) {
         Log.d("zhang   ", message);
     }
-
+*/
 
 }

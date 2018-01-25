@@ -1,9 +1,8 @@
 package io.agora.agoraandroidhq.view;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -27,8 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -42,15 +39,15 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Random;
 
 import io.agora.agoraandroidhq.R;
-import io.agora.agoraandroidhq.control.AgoraLinkToCloud;
+import io.agora.agoraandroidhq.control.AgoraSignal;
 import io.agora.agoraandroidhq.control.JsonToString;
 import io.agora.agoraandroidhq.module.Question;
 import io.agora.agoraandroidhq.module.Result;
+import io.agora.agoraandroidhq.module.User;
 import io.agora.agoraandroidhq.tools.Constants;
 import io.agora.agoraandroidhq.tools.GameControl;
 import io.agora.agoraandroidhq.tools.HttpUrlUtils;
@@ -59,9 +56,7 @@ import io.agora.agoraandroidhq.tools.MessageRecyclerViewAdapter;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
-import io.rong.imlib.RongIMClient;
-import io.rong.imlib.model.MessageContent;
-import io.rong.message.TextMessage;
+
 
 /**
  * Created by zhangtao on 2018/1/12.
@@ -78,10 +73,10 @@ public class GameActivity extends Activity {
         setContentView(R.layout.paly_game);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        findView();
 
-        joinChatRoom(Constants.chatRoom);
-        joinChatRoom(Constants.questionRoom);
+
+        //joinChatRoom(Constants.chatRoom);
+        //joinChatRoom(Constants.questionRoom);
         try {
             init();
         } catch (Exception e) {
@@ -92,37 +87,211 @@ public class GameActivity extends Activity {
     }
 
 
-    private void joinChatRoom(final String roomId) {
-        AgoraLinkToCloud.joinChatRoom(roomId, -1, new RongIMClient.OperationCallback() {
-            @Override
-            public void onSuccess() {
-                // Toast.makeText(GameActivity.this, "join room  " + roomId, Toast.LENGTH_SHORT).show();
-                if (roomId.equals(Constants.chatRoom)) {
+    private User getUser() {
 
+        User currentUser = new User();
+        String channelName = getChannelName();
+        currentUser.setChannelName(channelName);
+        GameControl.currentUser = currentUser;
 
-                } else if (roomId.equals(Constants.questionRoom)) {
-
-                }
-            }
-
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
-
-            }
-        });
+        return currentUser;
     }
 
     private void init() throws Exception {
-
-        AgoraLinkToCloud.addEventHandler(handler);
+        loginAgoraSignal();
+        GameControl.logD("init");
+        findView();
+        //AgoraLinkToCloud.addEventHandler(handler);
         //joinChannel();
-        checkSelfPermissions();
+
         initQuestionLayout();
 
-        startCheckWheatherCanPlay();
+        //startCheckWheatherCanPlay();
 
         GameControl.controlCheckThread = true;
+
+        getUser();
+
+
+        checkSelfPermissions();
     }
+
+    private String getAccount() {
+
+
+        String uid = Constants.UID.toString() + new Random().nextInt(100000);
+        GameControl.logD("getAccount = " + uid);
+        return uid;
+    }
+
+    private String getChannelName() {
+        Intent intent = getIntent();
+        String channelName = intent.getStringExtra("ChannelName");
+        GameControl.logD("getChannelName  = " + channelName);
+        return channelName;
+    }
+
+
+    private AgoraSignal agoraSignal;
+
+    private void loginAgoraSignal() {
+
+        agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
+        agoraSignal.addEventHandler(agoraHandler);
+        agoraSignal.login();
+
+    }
+
+
+    private Handler agoraHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case Constants.LOGIN_AGORA_SIGNAL_FAIL:
+                    GameControl.logD("LOGIN_AGORA_SIGNAL_FAIL");
+                    toastHelper(getString(R.string.login_agora_signal_fail));
+                    //finish();
+                    agoraSignal.login();
+                    break;
+                case Constants.LOGIN_AGORA_SIGNAL_SUCCESS:
+                    GameControl.logD("LOGIN_AGORA_SIGNAL_SUCCESS");
+                    toastHelper(getString(R.string.login_agora_signal_success));
+
+                    break;
+
+                case Constants.AGORA_SIGNAL_RECEIVE:
+
+
+                    String mess = (String) msg.obj;
+                    Object jsonObject = null;
+                    try {
+                        jsonObject = JsonToString.jsonToString(mess);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    GameControl.logD("AGORA_SIGNAL_RECEIVE   =  " + mess);
+                    switch (JsonToString.strinType) {
+
+                        case "chat":
+                            io.agora.agoraandroidhq.module.Message message = (io.agora.agoraandroidhq.module.Message) jsonObject;
+                            messageRecyclerViewAdapter.updateData(message);
+                            recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
+
+                            break;
+
+                        case "result":
+                            Result result = (Result) jsonObject;
+
+                            int correct = result.correct;
+                            int res = result.result;
+                            if (GameControl.currentQuestion != null) {
+                                if (correct == 0) {
+                                    time_reduce.setText(getString(R.string.answer_error_message) + res);
+
+                                    time_reduce.setTextColor(Color.RED);
+                                    time_reduce.setVisibility(View.VISIBLE);
+                                    //game_title.setVisibility(View.INVISIBLE);
+                                    GameControl.clientWheatherCanPlay = false;
+                                } else {
+                                    time_reduce.setText(R.string.answer_correct_message);
+                                    time_reduce.setTextColor(Color.RED);
+                                    time_reduce.setVisibility(View.VISIBLE);
+                                    //game_title.setVisibility(View.INVISIBLE);
+                                    GameControl.clientWheatherCanPlay = true;
+                                }
+                                questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
+                                //time_reduce.setVisibility(View.INVISIBLE);
+                                game_layout.setVisibility(View.VISIBLE);
+                                submit_btn.setVisibility(View.GONE);
+                            }
+
+                            logD(" Serverwheather " + GameControl.serverWheatherCanPlay + "  " + "ClientServer  " + GameControl.clientWheatherCanPlay);
+
+                            break;
+
+
+                        case "quiz":
+/*
+                            try {
+                                checkWheatherCanPlay();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }*/
+                            Question question = (Question) jsonObject;
+                            ;
+
+                            /*if (GameControl.clientWheatherCanPlay && GameControl.serverWheatherCanPlay) {
+
+                                showquestionView(question);
+
+                            }*/
+                            if (question != null) {
+
+                                GameControl.setCurrentQuestion(question);
+                            }
+
+                            logD("quiz   showQuestion");
+                            //showQuestion();
+                            //showquestionView(GameControl.currentQuestion);
+                            break;
+
+                    }
+                    break;
+
+                case Constants.AGORA_SIGNAL_SEND:
+                    // TextMessage sendContent = (TextMessage) msg.obj;
+
+                    // String sendName = sendContent.getUserInfo().getUserId();
+                    // String messge = sendContent.getContent();
+                    //logD("handleMessage   = " + messge);
+
+                    String sendMessage = (String) msg.obj;
+                    GameControl.logD("sendMessage  = " + sendMessage);
+                    io.agora.agoraandroidhq.module.Message jsonObjects = null;
+                    try {
+                        jsonObjects = (io.agora.agoraandroidhq.module.Message) JsonToString.jsonToString(sendMessage);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    GameControl.logD("sendMessage  sendName  sendContent " + jsonObjects.getContent() + "   " + jsonObjects.getSender());
+                    String sendName = jsonObjects.getSender();
+
+                    String content = jsonObjects.getContent();
+                    GameControl.logD("sendMessage = ");
+                    io.agora.agoraandroidhq.module.Message message = new io.agora.agoraandroidhq.module.Message(sendName, content);
+                    messageRecyclerViewAdapter.updateData(message);
+
+
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
+                    break;
+
+                case Constants.MESSAGE_SEND_ERROR:
+                    //TODO
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    };
+
+
+    private void toastHelper(String message) {
+        Toast.makeText(GameActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void logD(String message) {
+        Log.d("zhangHQ", message + "");
+    }
+
 
     private void startCheckWheatherCanPlay() {
         new Thread() {
@@ -130,7 +299,7 @@ public class GameActivity extends Activity {
             public void run() {
                 super.run();
                 while (GameControl.controlCheckThread) {
-
+                    GameControl.logD("startCheckWheatherCanPalyThread");
                     try {
                         Thread.sleep(15000);
                     } catch (InterruptedException e) {
@@ -225,17 +394,28 @@ public class GameActivity extends Activity {
 
                 try {
                     messageString = JsonToString.sendMessageString(message);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                logD("messageString  =  " + messageString);
+                String selfMessage = null;
+                try {
+                    selfMessage = JsonToString.sendMessageSelf(message);
+                } catch (JSONException e) {
+
+                }
+
+                GameControl.logD("messageSend  =  " + messageString);
+
                 if (TextUtils.isEmpty(message)) {
                     Toast.makeText(GameActivity.this, "content can not be null", Toast.LENGTH_SHORT).show();
                 } else {
-                    TextMessage content = TextMessage.obtain(messageString);
-                    AgoraLinkToCloud.sendMessage(content, Constants.questionRoom);
-                    logD("sendMessage   " + messageString);
+                    /*TextMessage content = TextMessage.obtain(messageString);
+                    AgoraLinkToCloud.sendMessage(content, Constants.questionRoom);*/
+                    if (agoraSignal != null) {
+                        agoraSignal.sendChannelMessage(messageString, selfMessage);
+                    }
                 }
             }
         });
@@ -271,140 +451,12 @@ public class GameActivity extends Activity {
     }
 
 
-    @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            // TextMessage content = (TextMessage) msg.obj;
-            // String roomId = content.getUserInfo()
-
-
-            switch (msg.what) {
-                case Constants.MESSAGE_RECEIVE:
-                    //TODO
-                    io.rong.imlib.model.Message receiveContent = (io.rong.imlib.model.Message) msg.obj;
-                    TextMessage textMessage = (TextMessage) receiveContent.getContent();
-                    String s = textMessage.getContent();
-                    logD("handleMessage Receive  getObjectName =" + receiveContent.getObjectName() + "  getSenderUserId = " + receiveContent.getSenderUserId() + "  getContent = " + s);
-                    Object jsonObject = null;
-                    try {
-                        jsonObject = JsonToString.jsonToString(s);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    switch (JsonToString.strinType) {
-
-                        case "chat":
-                            io.agora.agoraandroidhq.module.Message message = (io.agora.agoraandroidhq.module.Message) jsonObject;
-                            messageRecyclerViewAdapter.updateData(message);
-                            recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
-
-                            break;
-
-                        case "result":
-                            Result result = (Result) jsonObject;
-
-                            int correct = result.correct;
-                            int res = result.result;
-                            if (GameControl.currentQuestion != null) {
-                                if (correct == 0) {
-                                    time_reduce.setText(getString(R.string.answer_error_message) + res);
-
-                                    time_reduce.setTextColor(Color.RED);
-                                    time_reduce.setVisibility(View.VISIBLE);
-                                    //game_title.setVisibility(View.INVISIBLE);
-                                    GameControl.clientWheatherCanPlay = false;
-                                } else {
-                                    time_reduce.setText(R.string.answer_correct_message);
-                                    time_reduce.setTextColor(Color.RED);
-                                    time_reduce.setVisibility(View.VISIBLE);
-                                    //game_title.setVisibility(View.INVISIBLE);
-                                    GameControl.clientWheatherCanPlay = true;
-                                }
-                                questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
-                                //time_reduce.setVisibility(View.INVISIBLE);
-                                game_layout.setVisibility(View.VISIBLE);
-                                submit_btn.setVisibility(View.GONE);
-                            }
-
-                            logD(" Serverwheather " + GameControl.serverWheatherCanPlay + "  " + "ClientServer  " + GameControl.clientWheatherCanPlay);
-
-                            break;
-
-
-                        case "quiz":
-/*
-                            try {
-                                checkWheatherCanPlay();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }*/
-                            Question question = (Question) jsonObject;
-                            ;
-
-                            /*if (GameControl.clientWheatherCanPlay && GameControl.serverWheatherCanPlay) {
-
-                                showquestionView(question);
-
-                            }*/
-                            if (question != null) {
-
-                                GameControl.setCurrentQuestion(question);
-                            }
-
-                            logD("quiz   showQuestion");
-                            //showQuestion();
-                            //showquestionView(GameControl.currentQuestion);
-                            break;
-
-                    }
-                    break;
-
-                case Constants.MESSAGE_SEND:
-                    TextMessage sendContent = (TextMessage) msg.obj;
-
-                    String sendName = sendContent.getUserInfo().getUserId();
-                    String messge = sendContent.getContent();
-                    logD("handleMessage   = " + messge);
-
-                    io.agora.agoraandroidhq.module.Message message = new io.agora.agoraandroidhq.module.Message(sendName, messge);
-                    messageRecyclerViewAdapter.updateData(message);
-
-
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
-                    break;
-
-                case Constants.MESSAGE_SEND_ERROR:
-                    //TODO
-                    break;
-                default:
-                    break;
-            }
-
-
-            //TODO
-        }
-    };
-
-
-    private void logD(String message) {
-        Log.d("zhangHQ", message + "");
-    }
-
     private void checkWheatherCanPlay() throws JSONException {
-        AgoraLinkToCloud.checkWheatherCanPlay(new HttpUrlUtils.OnResponse() {
+        AgoraSignal.checkWheatherCanPlay(new HttpUrlUtils.OnResponse() {
             @Override
             public void onResponse(String data) throws JSONException {
-                logD(data);
+                //logD(data);
+
                 if (data.equals(Constants.MESSAGE_TOAST)) {
                     return;
                 }
@@ -426,37 +478,11 @@ public class GameActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-        for (int i = 0; i < AgoraLinkToCloud.messageHandler.size(); i++) {
-
-            AgoraLinkToCloud.removeEventHandler(AgoraLinkToCloud.messageHandler.get(i));
-
-        }
 
         GameControl.controlCheckThread = false;
 
-        AgoraLinkToCloud.quitChatRoom(new RongIMClient.OperationCallback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(GameActivity.this, R.string.logout_success_message, Toast.LENGTH_SHORT).show();
-            }
+        agoraSignal.removeEnventHandler();
 
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
-
-            }
-        }, Constants.questionRoom);
-
-        AgoraLinkToCloud.quitChatRoom(new RongIMClient.OperationCallback() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
-
-            }
-        }, Constants.chatRoom);
 
         leaveChannel();
 
@@ -469,7 +495,8 @@ public class GameActivity extends Activity {
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() { // Tutorial Step 1
         @Override
         public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) { // Tutorial Step 5
-            logD("onFirstRemoteVideoDecode");
+            // logD("onFirstRemoteVideoDecode");
+            GameControl.logD("onFirstRemoteVideoDecoded");
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -488,10 +515,13 @@ public class GameActivity extends Activity {
                     onRemoteUserLeft();
                 }
             });
+            GameControl.logD("onUserOffline");
         }
 
         @Override
         public void onUserMuteVideo(final int uid, final boolean muted) { // Tutorial Step 10
+
+            GameControl.logD("onUserMuteVideo");
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -502,6 +532,7 @@ public class GameActivity extends Activity {
 
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+            GameControl.logD("onJoinChannelSuccess");
             super.onJoinChannelSuccess(channel, uid, elapsed);
             logD("onJOinChannelSuccess");
         }
@@ -509,9 +540,8 @@ public class GameActivity extends Activity {
         @Override
         public void onReceiveSEI(String info) {
             super.onReceiveSEI(info);
+            GameControl.logD("onReceiveSEI  = " + info);
 
-            logD("onReceiveSEI" + info);
-            logD("length " + info.length());
             JSONObject jsonObject = null;
             int sid = -1;
             if (info != null) {
@@ -713,7 +743,6 @@ public class GameActivity extends Activity {
         initAgoraEngine();
         setupVideoProfile();
         //joinChannel();
-
     }
 
     // Tutorial Step 2
@@ -736,7 +765,8 @@ public class GameActivity extends Activity {
         rtcEngine = RtcEngine.create(getBaseContext(), Constants.AGORA_APP_ID, mRtcEventHandler);
         rtcEngine.setChannelProfile(io.agora.rtc.Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
         rtcEngine.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_AUDIENCE, null);
-        rtcEngine.joinChannel(null, Constants.agoraChannelName, "Extra Optional Data", Integer.parseInt(Constants.UID)); // if you do not specify the uid, we will generate the uid for you
+        GameControl.logD("channelName   account  = " + GameControl.currentUser.channelName + "   " + GameControl.currentUser.account);
+        rtcEngine.joinChannel(null, GameControl.currentUser.channelName, "Extra Optional Data", Integer.parseInt(Constants.UID)); // if you do not specify the uid, we will generate the uid for you
     }
 
 
@@ -868,12 +898,12 @@ public class GameActivity extends Activity {
         //  Toast.makeText(GameActivity.this, builder.toString(), Toast.LENGTH_SHORT).show();
 
         try {
-            AgoraLinkToCloud.sendAnswerToserver(GameControl.currentQuestion.getId(), a, new HttpUrlUtils.OnResponse() {
+            AgoraSignal.sendAnswerToserver(GameControl.currentQuestion.getId(), a, new HttpUrlUtils.OnResponse() {
                 @Override
                 public void onResponse(String data) {
 
-                    logD("sendAnswerToserver   = " + data);
-
+                    // logD("sendAnswerToserver   = " + data);
+                    GameControl.logD("sendAnswer OnResponse  =  " + data);
                 }
             });
         } catch (JSONException e) {
@@ -965,19 +995,19 @@ public class GameActivity extends Activity {
     }
 
     private void buttonToRelive() throws JSONException {
-        AgoraLinkToCloud.checkRelive(new HttpUrlUtils.OnResponse() {
+        AgoraSignal.checkRelive(new HttpUrlUtils.OnResponse() {
             @Override
             public void onResponse(String data) throws JSONException {
-                logD("checkWheatherCanPlay -------------");
+                // logD("checkWheatherCanPlay -------------");
 
-                logD(data + "");
-
+                //logD(data + "");
+                GameControl.logD("reliveButton  onResponse =  " + data);
                 if (data.equals(Constants.MESSAGE_TOAST)) {
                     System.out.println(Toast.makeText(GameActivity.this, R.string.connect_net_error_or_server_error, Toast.LENGTH_SHORT));
                 }
 
                 if (data.equals("{}")) {
-                    logD("checkWheatherCanPlay");
+                    // logD("checkWheatherCanPlay");
                     GameControl.serverWheatherCanPlay = true;
                     GameControl.clientWheatherCanPlay = true;
 
@@ -998,7 +1028,6 @@ public class GameActivity extends Activity {
             }
         });
     }
-
 
     /*private Handler handler = new Handler(){
         @Override
