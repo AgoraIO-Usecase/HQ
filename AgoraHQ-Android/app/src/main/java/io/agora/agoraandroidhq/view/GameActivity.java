@@ -482,7 +482,7 @@ public class GameActivity extends Activity {
         GameControl.controlCheckThread = false;
 
         agoraSignal.removeEnventHandler();
-
+        agoraSignal.onLogoutSDKClick();
 
         leaveChannel();
 
