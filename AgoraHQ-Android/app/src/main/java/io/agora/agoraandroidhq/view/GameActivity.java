@@ -107,7 +107,7 @@ public class GameActivity extends Activity {
 
         initQuestionLayout();
 
-        startCheckWheatherCanPlay();
+        //startCheckWheatherCanPlay();
        // checkWheatherCanPlay();
         GameControl.controlCheckThread = true;
 
@@ -248,11 +248,15 @@ public class GameActivity extends Activity {
                                 GameControl.setCurrentQuestion(question);
                             }
 
-                            logD("quiz   showQuestion");
+                            logD("quiz   showQuestion" +isFirst);
                             //showQuestion();
                             //showquestionView(GameControl.currentQuestion);
                             try {
-                                checkWheatherCanPlay();
+                                if(! isFirst) {
+                                    checkWheatherCanPlay();
+
+                                    isFirst =false;
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -329,7 +333,11 @@ public class GameActivity extends Activity {
                     GameControl.logD("startCheckWheatherCanPalyThread");
 
                     try {
-                        checkWheatherCanPlay();
+                        if(isFirst) {
+                            checkWheatherCanPlay();
+
+                            isFirst =false;
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -486,7 +494,7 @@ public class GameActivity extends Activity {
                     return;
                 }
 
-                isFirst = false;
+               // isFirst = false;
 
                 if (data != null) {
                     JSONObject object = new JSONObject(data);
