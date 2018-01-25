@@ -136,7 +136,7 @@ public class AgoraSignal {
         }
     }
 
-    public void onLogoutSDKClick(View view) {
+    public void onLogoutSDKClick() {
         if (agoraHQSigSDK != null) {
             agoraHQSigSDK.logout();
         }
