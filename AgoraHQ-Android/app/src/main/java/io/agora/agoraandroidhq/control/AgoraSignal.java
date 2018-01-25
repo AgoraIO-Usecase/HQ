@@ -195,9 +195,9 @@ public class AgoraSignal {
        // String url = "http://123.155.153.87:8000/v1/canplay?gid=10001&uid=24324242";
         String url = "http://123.155.153.87:9000/v1/canplay?gid="+GameControl.currentUser.channelName+"&uid="+GameControl.currentUser.account;
         GameControl.logD("checkWheatherCanPlay  =  "+ url);
-       /* HttpUrlUtils utils = new HttpUrlUtils();
+       HttpUrlUtils utils = new HttpUrlUtils();
 
         utils.execHttpAsyncTask(url, false, callback, null);
-*/
+
     }
 }

@@ -65,6 +65,7 @@ import io.agora.rtc.video.VideoCanvas;
 public class GameActivity extends Activity {
 
 
+    private boolean isFirst = true;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +107,8 @@ public class GameActivity extends Activity {
 
         initQuestionLayout();
 
-        //startCheckWheatherCanPlay();
-
+        startCheckWheatherCanPlay();
+       // checkWheatherCanPlay();
         GameControl.controlCheckThread = true;
 
         getUser();
@@ -185,37 +186,42 @@ public class GameActivity extends Activity {
 
                             int correct = result.correct;
                             int res = result.result;
-                            if (GameControl.currentQuestion != null) {
-                                if (correct == 0) {
-                                    int answer = res + 1;
-                                    time_reduce.setText(getString(R.string.answer_error_message) + "  " + answer);
 
-                                    time_reduce.setTextColor(Color.RED);
-                                    time_reduce.setVisibility(View.VISIBLE);
-                                    //game_title.setVisibility(View.INVISIBLE);
-                                    GameControl.clientWheatherCanPlay = false;
 
-                                    if (questionTime != 0 && (questionTime != 10)) {
-                                        questionTime = 0;
+
+
+                                if (GameControl.currentQuestion != null) {
+                                    GameControl.logD("GameControl.currentQues = " + GameControl.currentQuestion.toString());
+                                    if (correct == 0) {
+                                        int answer = res + 1;
+                                        time_reduce.setText(getString(R.string.answer_error_message) + "  " + answer);
+
+                                        time_reduce.setTextColor(Color.RED);
+                                        time_reduce.setVisibility(View.VISIBLE);
+                                        //game_title.setVisibility(View.INVISIBLE);
+                                        GameControl.clientWheatherCanPlay = false;
+
+                                        if (questionTime != 0 && (questionTime != 10)) {
+                                            questionTime = 0;
+                                        }
+
+                                    } else {
+                                        time_reduce.setText(R.string.answer_correct_message);
+                                        time_reduce.setTextColor(Color.RED);
+                                        time_reduce.setVisibility(View.VISIBLE);
+                                        //game_title.setVisibility(View.INVISIBLE);
+                                        GameControl.clientWheatherCanPlay = true;
+
+                                        if (questionTime != 0 && (questionTime != 10)) {
+                                            questionTime = 0;
+                                        }
                                     }
 
-                                } else {
-                                    time_reduce.setText(R.string.answer_correct_message);
-                                    time_reduce.setTextColor(Color.RED);
-                                    time_reduce.setVisibility(View.VISIBLE);
-                                    //game_title.setVisibility(View.INVISIBLE);
-                                    GameControl.clientWheatherCanPlay = true;
-
-                                    if (questionTime != 0 && (questionTime != 10)) {
-                                        questionTime = 0;
-                                    }
+                                    questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
+                                    //time_reduce.setVisibility(View.INVISIBLE);
+                                    game_layout.setVisibility(View.VISIBLE);
+                                    submit_btn.setVisibility(View.GONE);
                                 }
-
-                                questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
-                                //time_reduce.setVisibility(View.INVISIBLE);
-                                game_layout.setVisibility(View.VISIBLE);
-                                submit_btn.setVisibility(View.GONE);
-                            }
 
                             logD(" Serverwheather " + GameControl.serverWheatherCanPlay + "  " + "ClientServer  " + GameControl.clientWheatherCanPlay);
 
@@ -245,6 +251,11 @@ public class GameActivity extends Activity {
                             logD("quiz   showQuestion");
                             //showQuestion();
                             //showquestionView(GameControl.currentQuestion);
+                            try {
+                                checkWheatherCanPlay();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             break;
 
                     }
@@ -304,25 +315,28 @@ public class GameActivity extends Activity {
     }
 
 
-    private void startCheckWheatherCanPlay() {
+   private void startCheckWheatherCanPlay() {
         new Thread() {
             @Override
             public void run() {
                 super.run();
-                while (GameControl.controlCheckThread) {
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                     GameControl.logD("startCheckWheatherCanPalyThread");
-                    try {
-                        Thread.sleep(15000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
                     try {
                         checkWheatherCanPlay();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+
                 }
-            }
+
         }.start();
     }
 
@@ -472,6 +486,8 @@ public class GameActivity extends Activity {
                     return;
                 }
 
+                isFirst = false;
+
                 if (data != null) {
                     JSONObject object = new JSONObject(data);
                     boolean wheatherCanPlay = object.getBoolean("result");
@@ -491,7 +507,8 @@ public class GameActivity extends Activity {
 
         GameControl.logD("GameActivityDestory");
         GameControl.controlCheckThread = false;
-
+        GameControl.currentQuestion = null;
+        questionFlag = false;
         agoraSignal.removeEnventHandler();
         agoraSignal.onLogoutSDKClick();
 
@@ -588,11 +605,11 @@ public class GameActivity extends Activity {
                 case 0:
                     int questime = (int) msg.obj;
                     logD("questionTime  = " + questime);
-                    /*if(questime<0){
+                    if(questime<0){
 
                         questionTime = 10;
                         return;
-                    }*/
+                    }
 
                     time_reduce.setText(questime + " s");
 
