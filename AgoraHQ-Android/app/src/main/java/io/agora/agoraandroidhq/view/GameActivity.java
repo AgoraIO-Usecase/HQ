@@ -187,14 +187,15 @@ public class GameActivity extends Activity {
                             int correct = result.correct;
                             int res = result.result;
 
+                            if (GameControl.currentQuestion != null) {
+                                GameControl.logD("GameControl.currentQues = " + GameControl.currentQuestion.toString());
+                                GameControl.logD("result  showHighLightCheckBox  =  " + checkBox_item.size());
+                                   /* setCheckBoxBackHighLight(res);
+*/
 
-
-
-                                if (GameControl.currentQuestion != null) {
-                                    GameControl.logD("GameControl.currentQues = " + GameControl.currentQuestion.toString());
-                                    if (correct == 0) {
-                                        int answer = res + 1;
-                                        time_reduce.setText(getString(R.string.answer_error_message) + "  " + answer);
+                                if (correct == 0) {
+                                    int answer = res + 1;
+                                    time_reduce.setText(getString(R.string.answer_error_message) + "  " + answer);
 
                                         time_reduce.setTextColor(Color.RED);
                                         time_reduce.setVisibility(View.VISIBLE);
@@ -217,11 +218,12 @@ public class GameActivity extends Activity {
                                         }
                                     }
 
-                                    questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
-                                    //time_reduce.setVisibility(View.INVISIBLE);
-                                    game_layout.setVisibility(View.VISIBLE);
-                                    submit_btn.setVisibility(View.GONE);
-                                }
+                                questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
+                                //time_reduce.setVisibility(View.INVISIBLE);
+                                game_layout.setVisibility(View.VISIBLE);
+                                submit_btn.setVisibility(View.GONE);
+                                getCorrectCheckBox(res);
+                            }
 
                             logD(" Serverwheather " + GameControl.serverWheatherCanPlay + "  " + "ClientServer  " + GameControl.clientWheatherCanPlay);
 
@@ -612,8 +614,9 @@ public class GameActivity extends Activity {
             switch (msg.what) {
                 case 0:
                     int questime = (int) msg.obj;
-                    logD("questionTime  = " + questime);
-                    if(questime<0){
+                    //logD("questionTime  = " + questime);
+                    GameControl.logD("questionReduceTime  =  " + questime);
+                    if (questime < 0) {
 
                         questionTime = 10;
                         return;
@@ -682,8 +685,12 @@ public class GameActivity extends Activity {
         GameActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                GameControl.logD("GameControl serverWheatherCanPlay = " + GameControl.serverWheatherCanPlay + "  GameControl.clientWheatherCanPlay  = " + GameControl.clientWheatherCanPlay);
+
                 if (GameControl.serverWheatherCanPlay && GameControl.clientWheatherCanPlay) {
-                    logD("gameActivituy  =  " + "1111");
+                    // logD("gameActivituy  =  " + "1111");
+
                     showquestionView(GameControl.currentQuestion);
 
                 } else {
@@ -965,6 +972,13 @@ public class GameActivity extends Activity {
     }
 
 
+    private void setCheckBoxBackHighLight(int result) {
+
+        checkBox_item.get(result).setBackgroundColor(Color.GREEN);
+
+    }
+
+
     private ArrayList answerList;
 
     private void showquestionView(Question question) {
@@ -1017,6 +1031,49 @@ public class GameActivity extends Activity {
     }
 
 
+    private View createCheck(String text, int position) {
+
+        LinearLayout view = new LinearLayout(GameActivity.this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        // params.setMargins(left, top, right, bottom);
+        params.setMargins(0, 20, 0, 20);
+        // view.setBackgroundColor(Color.BLACK);
+        view.setLayoutParams(params);
+        view.setTag(position);
+
+        // View view = game_layout.findViewById(R.id.question_layout);
+        CheckBox box = new CheckBox(GameActivity.this);
+        GameControl.logD("text  = " + text);
+        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, 15, 0, 15);
+        box.setText(text);
+        box.setTextColor(Color.BLACK);
+        box.setTextSize(20);
+        //box.setTag(position);
+        box.setLayoutParams(layoutParams);
+        box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    for (int i = 0; i < checkBox_item.size(); i++) {
+                        if (checkBox_item.get(i) != buttonView) {
+                            checkBox_item.get(i).setChecked(false);
+                        }
+                    }
+                }
+            }
+        });
+
+        checkBox_item.add(box);
+
+        view.addView(box);
+
+
+        return view;
+    }
+
+
     private int time = 10;
 
     private CheckBox createCheckBox(String text, int position) {
@@ -1045,6 +1102,44 @@ public class GameActivity extends Activity {
         return box;
     }
 
+    private void getCorrectCheckBox(int positions) {
+
+        int question_count = question_layout.getChildCount();
+        GameControl.logD("getCorrectCheckBoxitem =  " + question_count);
+
+        /*for (int i = 0; i < question_count; i++) {
+            View view = question_layout.getChildAt(i).getTag();
+            if ((int)view.getTag() == positions) {
+
+                view.setBackgroundColor(Color.GREEN);
+            }
+        }*/
+
+        for (int i = 0; i < question_count; i++) {
+            GameControl.logD("childTag = " + question_layout.getChildAt(i).getTag() + "");
+
+            View view = question_layout.getChildAt(i);
+            String tag = view.getTag() + "";
+
+            GameControl.logD("childTag = " + question_layout.getChildAt(i).getTag() + "");
+
+            if (tag.equals(positions + "")) {
+                GameControl.logD("correctChild  =  setBackGround");
+                view.setBackgroundColor(Color.RED);
+            }
+        }
+
+
+        View view = (View) question_layout.getTag(positions);
+
+        if (view != null) {
+            GameControl.logD("view is not null");
+        } else {
+            GameControl.logD("view is null");
+        }
+    }
+
+
     private View createBoard() {
         View view = new View(GameActivity.this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -1059,7 +1154,7 @@ public class GameActivity extends Activity {
     private void changeQuestionViewToRelive() throws JSONException {
         showquestionView(GameControl.currentQuestion);
         wheath_canPlay_TextView.setVisibility(View.VISIBLE);
-        wheath_canPlay_TextView.setText("eliminated !");
+        wheath_canPlay_TextView.setText(R.string.game_cannot_play);
         wheath_canPlay_TextView.setTextSize(16);
         wheath_canPlay_TextView.setTextColor(Color.RED);
         submit_btn.setText(R.string.relive_message);

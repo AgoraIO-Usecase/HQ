@@ -20,5 +20,6 @@
     <string name="token_incorrect_text">Token Incorrect</string>
     <string name="login_agora_signal_fail">Login Fail</string>
     <string name="login_agora_signal_success">Login Success</string>
+    <string name="game_cannot_play">eliminated !</string>
 
 </resources>
