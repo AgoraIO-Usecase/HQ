@@ -41,10 +41,11 @@ class QuestionView: UIView {
         super.init(coder: aDecoder)
     }
     
-    func setAnswers(_ answers: Array<String>, enable: Bool) {
+    func setAnswers(_ answers: Array<String>, answerHeights: Array<CGFloat>, enable: Bool) {
+        var height: CGFloat = answerHeights[0]
         for (index, answer) in answers.enumerated() {
-            let answerView = UIView(frame: CGRect(x: 30, y: 150 + index * 50, width: Int(self.frame.width - 60), height: 40))
-            let answerButton = UIButton(frame: CGRect(x: 20, y: 0, width: answerView.frame.width - 20, height: answerView.frame.height))
+            let answerView = UIView(frame: CGRect(x: 30.0, y: height, width: CGFloat(self.frame.width - 60), height: answerHeights[index + 1]))
+            let answerButton = UIButton(frame: CGRect(x: 20, y: 0, width: answerView.frame.width - 40, height: answerView.frame.height))
             answerView.layer.cornerRadius = 20
             answerView.layer.masksToBounds = true
             answerView.layer.borderWidth = 1
@@ -52,7 +53,8 @@ class QuestionView: UIView {
             answerButton.setTitle(answer, for: .normal)
             answerButton.contentHorizontalAlignment = .left
             answerButton.setTitleColor(UIColor.black, for: .normal)
-            answerButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            answerButton.titleLabel?.numberOfLines = 0
+//            answerButton.titleLabel?.adjustsFontSizeToFitWidth = true
             answerButton.isEnabled = enable
             answerButton.tag = index
             answerButton.addTarget(self, action: #selector(sendAnswer(_:)), for: .touchUpInside)
@@ -60,6 +62,7 @@ class QuestionView: UIView {
             buttons.append(answerButton)
             answerViews.append(answerView)
             self.addSubview(answerView)
+            height += answerHeights[index + 1] + 10
         }
     }
     
@@ -82,7 +85,7 @@ class QuestionView: UIView {
     }
     
     func setBackground(color: UIColor, of view: UIView, with ratio: Double) {
-        let backView = UIView(frame: CGRect(x: 0, y: 0, width: Double(self.frame.width - 60) * ratio, height: 40))
+        let backView = UIView(frame: CGRect(x: 0, y: 0, width: Double(view.frame.width) * ratio, height: Double(view.frame.height)))
         backView.layer.cornerRadius = 20
         backView.layer.masksToBounds = true
         backView.backgroundColor = color

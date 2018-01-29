@@ -91,6 +91,7 @@ class GameRoomViewController: UIViewController {
     }
     
     @IBAction func doChatButtonPressed(_ sender: UIButton) {
+        view.bringSubview(toFront: inputContainerView)
         chatMessgaeTestField.becomeFirstResponder()
         inputContainerView.isHidden = false
     }
@@ -122,10 +123,20 @@ class GameRoomViewController: UIViewController {
         }
         isAnswering = true
         let status = UserDefaults.standard.bool(forKey: "status")
+        var answerHeights = [CGFloat]()
+        var allHeight: CGFloat = 0
+        let height = getLabHeigh(labelStr: question, width: ScreenWidth - 140) + CGFloat(80)
+        answerHeights.append(height)
+        allHeight += height
+        for answer in answers {
+            let height = getLabHeigh(labelStr: answer, width: ScreenWidth - 140) + CGFloat(20)
+            answerHeights.append(height)
+            allHeight += height
+        }
         questionView = QuestionView.newQuestionView(with: qusetin)
         questionView.channelName = self.channelName
-        questionView.frame = CGRect(x: 20, y: 30, width: ScreenWidth - 40, height: CGFloat(160 + 50 * answers.count))
-        questionView.setAnswers(answers, enable: status)
+        questionView.frame = CGRect(x: 20, y: 30, width: ScreenWidth - 40, height: CGFloat(10 * answers.count + 20) + allHeight)
+        questionView.setAnswers(answers, answerHeights: answerHeights, enable: status)
         questionView.layer.cornerRadius = 30
         questionView.layer.masksToBounds = true
         questionView.backgroundColor = UIColor.white
@@ -137,6 +148,13 @@ class GameRoomViewController: UIViewController {
         self.view.addSubview(questionView)
 
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(changeTime), userInfo: status, repeats: true)
+    }
+    
+    func getLabHeigh(labelStr:String, width:CGFloat) -> CGFloat {
+        
+        let size = labelStr.boundingRect(with: CGSize(width: width, height: 8000), options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17)], context: nil)
+
+        return size.height
     }
     
     @objc func changeTime() {
