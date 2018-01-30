@@ -19,3 +19,17 @@
 /* title for relive */
 "You can play now" = "可以开始玩啦~";
 
+/* Modify User Nam */
+"Modify User Name" = "修改昵称";
+
+/* Take Photo */
+"Take Photo" = "拍照";
+
+/* Choose from Album */
+"Choose from Album" = "从相册选择";
+
+/* Cancel */
+"Cancel" = "取消";
+
+/* Save */
+"Save" = "保存";

@@ -10,6 +10,11 @@ import UIKit
 import AgoraRtcEngineKit
 import AgoraHQSigKit
 
+struct Message {
+    let name: String!
+    let content: NSMutableAttributedString!
+}
+
 class GameRoomViewController: UIViewController {
 
     @IBOutlet weak var chatTableView: UITableView!
@@ -41,7 +46,7 @@ class GameRoomViewController: UIViewController {
     var seiId: Int = -2
     var isAnswering: Bool = false
     
-    var messageList = [NSMutableAttributedString]()
+    var messageList = [Message]()
     
     let geter = ServerHelper()
     let poster = ServerHelper()
@@ -313,11 +318,12 @@ extension GameRoomViewController: AgoraHQSigDelegate{
             } else if jsonData["type"] as! String == "chat" {
                 print(jsonData["data"] as! String)
                 let chatMsg = (jsonData["name"] as! String) + ": " + (jsonData["data"] as! String)
-                let msg = NSMutableAttributedString(string: chatMsg)
+                let msgContent = NSMutableAttributedString(string: chatMsg)
                 let originalNSString = chatMsg as NSString
                 let nameRange = originalNSString.range(of: jsonData["name"] as! String)
                 
-                msg.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+                msgContent.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+                let msg = Message(name: jsonData["name"] as! String, content: msgContent)
                 messageList.append(msg)
                 updateChatView()
             }
@@ -372,11 +378,12 @@ extension GameRoomViewController: UITextFieldDelegate {
         msgId += 1
         
         let chatMsg = UserDefaults.standard.string(forKey: "name")! + ": " + message
-        let msg = NSMutableAttributedString(string: chatMsg)
+        let msgContent = NSMutableAttributedString(string: chatMsg)
         let originalNSString = chatMsg as NSString
         let nameRange = originalNSString.range(of: UserDefaults.standard.string(forKey: "name")!)
         
-        msg.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+        msgContent.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+        let msg = Message(name: UserDefaults.standard.string(forKey: "name")!, content: msgContent)
         self.messageList.append(msg)
         self.updateChatView()
         self.chatMessgaeTestField.text = ""
@@ -395,7 +402,14 @@ extension GameRoomViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatCell", for: indexPath) as! ChatCell
-        cell.messageLabel.attributedText = messageList[indexPath.row]
+        cell.messageLabel.attributedText = messageList[indexPath.row].content
+        if messageList[indexPath.row].name == UserDefaults.standard.string(forKey: "name")!
+        {
+            let profilePhoto = UserDefaults.standard.data(forKey: "ProfilePhoto")
+            cell.userImageView.image = profilePhoto == nil ? #imageLiteral(resourceName: "user_chat") : UIImage(data: profilePhoto!)
+        } else {
+            cell.userImageView.image = #imageLiteral(resourceName: "user_chat")
+        }
         
         return cell
     }
