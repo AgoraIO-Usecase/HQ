@@ -8,7 +8,7 @@
 "DJH-bs-XMF.normalTitle" = "Button";
 
 /* Class = "UILabel"; text = "Agora HQ"; ObjectID = "DVP-zu-KcS"; */
-"DVP-zu-KcS.text" = "Agora HQ";
+"DVP-zu-KcS.text" = "Agora Trivia";
 
 /* Class = "UIButton"; normalTitle = "Start"; ObjectID = "G4U-Bd-vIa"; */
 "G4U-Bd-vIa.normalTitle" = "开始答题";
@@ -24,4 +24,11 @@
 
 /* Class = "UILabel"; text = "$50000 Bonus"; ObjectID = "mIK-16-sjG"; */
 "mIK-16-sjG.text" = "￥50000 奖金";
+
+///* for more data  */
+"sup-2Z-LUV.normalTitle" = "获取更多";
+///* Rank list */
+"Vzb-V1-rUV.normalTitle" = "排行榜";
+///*   */
+"Llm-Zs-WWz.normalTitle"  = "邀请好友";
 

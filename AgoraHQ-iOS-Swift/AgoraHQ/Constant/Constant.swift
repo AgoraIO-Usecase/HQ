@@ -24,14 +24,16 @@ let isIPhone6P = ScreenHeight == 736 ? true : false
 
 let isIPhoneX = ScreenHeight == 812 ? true : false
 
-let rightColor = UIColor(hex: 0x66ff33, alpha: 0.8)
+let rightColor = UIColor(hex: 0x7ED321, alpha: 0.8)
 
-let wrongColor = UIColor(hex: 0xFF0000, alpha: 0.8)
+let wrongColor = UIColor(hex: 0xD0021B, alpha: 0.8)
 
-let selectedColor = UIColor(hex: 0xff6600, alpha: 0.8)
+let selectedColor = UIColor(hex: 0x16B8FD, alpha: 0.8)
 
-let answerUrl = "http://123.155.153.87:9000/v1/answer"
+let server = NSLocalizedString("http://76.231.168.66:9000", comment: "")
 
-let getStatusUrl = "http://123.155.153.87:9000/v1/canplay"
+let answerUrl = server + "/v1/answer"
 
-let reliveUrl = "http://123.155.153.87:9000/v1/relive"
+let getStatusUrl = server + "/v1/canplay"
+
+let reliveUrl = server + "/v1/relive"

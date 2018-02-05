@@ -39,7 +39,7 @@ class GameRoomViewController: UIViewController {
     
     var questionView: QuestionView!
     var timer: Timer!
-    let answerTime: Int = 10
+    var answerTime: Int = 10
     var pastTime: Int = 10
     
     var questionId: Int = -2
@@ -311,6 +311,7 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                 self.question = quiz["question"] as! String
                 self.answers = quiz["options"] as! Array<String>
                 self.questionId = sid
+                self.answerTime = quiz["timeout"] as! Int
             } else if jsonData["type"] as! String == "result" {
                 print(jsonData)
                 self.result = jsonData["data"] as! NSDictionary
