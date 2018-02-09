@@ -6,5 +6,7 @@
     <drawable name="gray">#aaaa</drawable>
     <drawable name="white">#ffff</drawable>
     <color name="red">#ff44</color>
+    <color name="black">#000</color>
+    <color name="gray">#aab</color>
 
 </resources>

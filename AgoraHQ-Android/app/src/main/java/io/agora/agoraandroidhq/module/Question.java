@@ -12,15 +12,26 @@ public class Question {
     private String question;
     private String chooseType;
     private ArrayList answerString;
+    private int totalQuestion;
+    private int timeOut;
 
 
-    public Question(int id, String question, String chooseType , ArrayList answerString){
+    public Question(int id, String question, String chooseType, ArrayList answerString, int totalQuestion, int timeOut) {
+        this.id = id;
+        this.question = question;
+        this.chooseType = chooseType;
+        this.answerString = answerString;
+        this.totalQuestion = totalQuestion;
+        this.timeOut = timeOut;
+    }
+
+
+    public Question(int id, String question, String chooseType, ArrayList answerString){
         this.id = id;
         this.question = question;
         this.chooseType = chooseType;
         this.answerString = answerString;
     }
-
 
     public ArrayList getAnswerString() {
         return answerString;
@@ -37,4 +48,13 @@ public class Question {
     public String getQuestion() {
         return question;
     }
+
+    public int getTotalQuestion() {
+        return totalQuestion;
+    }
+
+    public int getTimeOut() {
+        return timeOut;
+    }
+
 }

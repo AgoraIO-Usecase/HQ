@@ -1,0 +1,46 @@
+<LinearLayout android:layout_width="250dp"
+    android:layout_marginTop="200dp"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/gang_up_alertdialog_back"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/red"
+        android:text="@string/you_rereceive_a_video_invitation" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:id="@+id/refuse_video_invitation"
+            android:text="@string/refuse_video_invitation"
+            android:background="@drawable/game_gang_up_back"
+            android:alpha="0.7"
+            android:typeface="monospace"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:id="@+id/accept_video_invitation"
+            android:text="@string/accept_video_invitation"
+            android:background="@drawable/game_gang_up_back"
+            android:alpha="0.7"
+            android:typeface="monospace"/>
+    </LinearLayout>
+
+</LinearLayout>

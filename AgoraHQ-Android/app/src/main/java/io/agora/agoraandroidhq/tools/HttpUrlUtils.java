@@ -1,9 +1,7 @@
 package io.agora.agoraandroidhq.tools;
 
 import android.os.AsyncTask;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -17,13 +15,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
-import io.agora.agoraandroidhq.view.GameActivity;
 
 /**
  * Created by zhangtao on 2018/1/12.
@@ -127,8 +121,9 @@ public class HttpUrlUtils {
                }
            }*/
 
-            logD("Post =  " + isPost + " post to server data  = " + data);
-            logD("Post url = " + url);
+            //logD("Post =  " + isPost + " post to server data  = " + data);
+            //logD("Post url = " + url);
+
             DataOutputStream out = null;
             if (isPost) {
 

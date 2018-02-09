@@ -10,10 +10,13 @@ public class Message {
     private String content;
     private int type ;
 
+    private boolean isMe;
+
     public Message(int type , String sender,String content){
         this.type = type;
         this.sender = sender;
         this.content = content;
+        isMe = false;
     }
 
     public Message(String sender, String content){
@@ -29,4 +32,11 @@ public class Message {
         return content;
     }
 
+    public boolean getIsMe(){
+        return isMe;
+    }
+
+    public void setIsMe(boolean isMe){
+        this.isMe = isMe;
+    }
 }

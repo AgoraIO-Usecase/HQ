@@ -1,21 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Agora Trivia</string>
     <string name="net_error">Net error</string>
     <string name="error_to_resolve_token">Error to resolve token</string>
     <string name="next_game_time">Next Game Time</string>
-    <string name="the_day_and_the_money">Today 13:00 $50000 Money</string>
-    <string name="start_play_game">Start</string>
-    <string name="answer_error_message">Error,answer is</string>
-    <string name="answer_correct_message">Congratulation!</string>
+    <string name="the_day_and_the_money">Today 13:00 | $250 Bonus</string>
+    <string name="start_play_game">start</string>
+    <string name="answer_error_message">Wrong</string>
+    <string name="answer_correct_message">Bingo</string>
     <string name="logout_success_message">Logout Success</string>
     <string name="answer_is_null_message">Your answer is null!</string>
-    <string name="choose_success_message">Choose Success</string>
-    <string name="relive_message">Relive</string>
+    <string name="choose_success_message">Submit Success</string>
+    <string name="relive_message">Revive</string>
     <string name="connect_net_error_or_server_error">Net error or server error!</string>
     <string name="submit_message">Submit</string>
-    <string name="relive_success_message">Relive Success!</string>
-    <string name="fail_to_relive_message">Fail to relive!</string>
+    <string name="relive_success_message">Revive Success!</string>
+    <string name="fail_to_relive_message">Fail to revive!</string>
     <string name="submit_string">Submit</string>
     <string name="btn_send_message">Send</string>
     <string name="token_incorrect_text">Token Incorrect</string>
+    <string name="login_agora_signal_fail">Login Fail</string>
+    <string name="login_agora_signal_success">Login Success</string>
+    <string name="game_cannot_play">eliminated !</string>
+    <string name="text_do_not_have_permission">You do not have permission!</string>
+    <string name="app_title">Agora Trivia</string>
+    <string name="text_channel_name_can_not_be_null">Channel Name can not be null</string>
+    <string name="game_title">Agora Trivia</string>
+    <string name="ranking_list">Leaderboard</string>
+    <string name="text_invite_friends">Invite Friends</string>
+    <string name="http_relive">http://76.231.168.66:9000/v1/relive</string>
+    <string name="http_send_answer_to_server">http://76.231.168.66:9000/v1/answer</string>
+    <string name="http_check_wheather_can_play">http://76.231.168.66:9000/v1/canplay?gid=</string>
+    <string name="string_money_300">$300</string>
+
+    <string name="string_money_120">$120</string>
+    <string name="string_get_more">more</string>
+    <string name="gang_up_string">Team Mode</string>
+    <string name="edittext_gang_up_channel_name">Channel Name</string>
+    <string name="leave_gang_up_room">Leave Team Mode</string>
+    <string name="leave_gang_up_room_success">Leave Team Mode Success</string>
+    <string name="game_create_channel_name">Create Channel</string>
+    <string name="game_join_channel">Join Channel</string>
+    <string name="you_rereceive_a_video_invitation">You receive a video invitation ！</string>
+    <string name="refuse_video_invitation">Refuse</string>
+    <string name="accept_video_invitation">Accept</string>
+    <string name="can_not_team_mode">You can not team mode now</string>
+
 </resources>
