@@ -22,13 +22,6 @@ static let AppId: String = "Your App ID"
 static let AppcertificateID:  String = "Agora App Certificate"
 
 ```
-再去[融云](http://www.rongcloud.cn/)注册账号，并创建自己的测试项目，获取到 App Key，将 App Key 填写进 KeyCenter.swift
-
-```
-static let RCAppKey: String = "RC App Key"
-
-```
-
 最后使用 XCode 打开 AgoraHQ.xcworkspace，连接 iPhone／iPad 测试设备，设置有效的开发者签名后即可运行。
 
 ## 运行环境

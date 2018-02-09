@@ -32,13 +32,17 @@
 		0F3138E020036F2900EA9374 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3138DF20036F2900EA9374 /* QuestionView.swift */; };
 		0F3138E220036F4D00EA9374 /* QuestionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0F3138E120036F4D00EA9374 /* QuestionView.xib */; };
 		0F3138E5200379A400EA9374 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3138E4200379A400EA9374 /* Constant.swift */; };
+		0F45FF91202984E900EA7992 /* UidCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F45FF90202984E900EA7992 /* UidCell.swift */; };
 		0F51200620045DD4007F0336 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F51200520045DD3007F0336 /* CommonExtensions.swift */; };
+		0F614CD0202C152D00B3BABC /* MoreInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F614CCF202C152D00B3BABC /* MoreInfoViewController.swift */; };
+		0F68FB882015C04200E2437B /* AgoraHQSigKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F68FB872015C04200E2437B /* AgoraHQSigKit.framework */; };
+		0F68FB8A2015C61D00E2437B /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F68FB892015C61D00E2437B /* libsqlite3.tbd */; };
+		0F68FB8C2015F8A700E2437B /* StringMD5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F68FB8B2015F8A600E2437B /* StringMD5.swift */; };
 		0FB72D5B2003408D009623F9 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB72D5A2003408D009623F9 /* ChatCell.swift */; };
 		0FC0101B2007407D006DB1FA /* DynamicKey.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0FC010192007407C006DB1FA /* DynamicKey.mm */; };
 		0FC0101D2007420F006DB1FA /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC0101C2007420F006DB1FA /* libcrypto.a */; };
 		0FCC9348200511C2001BAEAA /* AlertUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCC9347200511C2001BAEAA /* AlertUtil.swift */; };
 		0FCC934A2005DF5E001BAEAA /* ServerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCC93492005DF5E001BAEAA /* ServerHelper.swift */; };
-		DE5887A12C30BEC731E86EA3 /* libPods-AgoraHQ.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 844A1ED11D2BB1D852702E53 /* libPods-AgoraHQ.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,17 +96,19 @@
 		0F3138DF20036F2900EA9374 /* QuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionView.swift; sourceTree = "<group>"; };
 		0F3138E120036F4D00EA9374 /* QuestionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QuestionView.xib; sourceTree = "<group>"; };
 		0F3138E4200379A400EA9374 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		0F45FF90202984E900EA7992 /* UidCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UidCell.swift; sourceTree = "<group>"; };
 		0F51200520045DD3007F0336 /* CommonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
 		0F5120082004BDD2007F0336 /* AgoraHQ-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgoraHQ-Bridging-Header.h"; sourceTree = "<group>"; };
+		0F614CCF202C152D00B3BABC /* MoreInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreInfoViewController.swift; sourceTree = "<group>"; };
+		0F68FB872015C04200E2437B /* AgoraHQSigKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraHQSigKit.framework; path = libs/AgoraHQSigKit.framework; sourceTree = "<group>"; };
+		0F68FB892015C61D00E2437B /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		0F68FB8B2015F8A600E2437B /* StringMD5.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringMD5.swift; sourceTree = "<group>"; };
 		0FB72D5A2003408D009623F9 /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		0FC010192007407C006DB1FA /* DynamicKey.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DynamicKey.mm; sourceTree = "<group>"; };
 		0FC0101A2007407D006DB1FA /* DynamicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey.h; sourceTree = "<group>"; };
 		0FC0101C2007420F006DB1FA /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = libs/libcrypto.a; sourceTree = "<group>"; };
 		0FCC9347200511C2001BAEAA /* AlertUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertUtil.swift; sourceTree = "<group>"; };
 		0FCC93492005DF5E001BAEAA /* ServerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHelper.swift; sourceTree = "<group>"; };
-		129D58B0E901CDC4C8F6BCCB /* Pods-AgoraHQ.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraHQ.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AgoraHQ/Pods-AgoraHQ.debug.xcconfig"; sourceTree = "<group>"; };
-		844A1ED11D2BB1D852702E53 /* libPods-AgoraHQ.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AgoraHQ.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E9BAA71FBCD424677FA0509B /* Pods-AgoraHQ.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraHQ.release.xcconfig"; path = "Pods/Target Support Files/Pods-AgoraHQ/Pods-AgoraHQ.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +116,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F68FB8A2015C61D00E2437B /* libsqlite3.tbd in Frameworks */,
+				0F68FB882015C04200E2437B /* AgoraHQSigKit.framework in Frameworks */,
 				0FC0101D2007420F006DB1FA /* libcrypto.a in Frameworks */,
 				0F3138DE2003625900EA9374 /* VideoToolbox.framework in Frameworks */,
 				0F3138DC2003625100EA9374 /* CoreVideo.framework in Frameworks */,
@@ -122,7 +130,6 @@
 				0F3138CC20035F2800EA9374 /* libresolv.tbd in Frameworks */,
 				0F3138CA20035F2000EA9374 /* CoreMedia.framework in Frameworks */,
 				0F3138C820035F1200EA9374 /* SystemConfiguration.framework in Frameworks */,
-				DE5887A12C30BEC731E86EA3 /* libPods-AgoraHQ.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +158,6 @@
 				0F2C76302003212F00784575 /* AgoraHQUITests */,
 				0F2C760F2003212F00784575 /* Products */,
 				0F3138C620035F1100EA9374 /* Frameworks */,
-				211481F2F3FFCFAC8CBC58B7 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -208,6 +214,7 @@
 			children = (
 				0F2C763F2003217800784575 /* MainViewController.swift */,
 				0F2C764420033E6600784575 /* GameRoomViewController.swift */,
+				0F614CCF202C152D00B3BABC /* MoreInfoViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -215,6 +222,8 @@
 		0F3138C620035F1100EA9374 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0F68FB892015C61D00E2437B /* libsqlite3.tbd */,
+				0F68FB872015C04200E2437B /* AgoraHQSigKit.framework */,
 				0FC0101C2007420F006DB1FA /* libcrypto.a */,
 				0F3138DD2003625800EA9374 /* VideoToolbox.framework */,
 				0F3138DB2003625100EA9374 /* CoreVideo.framework */,
@@ -227,7 +236,6 @@
 				0F3138CB20035F2800EA9374 /* libresolv.tbd */,
 				0F3138C920035F2000EA9374 /* CoreMedia.framework */,
 				0F3138C720035F1100EA9374 /* SystemConfiguration.framework */,
-				844A1ED11D2BB1D852702E53 /* libPods-AgoraHQ.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -254,6 +262,7 @@
 		0F51200720046ECE007F0336 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0F68FB8B2015F8A600E2437B /* StringMD5.swift */,
 				0FC0101A2007407D006DB1FA /* DynamicKey.h */,
 				0FC010192007407C006DB1FA /* DynamicKey.mm */,
 			);
@@ -264,19 +273,11 @@
 			isa = PBXGroup;
 			children = (
 				0FB72D5A2003408D009623F9 /* ChatCell.swift */,
+				0F45FF90202984E900EA7992 /* UidCell.swift */,
 				0F3138DF20036F2900EA9374 /* QuestionView.swift */,
 				0F3138E120036F4D00EA9374 /* QuestionView.xib */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		211481F2F3FFCFAC8CBC58B7 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				129D58B0E901CDC4C8F6BCCB /* Pods-AgoraHQ.debug.xcconfig */,
-				E9BAA71FBCD424677FA0509B /* Pods-AgoraHQ.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,12 +287,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0F2C76362003212F00784575 /* Build configuration list for PBXNativeTarget "AgoraHQ" */;
 			buildPhases = (
-				DA2BD74E4F81CBD50AD23226 /* [CP] Check Pods Manifest.lock */,
 				0F2C760A2003212F00784575 /* Sources */,
 				0F2C760B2003212F00784575 /* Frameworks */,
 				0F2C760C2003212F00784575 /* Resources */,
-				BFEE9E0A1D238DD58DF3561D /* [CP] Embed Pods Frameworks */,
-				A1FD7968D35CE8C5E7F317AD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -377,6 +375,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 0F2C76052003212F00784575;
 			productRefGroup = 0F2C760F2003212F00784575 /* Products */;
@@ -420,67 +419,15 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		A1FD7968D35CE8C5E7F317AD /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-AgoraHQ/Pods-AgoraHQ-resources.sh",
-				"${PODS_ROOT}/RongCloudIM/RongCloudIM/RCConfig.plist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AgoraHQ/Pods-AgoraHQ-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BFEE9E0A1D238DD58DF3561D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AgoraHQ/Pods-AgoraHQ-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DA2BD74E4F81CBD50AD23226 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AgoraHQ-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		0F2C760A2003212F00784575 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				0F3138E5200379A400EA9374 /* Constant.swift in Sources */,
+				0F45FF91202984E900EA7992 /* UidCell.swift in Sources */,
 				0F3138D62003600000EA9374 /* KeyCenter.swift in Sources */,
+				0F614CD0202C152D00B3BABC /* MoreInfoViewController.swift in Sources */,
 				0F51200620045DD4007F0336 /* CommonExtensions.swift in Sources */,
 				0F2C764520033E6600784575 /* GameRoomViewController.swift in Sources */,
 				0FB72D5B2003408D009623F9 /* ChatCell.swift in Sources */,
@@ -490,6 +437,7 @@
 				0FCC9348200511C2001BAEAA /* AlertUtil.swift in Sources */,
 				0F2C76402003217800784575 /* MainViewController.swift in Sources */,
 				0FC0101B2007407D006DB1FA /* DynamicKey.mm in Sources */,
+				0F68FB8C2015F8A700E2437B /* StringMD5.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,10 +621,10 @@
 		};
 		0F2C76372003212F00784575 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 129D58B0E901CDC4C8F6BCCB /* Pods-AgoraHQ.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 48TB6ZZL5S;
 				ENABLE_BITCODE = NO;
@@ -686,11 +634,10 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/RongCloudIM\"",
 					"$(PROJECT_DIR)/include",
 				);
 				INFOPLIST_FILE = AgoraHQ/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -698,7 +645,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraHQ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "29cd60c3-ea1c-4707-b23b-7b401268e841";
+				PROVISIONING_PROFILE = "47400579-56c9-4a89-a62a-c6eba365dff9";
 				PROVISIONING_PROFILE_SPECIFIER = AgoraIODev2017;
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraHQ/AgoraHQ-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -709,11 +656,12 @@
 		};
 		0F2C76382003212F00784575 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E9BAA71FBCD424677FA0509B /* Pods-AgoraHQ.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 48TB6ZZL5S;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -722,11 +670,10 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/RongCloudIM\"",
 					"$(PROJECT_DIR)/include",
 				);
 				INFOPLIST_FILE = AgoraHQ/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

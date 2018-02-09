@@ -8,6 +8,12 @@
 
 import UIKit
 import AgoraRtcEngineKit
+import AgoraHQSigKit
+
+struct Message {
+    let name: String!
+    let content: NSMutableAttributedString!
+}
 
 class GameRoomViewController: UIViewController {
 
@@ -20,45 +26,99 @@ class GameRoomViewController: UIViewController {
     @IBOutlet weak var chatContainerConstraint: NSLayoutConstraint!
     @IBOutlet weak var remoteContainerView: UIView!
     @IBOutlet weak var chatContainerView: UIView!
+    @IBOutlet weak var cheatChannelTableView: UITableView!
+    @IBOutlet weak var cheatButton: UIButton!
+    @IBOutlet weak var disconnectButton: UIButton!
     
+    var channelName: String!
     var hostView: UIView?
-    var question: String! //= "Q1.jdklfasjfdaslk"
-    var answers = [String]() // ["dfsfasdf","dasfadsfas","fdsafasdf","dhaskfh"]//[String]()
-//    var s: NSDictionary = ["0": 20, "1": 24, "2": 30, "3": 20]
+    var hostUid: UInt?
+    var invitedView: UIView?
+    var invitedUid: UInt?
+    var myUid: UInt?
+    var question: String!
+    var answers = [String]()
     var result: NSDictionary!
+    
+    var backgroundLayer : CAGradientLayer?
+    
+    var cheatContainView : UIView?
+    var cheatChannelTextField : UITextField?
+    var cheatChannelUsers = [UInt]() {
+        didSet {
+            cheatChannelTableView.reloadData()
+        }
+    }
+    
+    var isInCheatChannel = false {
+        didSet {
+            cheatChannelTableView.isHidden = !isInCheatChannel
+            cheatButton.setTitle(isInCheatChannel ? NSLocalizedString("Leave", comment: "Leave Cheat") : NSLocalizedString("Team mode", comment: "In Cheat"), for: .normal)
+        }
+    }
+    
+    var isInConnection = false {
+        didSet {
+            if isInConnection {
+                cheatButton.isEnabled = false
+                disconnectButton.isHidden = false
+            } else {
+                cheatButton.isEnabled = true
+                disconnectButton.isHidden = true
+            }
+        }
+    }
     
     // AgoraEngine
     var rtcEngine: AgoraRtcEngineKit!
+    var rtcCheatEngine: AgoraRtcEngineKit?
+    var agoraHQSigKit: AgoraHQSigKit!
     
     var questionView: QuestionView!
     var timer: Timer!
-    let answerTime: Int = 10
+    var answerTime: Int = 10
     var pastTime: Int = 10
     
     var questionId: Int = -2
     var seiId: Int = -2
     var isAnswering: Bool = false
     
-    var messageList = [NSMutableAttributedString]()
+    var messageList = [Message]()
     
     let geter = ServerHelper()
     let poster = ServerHelper()
     
+    var msgId = 0
+    
+    var audioSetTimer: Timer?
+    var audioSetTime: Int = 0
+    var audioSetted = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if agoraHQSigKit == nil {
+            agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
+        }
+        if isIPhoneX {
+            backgroundImageView.image = #imageLiteral(resourceName: "background_x")
+        }
+        agoraHQSigKit.delegate = self
+        
         chatTableView.rowHeight = UITableViewAutomaticDimension
         chatTableView.estimatedRowHeight = 44
+        addTouchEventToTableView(chatTableView)
         addKeyboardObserver()
-        joinChannel()
-        joinRCChatRoom()
-        addgradientLayer()
+        joinMediaChannel()
+//        addgradientLayer()
+        checkStatus()
+//        enginDestoryTheat = Thread(
     }
     
     // 设置消息view背景渐变
     func addgradientLayer() {
         let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(x: 0, y: 0, width: ScreenWidth, height: ScreenHeight * 0.35)
+        gradientLayer.frame = CGRect(x: 0, y: isIPhoneX ? 32 : 0, width: ScreenWidth, height: ScreenHeight * 0.35)
         gradientLayer.startPoint = CGPoint(x: 0, y: 1)
         gradientLayer.endPoint = CGPoint(x: 0, y: 0)
         gradientLayer.colors = [UIColor(hex: 0x003366, alpha: 1).cgColor, UIColor(hex: 0x003366, alpha: 0.5).cgColor, UIColor.clear.cgColor]
@@ -71,12 +131,17 @@ class GameRoomViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    deinit {
+        print("===============deinit===================")
+    }
+    
     @IBAction func doBackPressed(_ sender: UIButton) {
         leaveChannel()
         self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func doChatButtonPressed(_ sender: UIButton) {
+        view.bringSubview(toFront: inputContainerView)
         chatMessgaeTestField.becomeFirstResponder()
         inputContainerView.isHidden = false
     }
@@ -89,9 +154,102 @@ class GameRoomViewController: UIViewController {
         }
         
         poster.delegate = self
-        let paramDic = ["uid": UserDefaults.standard.string(forKey: "RCUid")! ,
-                        "gid": RoomName.RCIMQuestionRoom]
+        let paramDic = ["uid": UserDefaults.standard.string(forKey: "account")! ,
+                        "gid": channelName!]
         poster.postAction(to: reliveUrl, with: paramDic)
+    }
+    
+    @IBAction func doCheatButtonPressed(_ sender: UIButton) {
+        if isInCheatChannel {
+            rtcCheatEngine?.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}")
+            rtcCheatEngine?.leaveChannel(nil)
+            return
+        }
+        isAnswering = true
+        self.backgroundLayer = CAGradientLayer()
+        self.backgroundLayer?.frame = self.view.bounds
+        self.backgroundLayer?.backgroundColor = UIColor(hex: 0x000000, alpha: 0.4).cgColor
+        
+        self.view.layer.addSublayer(self.backgroundLayer!)
+        self.cheatContainView = UIView(frame: CGRect(x: self.view.center.x - 130, y: self.view.center.y - 120, width: 260, height: 130))
+        self.cheatContainView?.backgroundColor = UIColor.clear
+        
+        let cheatView = UIView(frame: CGRect(x: 0, y: 20, width: 260, height: 110))
+        cheatView.layer.cornerRadius = 10
+        cheatView.layer.masksToBounds = true
+        cheatView.backgroundColor = UIColor.white
+        
+        self.cheatChannelTextField = UITextField(frame: CGRect(x: 10, y: 10, width: 240, height: 40))
+        self.cheatChannelTextField?.layer.cornerRadius = 10
+        self.cheatChannelTextField?.layer.masksToBounds = true
+        self.cheatChannelTextField?.layer.borderWidth = 1
+        self.cheatChannelTextField?.layer.borderColor = UIColor.lightGray.cgColor
+        self.cheatChannelTextField?.textAlignment = .center
+        self.cheatChannelTextField?.text = "1"
+        
+        let cancelButton = UIButton(frame: CGRect(x: 240, y: 0, width: 20, height: 20))
+        cancelButton.tag = 1001
+        cancelButton.setImage(#imageLiteral(resourceName: "cancel"), for: .normal)
+        cancelButton.addTarget(self, action: #selector(joinOrCreateRoom(_:)), for: .touchUpInside)
+        
+        let createButton = UIButton(frame: CGRect(x: 10, y: 60, width: 110, height: 40))
+        createButton.setTitle(NSLocalizedString("Create Room", comment: "Create Room"), for: .normal)
+        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        createButton.setTitleColor(UIColor(hex: 0x3366FF, alpha: 1), for: .normal)
+        createButton.layer.cornerRadius = 20
+        createButton.layer.masksToBounds = true
+        createButton.layer.borderWidth = 1
+        createButton.layer.borderColor = UIColor.lightGray.cgColor
+        createButton.tag = 1002
+        createButton.addTarget(self, action: #selector(joinOrCreateRoom(_:)), for: .touchUpInside)
+        
+        let joinButton = UIButton(frame: CGRect(x: 140, y: 60, width: 110, height: 40))
+        joinButton.setTitle(NSLocalizedString("Join Room", comment: "Join Room"), for: .normal)
+        joinButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        joinButton.setTitleColor(UIColor(hex: 0x3366FF, alpha: 1), for: .normal)
+        joinButton.layer.cornerRadius = 20
+        joinButton.layer.masksToBounds = true
+        joinButton.layer.borderWidth = 1
+        joinButton.layer.borderColor = UIColor.lightGray.cgColor
+        joinButton.tag = 1003
+        joinButton.addTarget(self, action: #selector(joinOrCreateRoom(_:)), for: .touchUpInside)
+        
+        cheatView.addSubview(createButton)
+        cheatView.addSubview(joinButton)
+        cheatView.addSubview(self.cheatChannelTextField!)
+        self.cheatContainView?.addSubview(cheatView)
+        self.cheatContainView?.addSubview(cancelButton)
+        self.view.addSubview((self.cheatContainView)!)
+        self.cheatChannelTextField?.becomeFirstResponder()
+    }
+    
+    @objc func joinOrCreateRoom(_ button: UIButton) {
+        guard let cheatRoomName = self.cheatChannelTextField?.text else { return }
+        if cheatRoomName.isEmpty && button.tag != 1001 {
+            return
+        }
+        switch button.tag {
+        case 1002:
+            rtcCheatEngine = AgoraRtcEngineKit.createRtcEngine(withAppId: KeyCenter.AppId, delegate: self)
+            rtcCheatEngine?.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}")
+            rtcCheatEngine?.joinChannel(byKey: nil, channelName: self.channelName + "_" + cheatRoomName, info: nil, uid: myUid!, joinSuccess: nil)
+        case 1003:
+            rtcCheatEngine = AgoraRtcEngineKit.createRtcEngine(withAppId: KeyCenter.AppId, delegate: self)
+            rtcCheatEngine?.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}")
+            rtcCheatEngine?.joinChannel(byKey: nil, channelName: self.channelName + "_" + cheatRoomName, info: nil, uid: myUid!, joinSuccess: nil)
+        default:
+            break
+        }
+        self.cheatContainView?.removeFromSuperview()
+        self.backgroundLayer?.removeFromSuperlayer()
+        isAnswering = false
+    }
+    
+    @IBAction func doDisconnectButtonPressed(_ sender: UIButton) {
+        isInConnection = false
+        rtcEngine.muteLocalVideoStream(true)
+        rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}")
+        invitedView?.removeFromSuperview()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -108,10 +266,21 @@ class GameRoomViewController: UIViewController {
         }
         isAnswering = true
         let status = UserDefaults.standard.bool(forKey: "status")
+        var answerHeights = [CGFloat]()
+        var allHeight: CGFloat = 0
+        let height = getLabHeigh(labelStr: question, width: ScreenWidth - 140) + CGFloat(100)
+        answerHeights.append(height)
+        allHeight += height
+        for answer in answers {
+            let height = getLabHeigh(labelStr: answer, width: ScreenWidth - 140) + CGFloat(20)
+            answerHeights.append(height)
+            allHeight += height
+        }
         questionView = QuestionView.newQuestionView(with: qusetin)
-        questionView.frame = CGRect(x: 20, y: 30, width: ScreenWidth - 40, height: CGFloat(160 + 50 * answers.count))
-        questionView.setAnswers(answers, enable: status)
-        questionView.layer.cornerRadius = 30
+        questionView.channelName = self.channelName
+        questionView.frame = CGRect(x: 20, y: 30, width: ScreenWidth - 40, height: CGFloat(10 * answers.count + 20) + allHeight)
+        questionView.setAnswers(answers, answerHeights: answerHeights, enable: status)
+        questionView.layer.cornerRadius = 15
         questionView.layer.masksToBounds = true
         questionView.backgroundColor = UIColor.white
         
@@ -122,6 +291,13 @@ class GameRoomViewController: UIViewController {
         self.view.addSubview(questionView)
 
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(changeTime), userInfo: status, repeats: true)
+    }
+    
+    func getLabHeigh(labelStr:String, width:CGFloat) -> CGFloat {
+        
+        let size = labelStr.boundingRect(with: CGSize(width: width, height: 8000), options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17)], context: nil)
+
+        return size.height
     }
     
     @objc func changeTime() {
@@ -161,8 +337,9 @@ class GameRoomViewController: UIViewController {
     // 检查是否可以答题
     func checkStatus() {
         geter.delegate = self
-        let paramDic = ["uid": UserDefaults.standard.string(forKey: "RCUid")! ,
-                        "gid": RoomName.RCIMQuestionRoom]
+        let paramDic = ["uid": UserDefaults.standard.string(forKey: "account")! ,
+                        "gid": channelName!]
+        print(paramDic)
         geter.getAction(to: getStatusUrl, with: paramDic)
     }
 }
@@ -173,15 +350,18 @@ extension GameRoomViewController {
         UIApplication.shared.isIdleTimerDisabled = !active
     }
     
-    func joinChannel() {
-        rtcEngine = AgoraRtcEngineKit.sharedEngine(withAppId: KeyCenter.AppId, delegate: self)
+    func joinMediaChannel() {
+        rtcEngine = AgoraRtcEngineKit.createRtcEngine(withAppId: KeyCenter.AppId, delegate: self)
         rtcEngine.setChannelProfile(.channelProfile_LiveBroadcasting)
-        rtcEngine.setClientRole(.clientRole_Audience, withKey: nil)
+        rtcEngine.setClientRole(.clientRole_Broadcaster, withKey: nil)
+        rtcEngine.setVideoProfile(._VideoProfile_360P, swapWidthAndHeight: true)
         rtcEngine.enableVideo()
+        rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":1000}}")
         
-        let key = KeyCenter.AppcertificateID.isEmpty ? nil : DynamicKey.generateMediaChannelKeyby(KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, channelName: RoomName.AgoraChannelName, uid: 0)
+        let key = KeyCenter.AppcertificateID.isEmpty ? nil : DynamicKey.generateMediaChannelKeyby(KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, channelName: channelName, uid: 0)
         
-        let code = rtcEngine.joinChannel(byKey: key, channelName: RoomName.AgoraChannelName, info: nil, uid: 0, joinSuccess: nil)
+        let code = rtcEngine.joinChannel(byKey: key, channelName: channelName, info: nil, uid: 0, joinSuccess: nil)
+        rtcEngine.enableAudioVolumeIndication(1000, smooth: 3)
         
         if code == 0 {
             setIdleTimerActive(false)
@@ -191,34 +371,101 @@ extension GameRoomViewController {
         }
     }
     
+    func joinSigChannel() {
+        agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
+        agoraHQSigKit?.delegate = self
+        
+    }
+    
     func leaveChannel() {
         setIdleTimerActive(true)
         hostView?.removeFromSuperview()
         rtcEngine.leaveChannel(nil)
-        RCIMClient.shared().quitChatRoom(RoomName.RCIMQuestionRoom, success: nil, error: nil)
-//        RCIMClient.shared().quitChatRoom(RoomName.RCIMChatRoom, success: nil, error: nil)
+        if rtcCheatEngine != nil {
+            rtcCheatEngine?.leaveChannel(nil)
+        }
+        agoraHQSigKit.logout()
     }
 }
 
 // MARK: - Agora Delegate
 extension GameRoomViewController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
-        print("=========================join agora channel success")
+        rtcCheatEngine?.setEnableSpeakerphone(true)
+        myUid = uid
+        if engine == rtcCheatEngine {
+            cheatChannelUsers.append(uid)
+            isInCheatChannel = true
+        }
+        print("=========================join agora media channel: \(channel) success===============")
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
-        let canvas = AgoraRtcVideoCanvas()
-        hostView = UIView(frame: CGRect(x: 0, y: 0, width: remoteContainerView.frame.width, height: remoteContainerView.frame.height))
-        remoteContainerView.addSubview(hostView!)
-        canvas.uid = uid
-        canvas.view = hostView
-        canvas.renderMode = .render_Hidden
-        rtcEngine.setupRemoteVideo(canvas)
-        print("===================didJoinedOfUid \(uid)============================")
+        if engine == rtcCheatEngine {
+            cheatChannelUsers.append(uid)
+        }
+
+        print("===================did Joined Of Uid \(uid)============================")
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, firstRemoteVideoDecodedOfUid uid: UInt, size: CGSize, elapsed: Int) {
+        if uid == winHostUid {
+            let canvas = AgoraRtcVideoCanvas()
+            hostView = UIView(frame: CGRect(x: 0, y: 0, width: remoteContainerView.frame.width, height: isIPhoneX ? remoteContainerView.frame.height + 34 : remoteContainerView.frame.height))
+            remoteContainerView.addSubview(hostView!)
+            if invitedView != nil {
+                remoteContainerView.bringSubview(toFront: invitedView!)
+            }
+            hostUid = uid
+            canvas.uid = uid
+            canvas.view = hostView
+            canvas.renderMode = .render_Hidden
+            rtcEngine.setupRemoteVideo(canvas)
+        } else {
+            if invitedUid != nil {
+                invitedView?.removeFromSuperview()
+                invitedUid = nil
+            }
+            let canvas = AgoraRtcVideoCanvas()
+            invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
+            invitedView?.layer.cornerRadius = 10
+            invitedView?.layer.masksToBounds = true
+            remoteContainerView.addSubview(invitedView!)
+            invitedUid = uid
+            canvas.uid = uid
+            canvas.view = invitedView
+            canvas.renderMode = .render_Hidden
+            rtcEngine.setupRemoteVideo(canvas)
+        }
+        
+        
+        print("===================First Remote Video Decoded Of Uid \(uid)============================")
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraRtcUserOfflineReason) {
-        hostView?.removeFromSuperview()
+        if engine == rtcCheatEngine {
+            for (index, id) in cheatChannelUsers.enumerated() {
+                if id == uid {
+                    cheatChannelUsers.remove(at: index)
+                    return
+                }
+            }
+        }
+        if uid == hostUid {
+            hostView?.removeFromSuperview()
+            hostUid = nil
+        }
+        if uid == invitedUid {
+            invitedView?.removeFromSuperview()
+            invitedUid = nil
+        }
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didLeaveChannelWith stats: AgoraRtcStats) {
+        if engine == rtcCheatEngine {
+            isInCheatChannel = false
+            cheatChannelUsers.removeAll()
+        }
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didReceiveSEI sei: String) {
@@ -243,34 +490,91 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
             print(error)
         }
     }
-}
-
-// MARK: -RCIMCLient
-extension GameRoomViewController {
-    func joinRCChatRoom() {
-        RCIMClient.shared().joinChatRoom(RoomName.RCIMQuestionRoom, messageCount: -1, success: {
-            print("======================Join chat room seccess: 10001=====================")
-            self.checkStatus()
-        }) { (status: RCErrorCode) in
-            AlertUtil.showAlert(message: "Join question room error :\(status.rawValue)")
-            print("error :\(status.rawValue)")
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
+        if engine == rtcCheatEngine {
+           return
         }
-//        RCIMClient.shared().joinChatRoom(RoomName.RCIMChatRoom, messageCount: -1, success: {
-//            print("======================Join chat room seccess: chatroom=====================")
-//        }) { (status: RCErrorCode) in
-//            AlertUtil.showAlert(message: "Join chat room error :\(status.rawValue)")
-//            print("error :\(status.rawValue)")
-//        }
-        RCIMClient.shared().setReceiveMessageDelegate(self, object: nil)
+        var count = 0
+        for speaker in speakers {
+            if speaker.uid == hostUid || speaker.uid == invitedUid || speaker.uid == 0 {
+                count += 1
+            }
+        }
+        if speakers.count - count > 0 && !audioSetted {
+            audioSetted = true
+            if audioSetTimer != nil {
+                audioSetTimer?.invalidate()
+                audioSetTime = 0
+            }
+            if self.hostUid != nil {
+                self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.hostUid!),\"volume\":30}}")
+            }
+            if self.invitedUid != nil {
+                self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.invitedUid!),\"volume\":30}}")
+            }
+            print("=============== mute host ==================")
+        } else if speakers.count - count == 0 && audioSetted {
+            audioSetTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (_) in
+                self.audioSetTime += 1
+                self.audioSetted = false
+                print("=====================audio set to volume \(30 + 10 * self.audioSetTime)======================")
+                if self.hostUid != nil {
+                    self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.hostUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
+                }
+                if self.invitedUid != nil {
+                    self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.invitedUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
+                }
+                if self.audioSetTime >= 7 {
+                    self.audioSetTime = 0
+                    self.audioSetTimer?.invalidate()
+                }
+            })
+            print("------------------ unmute host ---------------")
+        }
+        print("------------------ report Audio Volume Indication Of Speakers \(NSDate().timeIntervalSince1970)---------------")
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didClientRoleChanged oldRole: AgoraRtcClientRole, newRole: AgoraRtcClientRole) {
+        print("=================\(oldRole.rawValue) ========================\(newRole.rawValue) ===================")
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didVideoMuted muted: Bool, byUid uid: UInt) {
+        if uid == invitedUid && muted{
+            invitedView?.removeFromSuperview()
+            invitedUid = nil
+        } else if !muted {
+            if invitedUid != nil {
+                invitedView?.removeFromSuperview()
+                invitedUid = nil
+            }
+            let canvas = AgoraRtcVideoCanvas()
+            invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
+            invitedView?.layer.cornerRadius = 10
+            invitedView?.layer.masksToBounds = true
+            remoteContainerView.addSubview(invitedView!)
+            invitedUid = uid
+            canvas.uid = uid
+            canvas.view = invitedView
+            canvas.renderMode = .render_Hidden
+            rtcEngine.setupRemoteVideo(canvas)
+        }
     }
 }
 
-// MARK: -RCIMCLient Delegate
-extension GameRoomViewController: RCIMClientReceiveMessageDelegate {
-    func onReceived(_ message: RCMessage!, left nLeft: Int32, object: Any!) {
-        let testMessage = message.content as! RCTextMessage
-        print(testMessage.content)
-        let data = testMessage.content.data(using: String.Encoding.utf8)
+// MARK: - AgoraHQSigDelegate
+extension GameRoomViewController: AgoraHQSigDelegate{
+    func agoraHQSigDidLoginSuccess(_ agoraHQSig: AgoraHQSigKit!) {
+        print("=========================join agora sig channel success===============")
+    }
+    
+    func agoraHQSig(_ agoraHQSi: AgoraHQSigKit!, didOccurError error: Error!) {
+        AlertUtil.showAlert(message: "Agora Sig error: \(error!)")
+    }
+    
+    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedChannelMessage channel: String!, message: String!, messageId: Int64) {
+        print("=============",message!,"===============")
+        let data = message.data(using: String.Encoding.utf8)
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
             if jsonData["type"] as! String == "quiz" {
@@ -280,48 +584,72 @@ extension GameRoomViewController: RCIMClientReceiveMessageDelegate {
                 self.question = quiz["question"] as! String
                 self.answers = quiz["options"] as! Array<String>
                 self.questionId = sid
+                self.answerTime = quiz["timeout"] as! Int
             } else if jsonData["type"] as! String == "result" {
                 print(jsonData)
                 self.result = jsonData["data"] as! NSDictionary
-                
-                DispatchQueue.main.sync(execute: {
-                    showResult(result: self.result)
-                })
+                showResult(result: self.result)
             } else if jsonData["type"] as! String == "chat" {
                 print(jsonData["data"] as! String)
                 let chatMsg = (jsonData["name"] as! String) + ": " + (jsonData["data"] as! String)
-                let msg = NSMutableAttributedString(string: chatMsg)
+                let msgContent = NSMutableAttributedString(string: chatMsg)
                 let originalNSString = chatMsg as NSString
                 let nameRange = originalNSString.range(of: jsonData["name"] as! String)
                 
-                msg.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+                msgContent.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+                let msg = Message(name: jsonData["name"] as! String, content: msgContent)
                 messageList.append(msg)
-                DispatchQueue.main.sync(execute: {
-                    updateChatView()
-                })
+                updateChatView()
             }
         } catch  {
             AlertUtil.showAlert(message: "Receive message error")
             print("Error: \(error)")
         }
-        
     }
     
-    func updateChatView() {
-        guard let tableView = chatTableView else {
-            return
+//    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedMessageFromAccount account: String!, message: String!, messageId: Int64) {
+//        print("=============",message!,"===============")
+//    }
+    
+    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedMessageFromAccount account: String!, message: String!, messageId: Int64) {
+        print("=============",message!,"===============")
+        let data = message.data(using: String.Encoding.utf8)
+        do {
+            let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
+            if jsonData["type"] as! String == "inviteRequest" {
+                if isInCheatChannel {
+                    AlertUtil.showAlert(message: NSLocalizedString("Host invite you to connect, But your are in gung up room!", comment: "can not connect"))
+                    return
+                }
+                let requestController = UIAlertController(title: nil, message: "Host invite you to connect", preferredStyle: .alert)
+                let acceptAction = UIAlertAction(title: "Accept", style: .default, handler: { (_) in
+                    // send message
+                    self.rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}")
+                    let canvas = AgoraRtcVideoCanvas()
+                    self.invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
+                    self.invitedView?.layer.cornerRadius = 10
+                    self.invitedView?.layer.masksToBounds = true
+                    self.remoteContainerView.addSubview(self.invitedView!)
+                    canvas.uid = self.myUid!
+                    canvas.view = self.invitedView
+                    canvas.renderMode = .render_Hidden
+                    self.rtcEngine.setupLocalVideo(canvas)
+                    self.isInConnection = true
+                    self.rtcEngine.muteLocalVideoStream(false)
+                })
+                let rejectAction = UIAlertAction(title: "Reject", style: .cancel, handler: { (_) in
+                    // send message
+                })
+                
+                requestController.addAction(acceptAction)
+                requestController.addAction(rejectAction)
+                
+                present(requestController, animated: true, completion: nil)
+            }
+        } catch  {
+            AlertUtil.showAlert(message: "Receive message error")
+            print("Error: \(error)")
         }
-        
-        tableView.beginUpdates()
-        if messageList.count > 100 {
-            messageList.removeFirst()
-            tableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-        }
-        let insertIndexPath = IndexPath(row: messageList.count - 1, section: 0)
-        tableView.insertRows(at: [insertIndexPath], with: .none)
-        tableView.endUpdates()
-        
-        tableView.scrollToRow(at: insertIndexPath, at: .bottom, animated: false)
     }
 }
 
@@ -359,32 +687,24 @@ extension GameRoomViewController: UITextFieldDelegate {
     // send chat message
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let message = chatMessgaeTestField.text else { return false }
-        
+
         let messageJson = "{\"type\":\"chat\",\"data\":\"\(message)\",\"name\":\"\(UserDefaults.standard.string(forKey: "name")!)\"}"
-        let content = RCTextMessage(content: messageJson)
-        RCIMClient.shared().sendMessage(.ConversationType_CHATROOM,
-                                        targetId: RoomName.RCIMQuestionRoom,
-                                        content: content,
-                                        pushContent: nil,
-                                        pushData: nil,
-                                        success: { (msgId: Int) in
-                                            let chatMsg = UserDefaults.standard.string(forKey: "name")! + ": " + message
-                                            let msg = NSMutableAttributedString(string: chatMsg)
-                                            let originalNSString = chatMsg as NSString
-                                            let nameRange = originalNSString.range(of: UserDefaults.standard.string(forKey: "name")!)
-                                            
-                                            msg.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
-                                            self.messageList.append(msg)
-                                            DispatchQueue.main.sync(execute: {
-                                                self.updateChatView()
-                                                self.chatMessgaeTestField.text = ""
-                                            })
-                                            
-                                            print("==============message send success=================")
-        }) { (error: RCErrorCode, msgId: Int) in
-            AlertUtil.showAlert(message: "message send error with ecode: \(error)")
-            print("==============message send error with ecode: \(error)=================")
-        }
+        agoraHQSigKit.sendChannelMessage(messageJson, messageId: Int64(self.msgId))
+        msgId += 1
+        
+        let chatMsg = UserDefaults.standard.string(forKey: "name")! + ": " + message
+        let msgContent = NSMutableAttributedString(string: chatMsg)
+        let originalNSString = chatMsg as NSString
+        let nameRange = originalNSString.range(of: UserDefaults.standard.string(forKey: "name")!)
+        
+        msgContent.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.orange, range: nameRange)
+        let msg = Message(name: UserDefaults.standard.string(forKey: "name")!, content: msgContent)
+        self.messageList.append(msg)
+        self.updateChatView()
+        self.chatMessgaeTestField.text = ""
+        
+        print("==============message send success \(messageJson)=================")
+
         return true
     }
 }
@@ -392,14 +712,61 @@ extension GameRoomViewController: UITextFieldDelegate {
 // MARK: - UITableView
 extension GameRoomViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messageList.count
+        return tableView == chatTableView ? messageList.count : cheatChannelUsers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView == cheatChannelTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "UidCell", for: indexPath) as! UidCell
+            cell.uidLabel.text = String(cheatChannelUsers[indexPath.row])
+            cell.uidLabel.adjustsFontSizeToFitWidth = true
+            if cheatChannelUsers[indexPath.row] == myUid {
+                cell.uidImageView.image = #imageLiteral(resourceName: "user_cheat_host")
+            } else {
+                cell.uidImageView.image = #imageLiteral(resourceName: "user_cheat")
+            }
+            return cell
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatCell", for: indexPath) as! ChatCell
-        cell.messageLabel.attributedText = messageList[indexPath.row]
+        cell.messageLabel.attributedText = messageList[indexPath.row].content
+        if messageList[indexPath.row].name == UserDefaults.standard.string(forKey: "name")!
+        {
+            let profilePhoto = UserDefaults.standard.data(forKey: "ProfilePhoto")
+            cell.userImageView.image = profilePhoto == nil ? #imageLiteral(resourceName: "user_chat") : UIImage(data: profilePhoto!)
+        } else {
+            cell.userImageView.image = #imageLiteral(resourceName: "user_chat")
+        }
         
         return cell
+    }
+    
+    func updateChatView() {
+        guard let tableView = chatTableView else {
+            return
+        }
+        
+        tableView.beginUpdates()
+        if messageList.count > 100 {
+            messageList.removeFirst()
+            tableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+        }
+        let insertIndexPath = IndexPath(row: messageList.count - 1, section: 0)
+        tableView.insertRows(at: [insertIndexPath], with: .none)
+        tableView.endUpdates()
+        
+        tableView.scrollToRow(at: insertIndexPath, at: .bottom, animated: false)
+    }
+    
+    func addTouchEventToTableView(_ tableView: UITableView) {
+        let tableViewGesture = UITapGestureRecognizer(target: self, action: #selector(tableViewTouchInSide))
+        tableViewGesture.numberOfTapsRequired = 1
+        tableViewGesture.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(tableViewGesture)
+    }
+    
+    @objc func tableViewTouchInSide() {
+        self.chatMessgaeTestField.resignFirstResponder()
+        inputContainerView.isHidden = true
     }
 }
 
@@ -414,7 +781,7 @@ private extension GameRoomViewController {
             
             let keyBoardBounds = keyBoardBoundsValue.cgRectValue
             let duration = durationValue.doubleValue
-            let deltaY = isIPhoneX ? keyBoardBounds.size.height - 32 : keyBoardBounds.size.height
+            let deltaY = isIPhoneX ? keyBoardBounds.size.height - 34 : keyBoardBounds.size.height
             
             if duration > 0 {
                 var optionsInt: UInt = 0

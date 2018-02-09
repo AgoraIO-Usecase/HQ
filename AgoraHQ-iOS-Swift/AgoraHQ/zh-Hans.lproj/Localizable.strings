@@ -19,3 +19,35 @@
 /* title for relive */
 "You can play now" = "可以开始玩啦~";
 
+/* Modify User Nam */
+"Modify User Name" = "修改昵称";
+
+/* Take Photo */
+"Take Photo" = "拍照";
+
+/* Choose from Album */
+"Choose from Album" = "从相册选择";
+
+/* Cancel */
+"Cancel" = "取消";
+
+/* Save */
+"Save" = "保存";
+
+/* Server*/
+"http://76.231.168.66:9000" = "http://123.155.153.87:9000";
+
+/* Leave Cheat */
+"Leave" = "离开";
+
+/* In Cheat */
+"Team mode" = "开黑";
+
+/* Creat Room */
+"Create Room" = "创建房间";
+
+/* Join Room */
+"Join Room" = "加入房间";
+
+
+

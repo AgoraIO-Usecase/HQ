@@ -8,12 +8,6 @@
 
 struct KeyCenter {
     static let AppId: String = <#Your App Id#>
+    // if the App Certificate is not opened, Fill in AppcertificateID with ""
     static let AppcertificateID:  String = <#Your App Certificate#>
-    static let RCAppKey: String = <#RC App Key#>
-}
-
-struct RoomName {
-    static let AgoraChannelName: String = "HQ_Demo"
-    static let RCIMQuestionRoom: String = "10001"
-    static let RCIMChatRoom: String = "chatroom"
 }

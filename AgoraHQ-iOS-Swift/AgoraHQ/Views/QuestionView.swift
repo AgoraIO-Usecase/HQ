@@ -17,7 +17,9 @@ class QuestionView: UIView {
 
     @IBOutlet weak var questionLable: UILabel!
     @IBOutlet weak var answerTimeLabel: UILabel!
+    @IBOutlet weak var titleImageView: UIImageView!
     
+    var channelName: String!
     var buttons = [UIButton]()
     var answerViews = [UIView]()
     var myAnswer: Int = -1
@@ -40,18 +42,21 @@ class QuestionView: UIView {
         super.init(coder: aDecoder)
     }
     
-    func setAnswers(_ answers: Array<String>, enable: Bool) {
+    func setAnswers(_ answers: Array<String>, answerHeights: Array<CGFloat>, enable: Bool) {
+        var height: CGFloat = answerHeights[0]
         for (index, answer) in answers.enumerated() {
-            let answerView = UIView(frame: CGRect(x: 30, y: 150 + index * 50, width: Int(self.frame.width - 60), height: 40))
-            let answerButton = UIButton(frame: CGRect(x: 20, y: 0, width: answerView.frame.width - 20, height: answerView.frame.height))
+            let answerView = UIView(frame: CGRect(x: 30.0, y: height, width: CGFloat(self.frame.width - 60), height: answerHeights[index + 1]))
+            let answerButton = UIButton(frame: CGRect(x: 20, y: 0, width: answerView.frame.width - 40, height: answerView.frame.height))
             answerView.layer.cornerRadius = 20
             answerView.layer.masksToBounds = true
-            answerView.layer.borderWidth = 1
-            answerView.layer.borderColor = UIColor.lightGray.cgColor
+            answerView.backgroundColor = buttonColor
+//            answerView.layer.borderWidth = 1
+//            answerView.layer.borderColor = UIColor.lightGray.cgColor
             answerButton.setTitle(answer, for: .normal)
             answerButton.contentHorizontalAlignment = .left
             answerButton.setTitleColor(UIColor.black, for: .normal)
-            answerButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            answerButton.titleLabel?.numberOfLines = 0
+//            answerButton.titleLabel?.adjustsFontSizeToFitWidth = true
             answerButton.isEnabled = enable
             answerButton.tag = index
             answerButton.addTarget(self, action: #selector(sendAnswer(_:)), for: .touchUpInside)
@@ -59,15 +64,17 @@ class QuestionView: UIView {
             buttons.append(answerButton)
             answerViews.append(answerView)
             self.addSubview(answerView)
+            height += answerHeights[index + 1] + 10
         }
     }
     
     @objc func sendAnswer(_ button: UIButton) {
         print((button.titleLabel?.text)!)
         button.superview?.backgroundColor = selectedColor
+        button.setTitleColor(UIColor.white, for: .normal)
         let poster = ServerHelper()
-        let paramDic = ["uid": UserDefaults.standard.string(forKey: "RCUid")!,
-                        "gid": "10001",
+        let paramDic = ["uid": UserDefaults.standard.string(forKey: "account")!,
+                        "gid": channelName!,
                         "sid": Int(UserDefaults.standard.string(forKey: "sid")!)!,
                         "result": button.tag] as [String : Any]
         myAnswer = button.tag
@@ -81,7 +88,7 @@ class QuestionView: UIView {
     }
     
     func setBackground(color: UIColor, of view: UIView, with ratio: Double) {
-        let backView = UIView(frame: CGRect(x: 0, y: 0, width: Double(self.frame.width - 60) * ratio, height: 40))
+        let backView = UIView(frame: CGRect(x: 0, y: 0, width: Double(view.frame.width) * ratio, height: Double(view.frame.height)))
         backView.layer.cornerRadius = 20
         backView.layer.masksToBounds = true
         backView.backgroundColor = color
@@ -92,6 +99,40 @@ class QuestionView: UIView {
     }
     
     func resetViewWithRightAnswers(_ result: NSDictionary) {
+        let status = UserDefaults.standard.bool(forKey: "status")
+        if status {
+            let myResult = result["result"] as! Int == myAnswer
+            self.answerTimeLabel.text = myResult ? NSLocalizedString("Bingo", comment: "right answer") : NSLocalizedString("Wrong", comment: "wrong answer")
+            self.titleImageView.image = myResult ? #imageLiteral(resourceName: "right") : #imageLiteral(resourceName: "wrong")
+            self.answerTimeLabel.transform = CGAffineTransform(translationX: 19, y: 0)
+            self.answerTimeLabel.textColor = myResult ? rightColor : wrongColor
+            if myAnswer >= 0 {
+                answerViews[myAnswer].backgroundColor = wrongColor
+                buttons[myAnswer].setTitleColor(UIColor.white, for: .normal)
+            }
+            
+            UserDefaults.standard.set(myResult, forKey: "status")
+        } else {
+            self.answerTimeLabel.text = NSLocalizedString("Can not play", comment: "title for cannot play")
+            self.answerTimeLabel.textColor = wrongColor
+        }
+        
+        answerViews[result["result"] as! Int].backgroundColor = rightColor
+        buttons[result["result"] as! Int].setTitleColor(UIColor.white, for: .normal)
+//        let spreads = result["spread"] as! NSDictionary
+        
+//        for i in 0..<spreads.count {
+//            if i != result["result"] as! Int {
+//                let ratio = result["total"] as!Int == 0 ? 0.0 : (spreads["\(i)"] as! Double) / (result["total"] as! Double)
+//                setBackground(color: wrongColor, of: answerViews[i], with: ratio)
+//            }
+//        }
+        for button in buttons {
+            button.isEnabled = false
+        }
+    }
+    
+    func resetViewWithRightAnswers2(_ result: NSDictionary) {
         let status = UserDefaults.standard.bool(forKey: "status")
         if status {
             let myResult = result["result"] as! Int == myAnswer
