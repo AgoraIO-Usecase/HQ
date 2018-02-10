@@ -83,9 +83,6 @@ public class GameActivity extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
-        //joinChatRoom(Constants.chatRoom);
-        //joinChatRoom(Constants.questionRoom);
         try {
             init();
         } catch (Exception e) {
@@ -113,19 +110,13 @@ public class GameActivity extends Activity {
         loginAgoraSignal();
         GameControl.logD("init");
         findView();
-        //AgoraLinkToCloud.addEventHandler(handler);
-        //joinChannel();
-
         initQuestionLayout();
 
         //startCheckWheatherCanPlay();
         // checkWheatherCanPlay();
         GameControl.controlCheckThread = true;
-
         checkSelfPermissions();
-
         executorService = createExcetorService();
-
         isInGangUp = false;
 
     }
@@ -135,13 +126,10 @@ public class GameActivity extends Activity {
     private ExecutorService createExcetorService() {
 
         ExecutorService executorService = Executors.newCachedThreadPool();
-
         return executorService;
     }
 
     private String getAccount() {
-
-
         String uid = Constants.UID.toString() + new Random().nextInt(100000);
         GameControl.logD("getAccount = " + uid);
         return uid;
@@ -154,15 +142,12 @@ public class GameActivity extends Activity {
         return channelName;
     }
 
-
     private AgoraSignal agoraSignal;
 
     private void loginAgoraSignal() {
-
         agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
         agoraSignal.addEventHandler(agoraHandler);
         agoraSignal.login();
-
     }
 
     private boolean wheatherChangeGameReuslt = true;
@@ -185,7 +170,6 @@ public class GameActivity extends Activity {
                     break;
 
                 case Constants.AGORA_SIGNAL_RECEIVE:
-
 
                     String mess = (String) msg.obj;
                     Object jsonObject = null;
@@ -261,36 +245,16 @@ public class GameActivity extends Activity {
                                     questionTimeHandler.sendEmptyMessageDelayed(2, 6000);
                                 }
                             }
-
-
-                            logD(" Serverwheather " + GameControl.serverWheatherCanPlay + "  " + "ClientServer  " + GameControl.clientWheatherCanPlay);
-
                             break;
 
-
                         case "quiz":
-/*
-                            try {
-                                checkWheatherCanPlay();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }*/
+
                             Question question = (Question) jsonObject;
-                            ;
-
-                            /*if (GameControl.clientWheatherCanPlay && GameControl.serverWheatherCanPlay) {
-
-                                showquestionView(question);
-
-                            }*/
                             if (question.getId() == 1) {
                                 GameControl.gameResult = true;
                                 wheatherChangeGameReuslt = true;
                             }
-
-
                             GameControl.logD("save Question :  id = " + question.getId() + "  " + question.getTimeOut());
-
                             if (question != null) {
                                 GameControl.setCurrentQuestion(question);
                                 int total = GameControl.currentQuestion.getTotalQuestion();
@@ -305,10 +269,6 @@ public class GameActivity extends Activity {
                                     time_reduce.setText(timeOut + " s");
                                 }
                             }
-
-                            logD("quiz   showQuestion" + isFirst);
-                            //showQuestion();
-                            //showquestionView(GameControl.currentQuestion);
                             try {
                                 if (!isFirst) {
                                     checkWheatherCanPlay();
@@ -330,11 +290,6 @@ public class GameActivity extends Activity {
                     break;
 
                 case Constants.AGORA_SIGNAL_SEND:
-                    // TextMessage sendContent = (TextMessage) msg.obj;
-
-                    // String sendName = sendContent.getUserInfo().getUserId();
-                    // String messge = sendContent.getContent();
-                    //logD("handleMessage   = " + messge);
 
                     String sendMessage = (String) msg.obj;
                     GameControl.logD("sendMessage  = " + sendMessage);
@@ -379,11 +334,9 @@ public class GameActivity extends Activity {
         Toast.makeText(GameActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
-
     private void logD(String message) {
         Log.d("zhangHQ", message + "");
     }
-
 
     private void startCheckWheatherCanPlay() {
 
@@ -578,13 +531,10 @@ public class GameActivity extends Activity {
             @Override
             public void onResponse(String data) throws JSONException {
                 //logD(data);
-
                 if (data.equals(Constants.MESSAGE_TOAST)) {
                     return;
                 }
-
                 // isFirst = false;
-
                 if (data != null) {
                     JSONObject object = new JSONObject(data);
                     boolean wheatherCanPlay = object.getBoolean("result");
@@ -596,7 +546,6 @@ public class GameActivity extends Activity {
             }
         });
     }
-
 
     @Override
     protected void onDestroy() {
@@ -643,23 +592,16 @@ public class GameActivity extends Activity {
 
 
     private RtcEngine rtcEngine;
-
     private boolean isFirstInVideo = true;
-
     private int invisitUid = -1;
-
     private int broadcastUid = -1;
 
-
     private IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() { // Tutorial Step 1
-
 
         @Override
         public void onFirstRemoteVideoDecoded(final int uid, int width, int height, int elapsed) { // Tutorial Step 5
             // logD("onFirstRemoteVideoDecode");
-
             GameControl.logD("sub onFirstRemoteVideoDecoded");
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -679,18 +621,15 @@ public class GameActivity extends Activity {
             });
         }
 
-
         @Override
         public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalVolume) {
             super.onAudioVolumeIndication(speakers, totalVolume);
             //GameControl.logD("sub onAudioVolumeIndication  totalvolume =  " + speakers.length);
-
             if (speakers.length == 0) {
                 return;
             }
 
             int count = 0;
-
             for (int i = 0; i < speakers.length; i++) {
 
                 if ((speakers[i].uid == Constants.broadCastUid) || (speakers[i].uid == invisitUid) || (speakers[i].uid == 0)) {
@@ -741,8 +680,6 @@ public class GameActivity extends Activity {
                 }
             });
             GameControl.logD("onUserOffline");
-
-
         }
 
         @Override
@@ -770,20 +707,8 @@ public class GameActivity extends Activity {
 
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-            GameControl.logD("onJoinChannelSuccess");
             super.onJoinChannelSuccess(channel, uid, elapsed);
-            logD("onJOinChannelSuccess");
-
             GameControl.logD("onJoinChannelSuccess  channel  =  " + channel);
-
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
-
         }
 
         @Override
@@ -884,11 +809,7 @@ public class GameActivity extends Activity {
 
     private int questionTime;
     private ImageView gameResult;
-
-
     private void showQuestion() {
-
-
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -917,9 +838,6 @@ public class GameActivity extends Activity {
             }
         });
 
-
-        logD("  runOnUiThread   ");
-        //questionFlag = true;
         GameActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -938,16 +856,12 @@ public class GameActivity extends Activity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         });
     }
 
-
     private boolean checkSelfPermissions() throws Exception {
-
-        Log.d("zhang   ", "checkSelfPermissionssss");
         return checkSelfPermission(Manifest.permission.RECORD_AUDIO, 0) &&
                 checkSelfPermission(Manifest.permission.CAMERA, 1) &&
                 checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
@@ -955,7 +869,6 @@ public class GameActivity extends Activity {
 
 
     public boolean checkSelfPermission(String permission, int requestCode) throws Exception {
-        // log.debug("checkSelfPermission " + permission + " " + requestCode);
         if (ContextCompat.checkSelfPermission(this,
                 permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -966,8 +879,6 @@ public class GameActivity extends Activity {
                     requestCode);
             return false;
         }
-
-        Log.d("zhang  ", " permission  granted");
 
         if (Manifest.permission.CAMERA.equals(permission)) {
             // getApplication()).initWorkerThread();
@@ -1028,12 +939,9 @@ public class GameActivity extends Activity {
         }
     }
 
-
     public void disConnectVideo(View view) {
-
         rtcEngine.muteLocalVideoStream(true);
         rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}");
-
         isInVideoWithBroadcast = false;
         FrameLayout frameLayout = findViewById(R.id.small_video);
         frameLayout.setVisibility(View.GONE);
@@ -1062,19 +970,20 @@ public class GameActivity extends Activity {
 
 
     private void initAgoraEngine() throws Exception {
-        rtcEngine = RtcEngine.create(GameActivity.this, Constants.AGORA_APP_ID, mRtcEventHandler);
+        rtcEngine = RtcEngine.create(getApplicationContext(), Constants.AGORA_APP_ID, mRtcEventHandler);
 
         rtcEngine.setChannelProfile(io.agora.rtc.Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
-       // rtcEngine.disableAudio();
+        //rtcEngine.disableAudio();
         rtcEngine.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER, null);
         //rtcEngine.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER, null);
         rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}");
         rtcEngine.enableAudioVolumeIndication(1000, 3);
-
+       // rtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
         /*rtcEngine.enableVideo();
         rtcEngine.enableLocalVideo(false);
         rtcEngine.setVideoProfile(io.agora.rtc.Constants.VIDEO_PROFILE_360P, false);
 */
+        GameControl.rtcEngine = new WeakReference<RtcEngine>(rtcEngine);
         GameControl.logD("channelName   account  = " + GameControl.currentUser.channelName + "   " + GameControl.currentUser.account);
         rtcEngine.joinChannel(null, GameControl.currentUser.channelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
 
@@ -1088,17 +997,10 @@ public class GameActivity extends Activity {
         if (container.getChildCount() >= 1) {
             return;
         }
-
-
         SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
         container.addView(surfaceView);
         rtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-
-        surfaceView.setTag(uid); // for mark purpose
-       /* View tipMsg = findViewById(R.id.quick_tips_when_use_agora_sdk); // optional UI
-        tipMsg.setVisibility(View.GONE);*/
     }
-
 
     private void setUpSmallVideo(int uid) {
 
@@ -1131,17 +1033,6 @@ public class GameActivity extends Activity {
 
                 if (rtcEngine != null) {
                     rtcEngine.leaveChannel();
-                    RtcEngine.destroy(rtcEngine);
-                }
-
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (gangUpRtcEngine != null) {
-                    //gangUpRtcEngine.leaveChannel();
-                    //RtcEngine.destroy(gangUpRtcEngine);
                 }
             }
         }.start();
@@ -1157,9 +1048,6 @@ public class GameActivity extends Activity {
         FrameLayout container = (FrameLayout) findViewById(R.id.small_video);
         container.removeAllViews();
         container.setVisibility(View.GONE);
-        // isInVideoWithBroadcast =false;
-
-
         GameControl.logD("onRemoteSmallVideoLeft isInVideoWithBroadcast = " + isInVideoWithBroadcast);
         gameGangUpButton.setClickable(true);
     }
@@ -1175,7 +1063,6 @@ public class GameActivity extends Activity {
             surfaceView.setVisibility(muted ? View.GONE : View.VISIBLE);
         }
     }
-
 
     // Step 11
     private void setUpLocalVideoCall() {
@@ -1198,20 +1085,16 @@ public class GameActivity extends Activity {
         frameLayout.addView(surfaceView);
     }
 
-
     // private Button button_show;
     private LinearLayout game_layout;
     private Button submit_btn;
     private LinearLayout question_layout;
-
     // private ArrayList<String> questionData = new ArrayList<String>();
     private ArrayList<CheckBox> checkBox_item = new ArrayList<CheckBox>();
     private ArrayList<View> board = new ArrayList<View>();
-
     private TextView game_title;
     private TextView wheath_canPlay_TextView;
     private TextView time_reduce;
-
 
     private void initQuestionLayout() {
         // button_show = findViewById(R.id.show_question_btn);
@@ -1224,11 +1107,8 @@ public class GameActivity extends Activity {
         wheath_canPlay_TextView = findViewById(R.id.wheather_canplay_TextView);
         wheath_canPlay_TextView.setVisibility(View.GONE);
         time_reduce = findViewById(R.id.time_reduce);
-
         setSubmitbtnListener();
-
     }
-
 
     private void setSubmitbtnListener() {
         submit_btn.setOnClickListener(new View.OnClickListener() {
@@ -1250,20 +1130,6 @@ public class GameActivity extends Activity {
         });
     }
 
-
-    /*@Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.submit_button:
-
-                submitAnswer();
-
-
-                break;
-
-        }
-    }*/
-
     private void submitAnswer() {
         questionFlag = false;
         // StringBuilder builder = new StringBuilder();
@@ -1281,8 +1147,6 @@ public class GameActivity extends Activity {
         } else {
             Toast.makeText(GameActivity.this, R.string.choose_success_message, Toast.LENGTH_SHORT).show();
         }
-
-        //  Toast.makeText(GameActivity.this, builder.toString(), Toast.LENGTH_SHORT).show();
 
         GameControl.logD("submit answer  url = " + Constants.HTTP_SEND_ANSWER_TO_SERVER);
         try {
@@ -1304,19 +1168,13 @@ public class GameActivity extends Activity {
         // questionData.clear();
         game_layout.setVisibility(View.GONE);
         questionTime = GameControl.timeOut;
-
     }
-
 
     private void setCheckBoxBackHighLight(int result) {
-
         checkBox_item.get(result).setBackgroundColor(Color.GREEN);
-
     }
 
-
     private ArrayList answerList;
-
     private void showquestionView(Question question) {
         //  int num = random.nextInt(10);
         //  logD("num  = "+num);
@@ -1360,57 +1218,7 @@ public class GameActivity extends Activity {
         }
         game_layout.setVisibility(View.VISIBLE);
         wheath_canPlay_TextView.setVisibility(View.GONE);
-
-        logD("showQuestionend   : " + question.getAnswerString().toString());
-        logD("showQuestionend   :" + checkBox_item.size() + " ------  question  ---" + game_layout.getVisibility() + "   " + View.VISIBLE);
-        //time = 10;
-    }
-
-
-    private View createCheck(String text, int position) {
-
-        LinearLayout view = new LinearLayout(GameActivity.this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1);
-        // params.setMargins(left, top, right, bottom);
-        params.setMargins(0, 20, 0, 20);
-        // view.setBackgroundColor(Color.BLACK);
-        view.setLayoutParams(params);
-        view.setTag(position);
-
-        // View view = game_layout.findViewById(R.id.question_layout);
-        CheckBox box = new CheckBox(GameActivity.this);
-        GameControl.logD("text  = " + text);
-        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 15, 0, 15);
-        box.setText(text);
-        box.setTextColor(Color.BLACK);
-        box.setTextSize(20);
-        //box.setTag(position);
-        box.setLayoutParams(layoutParams);
-        box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    for (int i = 0; i < checkBox_item.size(); i++) {
-                        if (checkBox_item.get(i) != buttonView) {
-                            checkBox_item.get(i).setChecked(false);
-                        }
-                    }
-                }
-            }
-        });
-
-        checkBox_item.add(box);
-
-        view.addView(box);
-
-
-        return view;
-    }
-
-
-//private int time = 10;
+   }
 
     private CheckBox createCheckBox(String text, int position) {
 
@@ -1442,39 +1250,16 @@ public class GameActivity extends Activity {
 
         int question_count = question_layout.getChildCount();
         GameControl.logD("getCorrectCheckBoxitem =  " + question_count);
-
-        /*for (int i = 0; i < question_count; i++) {
-            View view = question_layout.getChildAt(i).getTag();
-            if ((int)view.getTag() == positions) {
-
-                view.setBackgroundColor(Color.GREEN);
-            }
-        }*/
-
         for (int i = 0; i < question_count; i++) {
-            // GameControl.logD("childTag = " + question_layout.getChildAt(i).getTag() + "");
-
             View view = question_layout.getChildAt(i);
             String tag = view.getTag() + "";
-
-            //GameControl.logD("childTag = " + question_layout.getChildAt(i).getTag() + "");
-
             if (tag.equals(positions + "")) {
                 // GameControl.logD("correctChild  =  setBackGround");
                 view.setBackgroundColor(Color.GREEN);
             }
         }
 
-
-       /* View view = (View) question_layout.getTag(positions);
-
-        if (view != null) {
-            GameControl.logD("view is not null");
-        } else {
-            GameControl.logD("view is null");
-        }*/
     }
-
 
     private View createBoard() {
         View view = new View(GameActivity.this);
@@ -1535,17 +1320,13 @@ public class GameActivity extends Activity {
         });
     }
 
-
     private EditText gang_up_channel_name;
     private Button createGangUpChannel;
     private Button joinGangUpChannel;
     private AlertDialog gangUpAlertDialog;
-
     private RtcEngine gangUpRtcEngine;
-
     private boolean isInGangUp;
     private boolean wheatherCanPlayGame;
-
 
     IRtcEngineEventHandler gangUpRtcEngineEventHandler = new IRtcEngineEventHandler() {
         @Override
@@ -1618,38 +1399,28 @@ public class GameActivity extends Activity {
 
     };
 
-
     private void initGangUpRtcEngine() {
 
         try {
-            gangUpRtcEngine = RtcEngine.create(GameActivity.this, Constants.AGORA_APP_ID, gangUpRtcEngineEventHandler);
+            gangUpRtcEngine = RtcEngine.create(getApplicationContext(), Constants.AGORA_APP_ID, gangUpRtcEngineEventHandler);
+            GameControl.gangUpRtcEngine = new WeakReference<RtcEngine>(gangUpRtcEngine);
             GameControl.logD("sub initGangUpRtcEngine");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void showInvitationDialog() {
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-
         View gang_up_view = View.inflate(GameActivity.this, R.layout.invisit_video_dialog_layout, null);
-
-
         Button acceptVideoInvationBtn = gang_up_view.findViewById(R.id.accept_video_invitation);
-
         //*createGangUpChannel = gang_up_view.findViewById(R.id.create_gang_up_channel);
         Button refuseVideoInvationBtn = gang_up_view.findViewById(R.id.refuse_video_invitation);
         //*
-
         builder.setView(gang_up_view);
-
         builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         gangUpAlertDialog = dialog;
-
         acceptVideoInvationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1672,8 +1443,6 @@ public class GameActivity extends Activity {
             }
         });
         dialog.show();
-
-
     }
 
     public void gangUpClick(View view) {
@@ -1688,14 +1457,12 @@ public class GameActivity extends Activity {
             gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}");
             gangUpRtcEngine.leaveChannel();
             gameGangUpButton.setClickable(false);
-           // rtcEngine.disableAudio();
+            // rtcEngine.disableAudio();
         } else {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
 
             View gang_up_view = View.inflate(GameActivity.this, R.layout.gang_up_layout, null);
-
-
             gang_up_channel_name = gang_up_view.findViewById(R.id.gang_up_channel_name_editText);
             /*createGangUpChannel = gang_up_view.findViewById(R.id.create_gang_up_channel);
             joinGangUpChannel = gang_up_view.findViewById(R.id.join_gang_up_channel);
@@ -1709,12 +1476,9 @@ public class GameActivity extends Activity {
     }
 
     public void createGangUpChannelClick(View view) {
-
-
         if (gangUpRtcEngine == null) {
             initGangUpRtcEngine();
         }
-
         String channelName = getGangUpChannelName();
 
 
@@ -1766,9 +1530,7 @@ public class GameActivity extends Activity {
     }
 
     private String getGangUpChannelName() {
-
         String gangUpChannelName = gang_up_channel_name.getText().toString();
-
         return gangUpChannelName;
     }
 }

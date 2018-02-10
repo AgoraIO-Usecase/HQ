@@ -407,7 +407,40 @@ public class MainActivity extends Activity {
         super.onDestroy();
 
         GameControl.logD("MainActivity  onDestory");
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
 
+                RtcEngine rtcEngine = null;
+                RtcEngine gangUpRtcEngine = null;
+
+                if(GameControl.rtcEngine != null){
+                    rtcEngine = GameControl.rtcEngine.get();
+                    GameControl.logD("MainActivity onDestory rtcEngine = "+rtcEngine);
+                }
+
+                if(GameControl.gangUpRtcEngine != null){
+                    gangUpRtcEngine = GameControl.gangUpRtcEngine.get();
+                    GameControl.logD("MainActivity onDestory gangUpRtcEngine = "+gangUpRtcEngine);
+                }
+
+                if (gangUpRtcEngine != null) {
+                    gangUpRtcEngine.leaveChannel();
+                    GameControl.logD("MainActivity onDestory  leaveChannel = "+gangUpRtcEngine.leaveChannel());
+
+                }
+
+                if (rtcEngine != null) {
+                    rtcEngine.leaveChannel();
+                    RtcEngine.destroy(gangUpRtcEngine);
+                    RtcEngine.destroy(rtcEngine);
+                    GameControl.logD("MainActivity onDestory  RtcEngine.destroy = ");
+                    GameControl.rtcEngine = null;
+                    GameControl.gangUpRtcEngine = null;
+                }
+            }
+        }.start();
 
     }
 }
