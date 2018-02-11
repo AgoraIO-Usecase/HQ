@@ -197,9 +197,7 @@ public class GameActivity extends Activity {
                             if (GameControl.currentQuestion != null) {
                                 GameControl.logD("GameControl.currentQues = " + GameControl.currentQuestion.toString());
                                 GameControl.logD("result  showHighLightCheckBox  =  " + checkBox_item.size());
-                                   /* setCheckBoxBackHighLight(res);
-*/
-
+                                   /* setCheckBoxBackHighLight(res);*/
                                 if (correct == 0) {
                                     int answer = res + 1;
                                     time_reduce.setText(getString(R.string.answer_error_message));
@@ -986,7 +984,6 @@ public class GameActivity extends Activity {
         GameControl.rtcEngine = new WeakReference<RtcEngine>(rtcEngine);
         GameControl.logD("channelName   account  = " + GameControl.currentUser.channelName + "   " + GameControl.currentUser.account);
         rtcEngine.joinChannel(null, GameControl.currentUser.channelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
-
     }
 
 
@@ -1074,7 +1071,7 @@ public class GameActivity extends Activity {
 
         isInVideoWithBroadcast = true;
         GameControl.logD("setUpLocalVideoCall  isInVideoWithBroadcast = " + isInVideoWithBroadcast);
-        rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":100}}");
+        rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":30}}");
         rtcEngine.enableLocalVideo(true);
         rtcEngine.muteLocalVideoStream(false);
         SurfaceView surfaceView = RtcEngine.CreateRendererView(GameActivity.this);
@@ -1495,7 +1492,7 @@ public class GameActivity extends Activity {
             //rtcEngine.enableAudio();
 
             String realChannelName = GameControl.currentUser.channelName + "_" + channelName;
-            gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}");
+            gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}");
             gangUpRtcEngine.joinChannel(null, realChannelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
 
         }
@@ -1521,7 +1518,7 @@ public class GameActivity extends Activity {
                 //rtcEngine.enableAudio();
 
                 String realChannelName = GameControl.currentUser.channelName + "_" + channelName;
-                gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}");
+                gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}");
 
                 gangUpRtcEngine.joinChannel(null, realChannelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
 
