@@ -40,4 +40,6 @@ let getStatusUrl = server + "/v1/canplay"
 
 let reliveUrl = server + "/v1/relive"
 
+let inviteResponseUrl = server + "/v1/inviteResponse"
+
 let winHostUid: UInt = 1

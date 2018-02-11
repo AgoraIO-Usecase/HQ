@@ -12,5 +12,4 @@ class UidCell: UITableViewCell {
 
     @IBOutlet weak var uidLabel: UILabel!
     @IBOutlet weak var uidImageView: UIImageView!
-    
 }

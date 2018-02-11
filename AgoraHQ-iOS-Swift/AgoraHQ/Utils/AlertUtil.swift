@@ -19,6 +19,5 @@ class AlertUtil: NSObject {
         DispatchQueue.main.async {
             topVC?.present(alert, animated: true, completion: nil)
         }
-        
     }
 }

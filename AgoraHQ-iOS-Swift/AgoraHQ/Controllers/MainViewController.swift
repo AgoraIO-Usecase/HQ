@@ -17,6 +17,7 @@ class MainViewController: UIViewController{
     @IBOutlet weak var channelNameTextField: UITextField!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var backCardView: UIView!
+    @IBOutlet weak var setButton: UIButton!
     var userStatus = false
     var agoraHQSigKit : AgoraHQSigKit!
     var backgroundLayer : CAGradientLayer?
@@ -92,16 +93,16 @@ class MainViewController: UIViewController{
         print("==================================", UserDefaults.standard.string(forKey: "account")!)
     }
     
-//    @IBAction func showIntroduction(_ sender: UIButton) {
-//        AlertUtil.showAlert(message: NSLocalizedString("Please contact", comment: "title fot introduction") + "\n\n400 632 6626")
-//    }
-    
     @IBAction func doLoginButtonPressed(_ sender: UIButton) {
         checkUserStatus()
     }
     
     @IBAction func doSetButtonPressed(_ sender: UIButton) {
         let setSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        // support ipad
+        setSheet.popoverPresentationController?.sourceView = self.view
+        setSheet.popoverPresentationController?.sourceRect = CGRect(x: setButton.frame.maxX, y: backCardView.frame.minY + setButton.frame.minY, width: setButton.frame.width, height: setButton.frame.height)
         let nameAction = UIAlertAction(title: NSLocalizedString("Modify User Name", comment: "Modify User Name"), style: .default) { (_) in
             self.backgroundLayer = CAGradientLayer()
             self.backgroundLayer?.frame = self.view.bounds

@@ -50,13 +50,10 @@ class QuestionView: UIView {
             answerView.layer.cornerRadius = 20
             answerView.layer.masksToBounds = true
             answerView.backgroundColor = buttonColor
-//            answerView.layer.borderWidth = 1
-//            answerView.layer.borderColor = UIColor.lightGray.cgColor
             answerButton.setTitle(answer, for: .normal)
             answerButton.contentHorizontalAlignment = .left
             answerButton.setTitleColor(UIColor.black, for: .normal)
             answerButton.titleLabel?.numberOfLines = 0
-//            answerButton.titleLabel?.adjustsFontSizeToFitWidth = true
             answerButton.isEnabled = enable
             answerButton.tag = index
             answerButton.addTarget(self, action: #selector(sendAnswer(_:)), for: .touchUpInside)
@@ -119,25 +116,21 @@ class QuestionView: UIView {
         
         answerViews[result["result"] as! Int].backgroundColor = rightColor
         buttons[result["result"] as! Int].setTitleColor(UIColor.white, for: .normal)
-//        let spreads = result["spread"] as! NSDictionary
-        
-//        for i in 0..<spreads.count {
-//            if i != result["result"] as! Int {
-//                let ratio = result["total"] as!Int == 0 ? 0.0 : (spreads["\(i)"] as! Double) / (result["total"] as! Double)
-//                setBackground(color: wrongColor, of: answerViews[i], with: ratio)
-//            }
-//        }
+
         for button in buttons {
             button.isEnabled = false
         }
     }
     
+    // ratio styel
     func resetViewWithRightAnswers2(_ result: NSDictionary) {
         let status = UserDefaults.standard.bool(forKey: "status")
         if status {
             let myResult = result["result"] as! Int == myAnswer
             let ratio = result["total"] as!Int == 0 ? 0.0 : (result["correct"] as! Double) / (result["total"] as! Double)
             self.answerTimeLabel.text = myResult ? NSLocalizedString("Bingo", comment: "right answer") : NSLocalizedString("Wrong", comment: "wrong answer")
+            self.titleImageView.image = myResult ? #imageLiteral(resourceName: "right") : #imageLiteral(resourceName: "wrong")
+            self.answerTimeLabel.transform = CGAffineTransform(translationX: 19, y: 0)
             self.answerTimeLabel.textColor = myResult ? rightColor : wrongColor
             setBackground(color: rightColor, of: answerViews[result["result"] as! Int], with: ratio)
             answerViews[result["result"] as! Int].layer.borderColor = UIColor.lightGray.cgColor

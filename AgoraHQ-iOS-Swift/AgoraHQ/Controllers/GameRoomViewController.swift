@@ -29,6 +29,7 @@ class GameRoomViewController: UIViewController {
     @IBOutlet weak var cheatChannelTableView: UITableView!
     @IBOutlet weak var cheatButton: UIButton!
     @IBOutlet weak var disconnectButton: UIButton!
+    @IBOutlet weak var chatButton: UIButton!
     
     var channelName: String!
     var hostView: UIView?
@@ -87,9 +88,11 @@ class GameRoomViewController: UIViewController {
     
     let geter = ServerHelper()
     let poster = ServerHelper()
+    var inviteResponsePoster: ServerHelper?
     
     var msgId = 0
     
+    // audio set var
     var audioSetTimer: Timer?
     var audioSetTime: Int = 0
     var audioSetted = false
@@ -105,6 +108,8 @@ class GameRoomViewController: UIViewController {
         }
         agoraHQSigKit.delegate = self
         
+        cheatButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        
         chatTableView.rowHeight = UITableViewAutomaticDimension
         chatTableView.estimatedRowHeight = 44
         addTouchEventToTableView(chatTableView)
@@ -112,7 +117,7 @@ class GameRoomViewController: UIViewController {
         joinMediaChannel()
 //        addgradientLayer()
         checkStatus()
-//        enginDestoryTheat = Thread(
+        
     }
     
     // 设置消息view背景渐变
@@ -231,11 +236,11 @@ class GameRoomViewController: UIViewController {
         switch button.tag {
         case 1002:
             rtcCheatEngine = AgoraRtcEngineKit.createRtcEngine(withAppId: KeyCenter.AppId, delegate: self)
-            rtcCheatEngine?.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}")
+            rtcCheatEngine?.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}")
             rtcCheatEngine?.joinChannel(byKey: nil, channelName: self.channelName + "_" + cheatRoomName, info: nil, uid: myUid!, joinSuccess: nil)
         case 1003:
             rtcCheatEngine = AgoraRtcEngineKit.createRtcEngine(withAppId: KeyCenter.AppId, delegate: self)
-            rtcCheatEngine?.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}")
+            rtcCheatEngine?.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}")
             rtcCheatEngine?.joinChannel(byKey: nil, channelName: self.channelName + "_" + cheatRoomName, info: nil, uid: myUid!, joinSuccess: nil)
         default:
             break
@@ -356,7 +361,7 @@ extension GameRoomViewController {
         rtcEngine.setClientRole(.clientRole_Broadcaster, withKey: nil)
         rtcEngine.setVideoProfile(._VideoProfile_360P, swapWidthAndHeight: true)
         rtcEngine.enableVideo()
-        rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":1000}}")
+        rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}")
         
         let key = KeyCenter.AppcertificateID.isEmpty ? nil : DynamicKey.generateMediaChannelKeyby(KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, channelName: channelName, uid: 0)
         
@@ -427,7 +432,9 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
                 invitedUid = nil
             }
             let canvas = AgoraRtcVideoCanvas()
-            invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
+//            invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
+            invitedView = UIView()
+            invitedView?.translatesAutoresizingMaskIntoConstraints = false
             invitedView?.layer.cornerRadius = 10
             invitedView?.layer.masksToBounds = true
             remoteContainerView.addSubview(invitedView!)
@@ -436,29 +443,16 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
             canvas.view = invitedView
             canvas.renderMode = .render_Hidden
             rtcEngine.setupRemoteVideo(canvas)
+            
+            self.view.addConstraints([
+                                      NSLayoutConstraint.init(item: self.invitedView!, attribute: .right, relatedBy: .equal, toItem: self.remoteContainerView, attribute: .right, multiplier: 1, constant: -20),
+                                      NSLayoutConstraint.init(item: self.invitedView!, attribute: .bottom, relatedBy: .equal, toItem: self.remoteContainerView, attribute: .bottom, multiplier: 1, constant: -70),
+                                      NSLayoutConstraint(item: self.invitedView!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: ScreenWidth * 0.35),
+                                      NSLayoutConstraint(item: self.invitedView!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: ScreenWidth * 0.35 * 4.0 / 3.0)
+                                     ])
         }
-        
         
         print("===================First Remote Video Decoded Of Uid \(uid)============================")
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraRtcUserOfflineReason) {
-        if engine == rtcCheatEngine {
-            for (index, id) in cheatChannelUsers.enumerated() {
-                if id == uid {
-                    cheatChannelUsers.remove(at: index)
-                    return
-                }
-            }
-        }
-        if uid == hostUid {
-            hostView?.removeFromSuperview()
-            hostUid = nil
-        }
-        if uid == invitedUid {
-            invitedView?.removeFromSuperview()
-            invitedUid = nil
-        }
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didLeaveChannelWith stats: AgoraRtcStats) {
@@ -466,10 +460,12 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
             isInCheatChannel = false
             cheatChannelUsers.removeAll()
         }
+        
+        print("===================Did Leave Channel============================")
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didReceiveSEI sei: String) {
-        print("====================\(sei)================")
+        print("====================SEI Received \(sei)================")
         let data = sei.data(using: String.Encoding.utf8)
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
@@ -513,12 +509,10 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
             if self.invitedUid != nil {
                 self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.invitedUid!),\"volume\":30}}")
             }
-            print("=============== mute host ==================")
         } else if speakers.count - count == 0 && audioSetted {
             audioSetTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (_) in
                 self.audioSetTime += 1
                 self.audioSetted = false
-                print("=====================audio set to volume \(30 + 10 * self.audioSetTime)======================")
                 if self.hostUid != nil {
                     self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.hostUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
                 }
@@ -530,13 +524,26 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
                     self.audioSetTimer?.invalidate()
                 }
             })
-            print("------------------ unmute host ---------------")
         }
-        print("------------------ report Audio Volume Indication Of Speakers \(NSDate().timeIntervalSince1970)---------------")
     }
     
-    func rtcEngine(_ engine: AgoraRtcEngineKit, didClientRoleChanged oldRole: AgoraRtcClientRole, newRole: AgoraRtcClientRole) {
-        print("=================\(oldRole.rawValue) ========================\(newRole.rawValue) ===================")
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraRtcUserOfflineReason) {
+        if engine == rtcCheatEngine {
+            for (index, id) in cheatChannelUsers.enumerated() {
+                if id == uid {
+                    cheatChannelUsers.remove(at: index)
+                    return
+                }
+            }
+        }
+        if uid == hostUid {
+            hostView?.removeFromSuperview()
+            hostUid = nil
+        }
+        if uid == invitedUid {
+            invitedView?.removeFromSuperview()
+            invitedUid = nil
+        }
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didVideoMuted muted: Bool, byUid uid: UInt) {
@@ -549,7 +556,8 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
                 invitedUid = nil
             }
             let canvas = AgoraRtcVideoCanvas()
-            invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
+            invitedView = UIView()
+            invitedView?.translatesAutoresizingMaskIntoConstraints = false
             invitedView?.layer.cornerRadius = 10
             invitedView?.layer.masksToBounds = true
             remoteContainerView.addSubview(invitedView!)
@@ -558,6 +566,13 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
             canvas.view = invitedView
             canvas.renderMode = .render_Hidden
             rtcEngine.setupRemoteVideo(canvas)
+            
+            self.view.addConstraints([
+                NSLayoutConstraint.init(item: self.invitedView!, attribute: .right, relatedBy: .equal, toItem: self.remoteContainerView, attribute: .right, multiplier: 1, constant: -20),
+                NSLayoutConstraint.init(item: self.invitedView!, attribute: .bottom, relatedBy: .equal, toItem: self.remoteContainerView, attribute: .bottom, multiplier: 1, constant: -70),
+                NSLayoutConstraint(item: self.invitedView!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: ScreenWidth * 0.35),
+                NSLayoutConstraint(item: self.invitedView!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: ScreenWidth * 0.35 * 4.0 / 3.0)
+                ])
         }
     }
 }
@@ -607,10 +622,6 @@ extension GameRoomViewController: AgoraHQSigDelegate{
         }
     }
     
-//    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedMessageFromAccount account: String!, message: String!, messageId: Int64) {
-//        print("=============",message!,"===============")
-//    }
-    
     func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedMessageFromAccount account: String!, message: String!, messageId: Int64) {
         print("=============",message!,"===============")
         let data = message.data(using: String.Encoding.utf8)
@@ -618,27 +629,53 @@ extension GameRoomViewController: AgoraHQSigDelegate{
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
             if jsonData["type"] as! String == "inviteRequest" {
                 if isInCheatChannel {
-                    AlertUtil.showAlert(message: NSLocalizedString("Host invite you to connect, But your are in gung up room!", comment: "can not connect"))
+                    if self.inviteResponsePoster == nil {
+                        self.inviteResponsePoster = ServerHelper()
+                    }
+                    let paramDic = ["accept": false,
+                                    "account": UserDefaults.standard.string(forKey: "account")!] as [String : Any]
+                    self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
+                    
+                    AlertUtil.showAlert(message: NSLocalizedString("Host invite you to connect, But your are still in team mode!", comment: "can not connect"))
                     return
                 }
                 let requestController = UIAlertController(title: nil, message: "Host invite you to connect", preferredStyle: .alert)
                 let acceptAction = UIAlertAction(title: "Accept", style: .default, handler: { (_) in
                     // send message
-                    self.rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":1000}}")
+                    if self.inviteResponsePoster == nil {
+                        self.inviteResponsePoster = ServerHelper()
+                    }
+                    let paramDic = ["accept": true,
+                                    "account": UserDefaults.standard.string(forKey: "account")!] as [String : Any]
+                    self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
+                    
+                    self.rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":400}}")
                     let canvas = AgoraRtcVideoCanvas()
-                    self.invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
+                    self.invitedView = UIView()
+                    self.invitedView?.translatesAutoresizingMaskIntoConstraints = false
                     self.invitedView?.layer.cornerRadius = 10
                     self.invitedView?.layer.masksToBounds = true
-                    self.remoteContainerView.addSubview(self.invitedView!)
                     canvas.uid = self.myUid!
                     canvas.view = self.invitedView
                     canvas.renderMode = .render_Hidden
                     self.rtcEngine.setupLocalVideo(canvas)
                     self.isInConnection = true
                     self.rtcEngine.muteLocalVideoStream(false)
+                    self.remoteContainerView.addSubview(self.invitedView!)
+                    self.view.addConstraints([
+                        NSLayoutConstraint.init(item: self.invitedView!, attribute: .right, relatedBy: .equal, toItem: self.remoteContainerView, attribute: .right, multiplier: 1, constant: -20),
+                        NSLayoutConstraint.init(item: self.invitedView!, attribute: .bottom, relatedBy: .equal, toItem: self.remoteContainerView, attribute: .bottom, multiplier: 1, constant: -70),
+                        NSLayoutConstraint(item: self.invitedView!, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: ScreenWidth * 0.35),
+                        NSLayoutConstraint(item: self.invitedView!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: ScreenWidth * 0.35 * 4.0 / 3.0)
+                        ])
                 })
                 let rejectAction = UIAlertAction(title: "Reject", style: .cancel, handler: { (_) in
-                    // send message
+                    if self.inviteResponsePoster == nil {
+                        self.inviteResponsePoster = ServerHelper()
+                    }
+                    let paramDic = ["accept": false,
+                                    "account": UserDefaults.standard.string(forKey: "account")!] as [String : Any]
+                    self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
                 })
                 
                 requestController.addAction(acceptAction)
