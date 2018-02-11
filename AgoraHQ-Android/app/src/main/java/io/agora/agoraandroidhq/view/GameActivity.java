@@ -1170,6 +1170,7 @@ public class GameActivity extends Activity {
         layoutParams.setMargins(0, 15, 0, 15);
         box.setText(text);
         box.setTextColor(Color.BLACK);
+        GameControl.logD("setTag  position = "+position);
         box.setTag(position);
         box.setLayoutParams(layoutParams);
         box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1194,6 +1195,8 @@ public class GameActivity extends Activity {
         for (int i = 0; i < question_count; i++) {
             View view = question_layout.getChildAt(i);
             String tag = view.getTag() + "";
+
+            GameControl.logD("getCorrectCheckBox getTag = "+tag +"  position = "+positions);
             if (tag.equals(positions + "")) {
                 // GameControl.logD("correctChild  =  setBackGround");
                 view.setBackgroundColor(Color.GREEN);
