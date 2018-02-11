@@ -14,6 +14,7 @@ class CDlgAnswer : public CDialogEx
 public:
 	CDlgAnswer(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CDlgAnswer();
+	void updateStatusToPublish();
 
 // 对话框数据
 	enum { IDD = IDD_DIALOG_ANSWER };
@@ -33,6 +34,7 @@ protected:
 	afx_msg void OnBnClickedButtonStartMark();
 	afx_msg void OnBnClickedButtonStopanswer();
 	afx_msg void OnBnClickedButtonSetbonuses();
+	afx_msg void OnBnClickedButtonReset();
 
 	HRESULT onLoginSuccess(WPARAM wParam, LPARAM lParam);
 	HRESULT onLogout(WPARAM wParam, LPARAM lParam);
@@ -50,6 +52,8 @@ protected:
 	HRESULT onChannelJoinFailed(WPARAM wParam, LPARAM lParam);
 	HRESULT onChannelLeaved(WPARAM wParam, LPARAM lParam);
 
+	LRESULT onInputParam(WPARAM wParam, LPARAM lParam);
+
 protected:
 	void initCtrl();
 	void uninitCtrl();
@@ -59,8 +63,10 @@ protected:
 
 	void DrawClient();
 
+	int getChannelName();
 	void switchNewQuestion(const tagQuestionAnswer &newQuestion);
 	void notifyQuestionAnswerStatics(const tagQuestionStatics &QuestionStatics);
+	void notifyRoundListOfWinners(const std::vector<tagListOfWinners> &vecListOfWinner);
 
 private:
 	CString m_sQuestion;
@@ -84,10 +90,10 @@ private:
 	CAGButton m_btnUpdateQuestion;
 	CAGButton m_btnStartAnswer;
 	CAGButton m_btnStopAnswer;
+	CButton m_btnResetQuestion;
+	CStatic m_ctlNoticeInfo;
 	
 	CDlgAnswerResultStatics m_DlgResult;
 	int m_nQuestionId;
 	CAGEngineEventHandler* m_pAgEngineEventHandle;
-public:
-	afx_msg void OnBnClickedButtonReset();
 };

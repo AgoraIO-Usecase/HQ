@@ -119,6 +119,7 @@
     <ClInclude Include="DlgAnswer.h" />
     <ClInclude Include="DlgAnswerResultStatics.h" />
     <ClInclude Include="DlgConfig.h" />
+    <ClInclude Include="DlgInput.h" />
     <ClInclude Include="DynamicKey5.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="generatorSignalToken.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="DlgAnswer.cpp" />
     <ClCompile Include="DlgAnswerResultStatics.cpp" />
     <ClCompile Include="DlgConfig.cpp" />
+    <ClCompile Include="DlgInput.cpp" />
     <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="SignalInstance.cpp" />
     <ClCompile Include="SingleWrap.cpp" />

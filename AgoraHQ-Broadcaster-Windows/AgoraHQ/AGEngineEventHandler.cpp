@@ -242,7 +242,6 @@ void CAGEngineEventHandler::onFirstRemoteVideoFrame(uid_t uid, int width, int he
 
 void CAGEngineEventHandler::onUserJoined(uid_t uid, int elapsed)
 {
-	return;
 	LPAGE_USER_JOINED lpData = new AGE_USER_JOINED;
 
 	lpData->uid = uid;

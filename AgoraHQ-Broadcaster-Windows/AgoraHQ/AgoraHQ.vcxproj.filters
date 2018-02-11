@@ -93,6 +93,9 @@
     <ClInclude Include="DlgAnswerResultStatics.h">
       <Filter>Dlg</Filter>
     </ClInclude>
+    <ClInclude Include="DlgInput.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AgoraHQ.cpp">
@@ -138,6 +141,9 @@
       <Filter>AgoraObject</Filter>
     </ClCompile>
     <ClCompile Include="DlgAnswerResultStatics.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgInput.cpp">
       <Filter>Dlg</Filter>
     </ClCompile>
   </ItemGroup>
