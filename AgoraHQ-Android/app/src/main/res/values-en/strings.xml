@@ -31,6 +31,7 @@
     <string name="http_relive">http://76.231.168.66:9000/v1/relive</string>
     <string name="http_send_answer_to_server">http://76.231.168.66:9000/v1/answer</string>
     <string name="http_check_wheather_can_play">http://76.231.168.66:9000/v1/canplay?gid=</string>
+    <string name="http_reply_wheather_accept_video">http://76.231.168.66:9000//v1/inviteResponse</string>
     <string name="string_money_300">$300</string>
 
     <string name="string_money_120">$120</string>
@@ -45,5 +46,6 @@
     <string name="refuse_video_invitation">Refuse</string>
     <string name="accept_video_invitation">Accept</string>
     <string name="can_not_team_mode">You can not team mode now</string>
+
 
 </resources>

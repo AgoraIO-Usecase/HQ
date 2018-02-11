@@ -106,25 +106,20 @@ public class GameActivity extends Activity {
 
     private void init() throws Exception {
         getUser();
-
         loginAgoraSignal();
         GameControl.logD("init");
         findView();
         initQuestionLayout();
-
         //startCheckWheatherCanPlay();
         // checkWheatherCanPlay();
         GameControl.controlCheckThread = true;
         checkSelfPermissions();
         executorService = createExcetorService();
         isInGangUp = false;
-
     }
 
     private ExecutorService executorService;
-
     private ExecutorService createExcetorService() {
-
         ExecutorService executorService = Executors.newCachedThreadPool();
         return executorService;
     }
@@ -218,8 +213,6 @@ public class GameActivity extends Activity {
                                     }
 
                                 } else {
-
-
                                     time_reduce.setText(R.string.answer_correct_message);
                                     time_reduce.setTextColor(Color.GREEN);
                                     time_reduce.setVisibility(View.VISIBLE);
@@ -231,13 +224,11 @@ public class GameActivity extends Activity {
                                     }
                                 }
 
-
                                 questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
                                 //time_reduce.setVisibility(View.INVISIBLE);
                                 game_layout.setVisibility(View.VISIBLE);
                                 submit_btn.setVisibility(View.GONE);
                                 getCorrectCheckBox(res);
-
 
                                 if ((GameControl.currentQuestion.getId() + 1) == GameControl.total) {
                                     questionTimeHandler.sendEmptyMessageDelayed(2, 6000);
@@ -341,8 +332,6 @@ public class GameActivity extends Activity {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-
-
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -363,7 +352,6 @@ public class GameActivity extends Activity {
         });
     }
 
-
     private RecyclerView recyclerView;
     private MessageRecyclerViewAdapter messageRecyclerViewAdapter;
     private LinearLayout messageLinearLayou;
@@ -374,17 +362,12 @@ public class GameActivity extends Activity {
     private FrameLayout game_view_layout;
     private Button gameGangUpButton;
     private boolean wheatherHasFocus = false;
-
-
     private RecyclerView gangUpUidRecycleView;
     private GangUpRecycleViewAdapter gangUpRecycleViewAdapter;
     private ArrayList<String> gangUpUidList = new ArrayList<String>();
-
-
     private FrameLayout localSmallVideo;
     private Button disConnectBtn;
     private boolean isInVideoWithBroadcast = false;
-
 
     private void findView() {
         imageViewBack = findViewById(R.id.back_image);
@@ -491,8 +474,6 @@ public class GameActivity extends Activity {
         });
 
         ArrayList arrayList = new ArrayList();
-
-
         recyclerView = findViewById(R.id.messageRecycleView);
         messageRecyclerViewAdapter = new MessageRecyclerViewAdapter(GameActivity.this, arrayList);
         recyclerView.setAdapter(messageRecyclerViewAdapter);
@@ -503,26 +484,13 @@ public class GameActivity extends Activity {
             recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
         }
         // AgoraLinkToCloud.addEventHandler(handler);
-
-
         gameResult = findViewById(R.id.game_result);
         gangUpUidRecycleView = findViewById(R.id.gangUpUidRecycleView);
         gangUpRecycleViewAdapter = new GangUpRecycleViewAdapter(GameActivity.this);
         gangUpUidRecycleView.setAdapter(gangUpRecycleViewAdapter);
         gangUpUidRecycleView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-
         localSmallVideo = findViewById(R.id.small_video);
-
     }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
-    }
-
 
     private void checkWheatherCanPlay() throws JSONException {
         AgoraSignal.checkWheatherCanPlay(new HttpUrlUtils.OnResponse() {
@@ -553,8 +521,6 @@ public class GameActivity extends Activity {
         GameControl.controlCheckThread = false;
         GameControl.currentQuestion = null;
         questionFlag = false;
-
-
         if (agoraSignal != null) {
             agoraSignal.removeEnventHandler();
             executorService.execute(new Runnable() {
@@ -588,7 +554,6 @@ public class GameActivity extends Activity {
         System.gc();
     }
 
-
     private RtcEngine rtcEngine;
     private boolean isFirstInVideo = true;
     private int invisitUid = -1;
@@ -606,15 +571,11 @@ public class GameActivity extends Activity {
                     if (uid == Constants.broadCastUid) {
                         GameControl.logD("sub onFirstRemoteVideoDecoded  big  =  " + uid);
                         setupRemoteVideo(uid);
-
                     } else {
-
                         GameControl.logD("sub onFirstRemoteVideoDecoded  small  uid = " + uid);
                         setUpSmallVideo(uid);
-
                         invisitUid = uid;
                     }
-
                 }
             });
         }
@@ -654,11 +615,8 @@ public class GameActivity extends Activity {
 
                 String param3 = "{\"che.audio.playout.uid.volume\":{\"uid\":" + invisitUid + ",\"volume\":100}}";
                 rtcEngine.setParameters(param3);
-
-
             }
         }
-
 
         @Override
         public void onUserOffline(final int uid, int reason) { // Tutorial Step 7
@@ -692,7 +650,6 @@ public class GameActivity extends Activity {
                         onRemoteUserVideoMuted(uid, muted);
                     } else if (muted) {
                         onRemoteSmallVideoLeft();
-
                     }
 
                     if (!muted) {
@@ -813,7 +770,6 @@ public class GameActivity extends Activity {
             public void run() {
                 questionTime = GameControl.timeOut;
 
-
                 GameControl.logD("showQuestion questionFlag = " + questionFlag);
                 while (questionFlag) {
 
@@ -870,8 +826,6 @@ public class GameActivity extends Activity {
         if (ContextCompat.checkSelfPermission(this,
                 permission)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.d("zhang   ", "  permission != granted");
-
             ActivityCompat.requestPermissions(this,
                     new String[]{permission},
                     requestCode);
@@ -879,13 +833,10 @@ public class GameActivity extends Activity {
         }
 
         if (Manifest.permission.CAMERA.equals(permission)) {
-            // getApplication()).initWorkerThread();
-            Log.d("zhang  ", "  camera permission");
             joinAgoraLiveChannel();
         }
         return true;
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -902,7 +853,6 @@ public class GameActivity extends Activity {
                     }
                 } else {
                     // finish();
-
                 }
                 break;
             }
@@ -955,7 +905,6 @@ public class GameActivity extends Activity {
         initAgoraEngine();
         setupVideoProfile();
         //setUpLocalVideoCall();
-
         //joinChannel();
     }
 
@@ -985,7 +934,6 @@ public class GameActivity extends Activity {
         GameControl.logD("channelName   account  = " + GameControl.currentUser.channelName + "   " + GameControl.currentUser.account);
         rtcEngine.joinChannel(null, GameControl.currentUser.channelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
     }
-
 
     // Tutorial Step 5
     private void setupRemoteVideo(int uid) {
@@ -1076,7 +1024,6 @@ public class GameActivity extends Activity {
         rtcEngine.muteLocalVideoStream(false);
         SurfaceView surfaceView = RtcEngine.CreateRendererView(GameActivity.this);
         rtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
-
         surfaceView.setZOrderOnTop(true);
         surfaceView.setZOrderMediaOverlay(true);
         frameLayout.addView(surfaceView);
@@ -1182,7 +1129,6 @@ public class GameActivity extends Activity {
         checkBox_item.clear();
         board.clear();
         submit_btn.setVisibility(View.VISIBLE);
-
         answerList = GameControl.currentQuestion.getAnswerString();
         logD("showQuestionMid  : " + question.getAnswerString().toString());
 
@@ -1192,8 +1138,6 @@ public class GameActivity extends Activity {
         String questionTitle = questionId + "   " + title;
         game_title.setText(questionTitle);
         game_title.setVisibility(View.VISIBLE);
-
-
         for (int i = 0; i < answerList.size(); i++) {
             if (i == 0) {
                 View bo = createBoard();
@@ -1429,6 +1373,7 @@ public class GameActivity extends Activity {
                     gangUpAlertDialog.dismiss();
                     disConnectBtn.setVisibility(View.VISIBLE);
                     disConnectBtn.setClickable(true);
+                    AgoraSignal.wheatherAcceptVideoWithBroadCast(true,GameControl.currentUser.account);
                 }
             }
         });
@@ -1437,6 +1382,7 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View v) {
                 gangUpAlertDialog.dismiss();
+                AgoraSignal.wheatherAcceptVideoWithBroadCast(false,GameControl.currentUser.account);
             }
         });
         dialog.show();
@@ -1477,8 +1423,6 @@ public class GameActivity extends Activity {
             initGangUpRtcEngine();
         }
         String channelName = getGangUpChannelName();
-
-
         if (TextUtils.isEmpty(channelName)) {
             toastHelper("Channel name can not be null");
         } else {
@@ -1499,7 +1443,6 @@ public class GameActivity extends Activity {
     }
 
     private boolean isJoinGangUpChannel;
-
     public void joinGangUpChannel(View view) {
 
         if (gangUpRtcEngine == null) {
@@ -1516,12 +1459,9 @@ public class GameActivity extends Activity {
                 isJoinGangUpChannel = true;
                 gangUpRtcEngine.enableAudio();
                 //rtcEngine.enableAudio();
-
                 String realChannelName = GameControl.currentUser.channelName + "_" + channelName;
                 gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}");
-
                 gangUpRtcEngine.joinChannel(null, realChannelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
-
             }
         }
     }

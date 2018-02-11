@@ -26,7 +26,7 @@ public class Constants {
     public static  String HTTP_RELIVE;
     public static  String HTTP_SEND_ANSWER_TO_SERVER;
     public static  String HTTP_CHECK_WHEATHER_CAN_PLAY;
-
+    public static  String HTTP_REPLY_WHEATHER_ACCEPT_VIDEO;
     //rong cloud
 
     public static final String UID = "2942";

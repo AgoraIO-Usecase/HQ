@@ -164,18 +164,13 @@ public class HttpUrlUtils {
             }
 
             logD("ResponseCode = " + code);
-
-
             if (code == 200) {
                 InputStream in = null;
-
                 try {
                     in = conn.getInputStream();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
                 // Send http request, convert response to String
                 ByteArrayOutputStream outStream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
@@ -213,12 +208,13 @@ public class HttpUrlUtils {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-
-
-            try {
-                callback.onResponse((String) o);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            logD("onPostExecute");
+            if(callback !=null) {
+                try {
+                    callback.onResponse((String) o);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -234,7 +230,6 @@ public class HttpUrlUtils {
     public String chageDataToserver(Map parameters) throws UnsupportedEncodingException {
 
         //String responseContent = null;
-
         StringBuilder params = new StringBuilder();
         if (parameters.size() > 0) {
             for (Iterator iter = parameters.entrySet().iterator(); iter

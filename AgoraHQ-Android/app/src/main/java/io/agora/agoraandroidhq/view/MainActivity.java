@@ -83,19 +83,11 @@ public class MainActivity extends Activity {
     private void findView() {
         channelNameEditText = findViewById(R.id.channel_name_editText);
         playGame = findViewById(R.id.btnStartPlayGame);
-
         labelName = findViewById(R.id.user_label);
         labelImage = findViewById(R.id.user_image);
-
         setOnEditTextChangeListener(labelName);
-
         String userNameFromSharedPreference = getNameFromSharedPreference();
-
         labelName.setText(userNameFromSharedPreference);
-
-
-
-
     }
 
     private void initConstantsHttp() {
@@ -103,6 +95,7 @@ public class MainActivity extends Activity {
         Constants.HTTP_RELIVE = getResources().getString(R.string.http_relive);
         Constants.HTTP_SEND_ANSWER_TO_SERVER = getResources().getString(R.string.http_send_answer_to_server);
         Constants.HTTP_CHECK_WHEATHER_CAN_PLAY = getResources().getString(R.string.http_check_wheather_can_play);
+        Constants.HTTP_REPLY_WHEATHER_ACCEPT_VIDEO = getString(R.string.http_reply_wheather_accept_video);
 
         GameControl.logD("Http_relive = "+Constants.HTTP_RELIVE);
         GameControl.logD("Http_send_answer = "+Constants.HTTP_SEND_ANSWER_TO_SERVER);
