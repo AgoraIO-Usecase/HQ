@@ -190,7 +190,6 @@ class GameRoomViewController: UIViewController {
         self.cheatChannelTextField?.layer.borderWidth = 1
         self.cheatChannelTextField?.layer.borderColor = UIColor.lightGray.cgColor
         self.cheatChannelTextField?.textAlignment = .center
-        self.cheatChannelTextField?.text = "1"
         
         let cancelButton = UIButton(frame: CGRect(x: 240, y: 0, width: 20, height: 20))
         cancelButton.tag = 1001
@@ -432,7 +431,6 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
                 invitedUid = nil
             }
             let canvas = AgoraRtcVideoCanvas()
-//            invitedView = UIView(frame: CGRect(x: ScreenWidth * 0.60, y: ScreenHeight * 0.65, width: ScreenWidth * 0.35, height: ScreenWidth * 0.35 * 4.0 / 3.0))
             invitedView = UIView()
             invitedView?.translatesAutoresizingMaskIntoConstraints = false
             invitedView?.layer.cornerRadius = 10
