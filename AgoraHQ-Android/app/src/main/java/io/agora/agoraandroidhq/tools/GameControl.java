@@ -56,4 +56,6 @@ public class GameControl {
     public static WeakReference<RtcEngine> rtcEngine;
 
     public static WeakReference<RtcEngine> gangUpRtcEngine;
+
+    public static int result = -1;
 }
