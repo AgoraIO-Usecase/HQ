@@ -49,5 +49,14 @@
 /* Join Room */
 "Join Room" = "加入房间";
 
+/* can not connect */
+"Host invite you to connect, But your are still in team mode!" = "主持人邀请你连麦，但是你现在正在开黑！";
 
+/* invite request */
+"Host invite you to connect" = "主持人邀请你连麦";
 
+/* Accept */
+"Accept" = "接受";
+
+/* Reject */
+"Reject" = "拒绝";

@@ -109,6 +109,7 @@ class GameRoomViewController: UIViewController {
         agoraHQSigKit.delegate = self
         
         cheatButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        disconnectButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
         chatTableView.rowHeight = UITableViewAutomaticDimension
         chatTableView.estimatedRowHeight = 44
@@ -637,8 +638,8 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                     AlertUtil.showAlert(message: NSLocalizedString("Host invite you to connect, But your are still in team mode!", comment: "can not connect"))
                     return
                 }
-                let requestController = UIAlertController(title: nil, message: "Host invite you to connect", preferredStyle: .alert)
-                let acceptAction = UIAlertAction(title: "Accept", style: .default, handler: { (_) in
+                let requestController = UIAlertController(title: nil, message: NSLocalizedString("Host invite you to connect", comment: "invite request"), preferredStyle: .alert)
+                let acceptAction = UIAlertAction(title: NSLocalizedString("Accept", comment: "Accept"), style: .default, handler: { (_) in
                     // send message
                     if self.inviteResponsePoster == nil {
                         self.inviteResponsePoster = ServerHelper()
@@ -667,7 +668,7 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                         NSLayoutConstraint(item: self.invitedView!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: ScreenWidth * 0.35 * 4.0 / 3.0)
                         ])
                 })
-                let rejectAction = UIAlertAction(title: "Reject", style: .cancel, handler: { (_) in
+                let rejectAction = UIAlertAction(title: NSLocalizedString("Reject", comment: "Reject"), style: .cancel, handler: { (_) in
                     if self.inviteResponsePoster == nil {
                         self.inviteResponsePoster = ServerHelper()
                     }

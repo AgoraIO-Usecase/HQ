@@ -2,17 +2,17 @@
 /* Class = "UIButton"; normalTitle = "revive"; ObjectID = "07p-ko-hRF"; */
 "07p-ko-hRF.normalTitle" = "revive";
 
-/* Class = "UILabel"; text = "￥300"; ObjectID = "4jg-mj-B0u"; */
-"4jg-mj-B0u.text" = "￥300";
+/* Class = "UILabel"; text = "$300"; ObjectID = "4jg-mj-B0u"; */
+"4jg-mj-B0u.text" = "$300";
 
 /* Class = "UILabel"; text = "Today  13:00"; ObjectID = "7T7-5D-ANP"; */
 "7T7-5D-ANP.text" = "Today  13:00";
 
-/* Class = "UIButton"; normalTitle = "Gang up"; ObjectID = "Azb-9P-xss"; */
-"Azb-9P-xss.normalTitle" = "Gang up";
+/* Class = "UIButton"; normalTitle = "Team mode"; ObjectID = "Azb-9P-xss"; */
+"Azb-9P-xss.normalTitle" = "Team mode";
 
-/* Class = "UILabel"; text = "￥300"; ObjectID = "CCa-RW-eLa"; */
-"CCa-RW-eLa.text" = "￥300";
+/* Class = "UILabel"; text = "Leaderboard"; ObjectID = "CCa-RW-eLa"; */
+"CCa-RW-eLa.text" = "Leaderboard";
 
 /* Class = "UITextField"; placeholder = "Channel Name"; ObjectID = "Cw9-r4-4B2"; */
 "Cw9-r4-4B2.placeholder" = "Channel Name";
@@ -20,8 +20,8 @@
 /* Class = "UILabel"; text = "Please Contact"; ObjectID = "CxW-rC-smj"; */
 "CxW-rC-smj.text" = "Please Contact";
 
-/* Class = "UILabel"; text = "120"; ObjectID = "FHl-zT-1np"; */
-"FHl-zT-1np.text" = "120";
+/* Class = "UILabel"; text = "——"; ObjectID = "FHl-zT-1np"; */
+"FHl-zT-1np.text" = "——";
 
 /* Class = "UIButton"; normalTitle = "Start"; ObjectID = "G4U-Bd-vIa"; */
 "G4U-Bd-vIa.normalTitle" = "Start";
@@ -35,11 +35,14 @@
 /* Class = "UIButton"; normalTitle = "Invite friends"; ObjectID = "Llm-Zs-WWz"; */
 "Llm-Zs-WWz.normalTitle" = "Invite friends";
 
-/* Class = "UILabel"; text = "￥300"; ObjectID = "PDZ-Go-Veo"; */
-"PDZ-Go-Veo.text" = "￥300";
+/* Class = "UILabel"; text = "Extra life"; ObjectID = "PDZ-Go-Veo"; */
+"PDZ-Go-Veo.text" = "Extra life";
 
-/* Class = "UIButton"; normalTitle = "Rank list"; ObjectID = "Vzb-V1-rUV"; */
-"Vzb-V1-rUV.normalTitle" = "Rank list";
+/* Class = "UIButton"; normalTitle = "Disconnect"; ObjectID = "PIe-fa-5dz"; */
+"PIe-fa-5dz.normalTitle" = "Disconnect";
+
+/* Class = "UIButton"; normalTitle = "Leaderboard"; ObjectID = "Vzb-V1-rUV"; */
+"Vzb-V1-rUV.normalTitle" = "Leaderboard";
 
 /* Class = "UIButton"; normalTitle = "   Invite friends"; ObjectID = "Y4M-qi-zV4"; */
 "Y4M-qi-zV4.normalTitle" = "   Invite friends";
@@ -47,8 +50,8 @@
 /* Class = "UILabel"; text = "400 632 6626"; ObjectID = "aIz-aq-jVc"; */
 "aIz-aq-jVc.text" = "400 632 6626";
 
-/* Class = "UILabel"; text = "￥300"; ObjectID = "alX-UB-79d"; */
-"alX-UB-79d.text" = "￥300";
+/* Class = "UILabel"; text = "Account Balance"; ObjectID = "alX-UB-79d"; */
+"alX-UB-79d.text" = "Account Balance";
 
 /* Class = "UILabel"; text = "Login"; ObjectID = "eFe-VW-RRb"; */
 "eFe-VW-RRb.text" = "Login";

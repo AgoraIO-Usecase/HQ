@@ -62,6 +62,5 @@
 /* Class = "UILabel"; text = "Account Balance"; ObjectID = "alX-UB-79d"; */
 "alX-UB-79d.text" = "账户余额";
 
-
-
-
+/* Class = "UIButton"; normalTitle = "Disconnect"; ObjectID = "PIe-fa-5dz"; */
+"PIe-fa-5dz.normalTitle" = "下麦";

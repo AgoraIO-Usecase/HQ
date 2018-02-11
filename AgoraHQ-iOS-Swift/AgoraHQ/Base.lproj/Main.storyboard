@@ -515,7 +515,7 @@
                                     <constraint firstAttribute="width" constant="70" id="6Nv-OR-2zb"/>
                                     <constraint firstAttribute="height" constant="30" id="r3G-lt-wnw"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="11"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
                                 <state key="normal" title="Disconnect">
                                     <color key="titleColor" red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
