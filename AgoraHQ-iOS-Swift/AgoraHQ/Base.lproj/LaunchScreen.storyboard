@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -17,21 +17,8 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Artboard" translatesAutoresizingMaskIntoConstraints="NO" id="nAG-Fh-i1G">
-                                <rect key="frame" x="-15" y="11" width="405" height="779"/>
-                                <color key="backgroundColor" red="0.12552040819999999" green="0.29145160320000002" blue="0.74909329410000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <color key="tintColor" red="0.12552040819999999" green="0.29145160320000002" blue="0.74909329410000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            </imageView>
-                        </subviews>
                         <color key="backgroundColor" red="0.12552040819999999" green="0.29145160320000002" blue="0.74909329410000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <color key="tintColor" red="0.12552040819999999" green="0.29145160320000002" blue="0.74909329410000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        <constraints>
-                            <constraint firstItem="nAG-Fh-i1G" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="-15" id="Fkp-KP-bmj"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="nAG-Fh-i1G" secondAttribute="bottom" constant="-12" id="TYc-Ho-Dyh"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nAG-Fh-i1G" secondAttribute="trailing" constant="-15" id="xzt-l9-1dc"/>
-                            <constraint firstItem="nAG-Fh-i1G" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="-33" id="yYS-2X-CUU"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
@@ -40,8 +27,5 @@
             <point key="canvasLocation" x="52" y="374.66266866566718"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="Artboard" width="388" height="828"/>
-    </resources>
     <color key="tintColor" red="0.12552040815353394" green="0.29145160317420959" blue="0.74909329414367676" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
 </document>
