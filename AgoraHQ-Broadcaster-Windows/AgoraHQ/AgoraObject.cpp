@@ -399,6 +399,28 @@ BOOL CAgoraObject::IsLocalAudioMuted()
 	return m_bLocalAudioMuted;
 }
 
+BOOL CAgoraObject::MuteRemoteAudio(uid_t uid, BOOL bMuted /*= TRUE*/)
+{
+	ASSERT(NULL != m_lpAgoraEngine);
+
+	RtcEngineParameters rep(*m_lpAgoraEngine);
+
+	int ret = rep.muteRemoteAudioStream(uid, bMuted);
+	
+	return ret == 0 ? TRUE : FALSE;
+}
+
+BOOL CAgoraObject::MuteRemoteVideo(uid_t uid, BOOL bMuted /*= TRUE*/)
+{
+	ASSERT(NULL != m_lpAgoraEngine);
+
+	RtcEngineParameters rep(*m_lpAgoraEngine);
+
+	int ret = rep.muteRemoteVideoStream(uid, bMuted);
+
+	return ret == 0 ? TRUE : FALSE;
+}
+
 BOOL CAgoraObject::MuteAllRemoteAudio(BOOL bMuted)
 {
 	ASSERT(m_lpAgoraEngine != NULL);

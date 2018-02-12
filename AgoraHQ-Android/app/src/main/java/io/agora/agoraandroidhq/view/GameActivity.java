@@ -188,12 +188,21 @@ public class GameActivity extends Activity {
 
                             int correct = result.correct;
                             int res = result.result;
+                            int chooseResult = -1;
+                            GameControl.logD("clientWheatherCanPlay = "+GameControl.clientWheatherCanPlay +"  serverWheatherCanPlay = "+GameControl.serverWheatherCanPlay);
+                            if(GameControl.clientWheatherCanPlay && GameControl.serverWheatherCanPlay){
+                                chooseResult =  GameControl.result;
+                            }else{
+                                chooseResult = -1;
+                            }
 
+
+                            GameControl.logD("result  res = "+res +"  chooseResult = " +chooseResult);
                             if (GameControl.currentQuestion != null) {
                                 GameControl.logD("GameControl.currentQues = " + GameControl.currentQuestion.toString());
                                 GameControl.logD("result  showHighLightCheckBox  =  " + checkBox_item.size());
                                    /* setCheckBoxBackHighLight(res);*/
-                                if (correct == 0) {
+                                if ((res != chooseResult)) {
                                     int answer = res + 1;
                                     time_reduce.setText(getString(R.string.answer_error_message));
 
@@ -223,17 +232,18 @@ public class GameActivity extends Activity {
                                         questionTime = 0;
                                     }
                                 }
-
+                                getCorrectCheckBox(res);
                                 questionTimeHandler.sendEmptyMessageDelayed(1, 5000);
                                 //time_reduce.setVisibility(View.INVISIBLE);
                                 game_layout.setVisibility(View.VISIBLE);
                                 submit_btn.setVisibility(View.GONE);
-                                getCorrectCheckBox(res);
 
                                 if ((GameControl.currentQuestion.getId() + 1) == GameControl.total) {
                                     questionTimeHandler.sendEmptyMessageDelayed(2, 6000);
                                 }
                             }
+
+                            GameControl.result = -1;
                             break;
 
                         case "quiz":
@@ -734,10 +744,11 @@ public class GameActivity extends Activity {
 
                         questionFlag = false;
                         if (GameControl.serverWheatherCanPlay && GameControl.clientWheatherCanPlay) {
-                            GameControl.clientWheatherCanPlay = false;
+                            //GameControl.clientWheatherCanPlay = false;
                             submitAnswer();
                         } else {
                             Toast.makeText(GameActivity.this, "you can not play", Toast.LENGTH_SHORT).show();
+                            GameControl.result = -1;
                         }
                         game_layout.setVisibility(View.GONE);
                         questionTime = GameControl.timeOut;
@@ -1082,7 +1093,9 @@ public class GameActivity extends Activity {
 
             CheckBox checkBox = checkBox_item.get(i);
             if (checkBox.isChecked()) {
+
                 a = i;
+
             }
         }
 
@@ -1105,7 +1118,6 @@ public class GameActivity extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         //question_layout.removeAllViews();
         checkBox_item.clear();
         board.clear();
@@ -1170,20 +1182,31 @@ public class GameActivity extends Activity {
         layoutParams.setMargins(0, 15, 0, 15);
         box.setText(text);
         box.setTextColor(Color.BLACK);
+        GameControl.logD("setTag  position = "+position);
         box.setTag(position);
         box.setLayoutParams(layoutParams);
         box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+
                     for (int i = 0; i < checkBox_item.size(); i++) {
                         if (checkBox_item.get(i) != buttonView) {
                             checkBox_item.get(i).setChecked(false);
                         }
+
+                        if(checkBox_item.get(i) == buttonView){
+
+                            GameControl.result = i;
+                        }
                     }
+
+
                 }
             }
         });
+
+
         return box;
     }
 
@@ -1194,12 +1217,12 @@ public class GameActivity extends Activity {
         for (int i = 0; i < question_count; i++) {
             View view = question_layout.getChildAt(i);
             String tag = view.getTag() + "";
+            GameControl.logD("getCorrectCheckBox getTag = "+tag +"  position = "+positions);
             if (tag.equals(positions + "")) {
                 // GameControl.logD("correctChild  =  setBackGround");
                 view.setBackgroundColor(Color.GREEN);
             }
         }
-
     }
 
     private View createBoard() {

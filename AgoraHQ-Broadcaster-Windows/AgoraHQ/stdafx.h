@@ -76,6 +76,12 @@ typedef struct tagQuestionStatics
 	std::map<std::string, int> mapSpread;
 };
 
+typedef struct tagListOfWinners
+{
+	int nPlayerId;
+	std::string strPlayerName;
+	float fPlayerBonus;
+};
 
 #ifdef _UNICODE
 #if defined _M_IX86
