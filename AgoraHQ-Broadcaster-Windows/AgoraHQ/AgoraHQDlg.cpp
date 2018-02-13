@@ -704,10 +704,11 @@ LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 
 LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 {
+	BOOL bAccpet = bool(wParam);
 	if (m_agInviteRemoteAudience.isValid){
 		KillTimer(EVENT_TIMER_INVITEREMOTE);
 
-		if (m_lpAgoraObject){
+		if (m_lpAgoraObject && bAccpet){
 			m_lpAgoraObject->MuteRemoteAudio(str2int(m_agInviteRemoteAudience.remoteAccount), !m_agInviteRemoteAudience.enableAudio);
 			m_lpAgoraObject->MuteRemoteVideo(str2int(m_agInviteRemoteAudience.remoteAccount), !m_agInviteRemoteAudience.enableVideo);
 			m_nInviteRemote = str2int(m_agInviteRemoteAudience.remoteAccount);
@@ -743,7 +744,19 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 				}
 			}
 		}
+		else{
+			CString csStrFormat;
+			csStrFormat.Format(_T("\t Invitees: %s\n\t EnableVideo : %d \n\t EnableAudio: %d\n\t nTimeout: %d\n\t Rejected invitation.."),
+				s2cs(m_agInviteRemoteAudience.remoteAccount), m_agInviteRemoteAudience.enableVideo, m_agInviteRemoteAudience.enableAudio, m_agInviteRemoteAudience.nTimeOut);
+
+			AfxMessageBox(csStrFormat);
+		}
 	}
+
+	m_agInviteRemoteAudience.isValid = false;
+	m_agInviteRemoteAudience.isAccpet = false;
+	m_agInviteRemoteAudience.remoteAccount = "";
+
 	return TRUE;
 }
 
