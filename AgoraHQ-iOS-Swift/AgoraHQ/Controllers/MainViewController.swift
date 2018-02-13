@@ -34,7 +34,7 @@ class MainViewController: UIViewController{
             agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
             
             // 测试环境需要调用下面API设置测试服务器，如需上线请联系商务开通生产环境
-            agoraHQSigKit.dbg("lbss", b: "125.88.159.173")
+            agoraHQSigKit.dbg("lbs_100", b: "1")
         }
         agoraHQSigKit?.delegate = self
     }
