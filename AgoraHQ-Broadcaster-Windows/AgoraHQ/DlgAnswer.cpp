@@ -263,7 +263,8 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	}
 
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\"}",curLanguage.data());
+	sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"encrypt\":\"v1\"}",curLanguage.data());
+	//sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\"}", curLanguage.data());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
@@ -424,8 +425,16 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 	}
 	else if ("inviteResponse" == msgType){
 
+		std::string strRemoteMediaUid = document["data"]["mediaUid"].GetString();
+		std::string strAccount = document["data"]["uid"].GetString(); 
 		bool bAccept = document["data"]["accept"].GetBool();
-		::PostMessage(theApp.GetMainWnd()->m_hWnd, WM_InviteCallBackAccpet, WPARAM(bAccept),NULL);
+
+		LPAG_INVITE_CALLBACKACCEPT lpData = new AG_INVITE_CALLBACKACCEPT;
+		lpData->isAccept = bAccept;
+		lpData->remoteMediaUid = strRemoteMediaUid;
+		lpData->remoteSigAccount = strAccount;
+
+		::PostMessage(theApp.GetMainWnd()->m_hWnd, WM_InviteCallBackAccpet, WPARAM(lpData),NULL);
 	}
 	else if ("ListOfWinners" == msgType){
 		std::vector<tagListOfWinners> vecWinnersTemp;

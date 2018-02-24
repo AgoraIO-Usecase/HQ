@@ -125,6 +125,11 @@ int str2int(const std::string &str)
 	return atoi(str.c_str());
 }
 
+int str2long(const std::string &str)
+{
+	return atoll(str.data());
+}
+
 float str2float(const std::string &str)
 {
 	return (float)atof(str.c_str());

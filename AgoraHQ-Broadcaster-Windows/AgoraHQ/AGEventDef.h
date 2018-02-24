@@ -326,6 +326,14 @@ namespace SingleDesc
 		bool isValid;
 	}AG_INVITE_REMOTEAUDIENCE,*PAG_INVITE_REMOTEAUDIENCE,*LPAG_INVITE_REMOTEAUDEINCE;
 
+	typedef struct AGTagInviteCallBackAccpet
+	{
+		std::string remoteMediaUid;
+		std::string remoteSigAccount;
+		bool isAccept;
+
+	}AG_INVITE_CALLBACKACCEPT,*PAG_INVITE_CALLBACKACCEPT,*LPAG_INVITE_CALLBACKACCEPT;
+
 #define 	WM_InviteReceived_ChannelName  (WM_BCCall_result + 1)
 #define WM_UpdateInputParam (WM_BCCall_result + 2)
 #define WM_NewChannelName (WM_BCCall_result + 3)

@@ -32,6 +32,7 @@ std::string utf82gbk(const char *utf8);
 std::string gbk2utf8(const std::string &gbk);
 std::string utf82gbk(const std::string &utf8);
 int str2int(const std::string &str);
+int str2long(const std::string &str);
 float str2float(const std::string &str);
 CString s2cs(const std::string &str);
 std::string cs2s(const CString &str);
