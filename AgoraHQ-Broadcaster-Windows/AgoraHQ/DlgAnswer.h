@@ -53,6 +53,7 @@ protected:
 	HRESULT onChannelLeaved(WPARAM wParam, LPARAM lParam);
 
 	LRESULT onInputParam(WPARAM wParam, LPARAM lParam);
+	LRESULT onSetDataTimeBonus(WPARAM wParam, LPARAM lParam);
 
 protected:
 	void initCtrl();

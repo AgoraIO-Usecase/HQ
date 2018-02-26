@@ -45,6 +45,7 @@ private:
 	CComboBox m_comSolutionIndex;
 	CComboBox m_comCamera;
 	CStatic m_trlTestVideo;
+	CButton m_btnEnableEncrypt;
 
 	CAgoraCameraManager CameraManager; 
 	IRtcEngine* pRtcEngine;

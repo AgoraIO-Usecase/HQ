@@ -39,6 +39,7 @@ void CDlgConfig::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_VIDEOTEST, m_trlTestVideo);
 	DDX_Control(pDX, IDC_COMBO_LANGUAGE, m_comLanguage);
 	DDX_Control(pDX, IDC_COMBO_ServerAccount, m_comServerAccount);
+	DDX_Control(pDX, IDC_CHECK_EnableEncrypt, m_btnEnableEncrypt);
 }
 
 
@@ -96,6 +97,8 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 	gHQConfig.setLanguage(int2str(nLanguage));
 	m_comServerAccount.GetWindowTextW(strParam);
 	gHQConfig.setServerAccount(cs2s(strParam));
+	bool bEnableEncrypt = m_btnEnableEncrypt.GetCheck();
+	gHQConfig.setEnableEncrypt(int2str(bEnableEncrypt));
 	
 	int nCurSel = m_comCamera.GetCurSel();
 	CAgoraCameraManager CameraManager;
@@ -243,6 +246,17 @@ void CDlgConfig::initCtrl()
 	if ("" == strVideoIndex)
 		strVideoIndex = "15";
 	m_comSolutionIndex.SetCurSel(str2int(strVideoIndex));
+
+	std::string strEnableEncrypt = gHQConfig.getEnableEncrypt();
+	if ("" == strEnableEncrypt || "0" == strEnableEncrypt){
+
+		m_btnEnableEncrypt.SetCheck(FALSE);
+		gHQConfig.setEnableEncrypt("0");
+	}
+	else{
+
+		m_btnEnableEncrypt.SetCheck(TRUE);
+	}
 
 	std::string strCameraID = gHQConfig.getCameraDeviceID();
 	CString strDefCameraId = s2cs(strCameraID);

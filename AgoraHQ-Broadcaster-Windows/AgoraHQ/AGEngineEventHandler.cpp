@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "AGEngineEventHandler.h"
 #include "AGEventDef.h"
+#include "commonFun.h"
 
 CAGEngineEventHandler::CAGEngineEventHandler(void):
 m_bActive(FALSE)

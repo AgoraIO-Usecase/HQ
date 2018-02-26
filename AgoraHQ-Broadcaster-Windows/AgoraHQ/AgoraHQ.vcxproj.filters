@@ -96,6 +96,9 @@
     <ClInclude Include="DlgInput.h">
       <Filter>Dlg</Filter>
     </ClInclude>
+    <ClInclude Include="DlgSetTimeBonus.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AgoraHQ.cpp">
@@ -146,6 +149,9 @@
     <ClCompile Include="DlgInput.cpp">
       <Filter>Dlg</Filter>
     </ClCompile>
+    <ClCompile Include="DlgSetTimeBonus.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AgoraHQ.rc">
@@ -163,6 +169,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\IDB_NETWORK_QUALITY.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\AgoraHQ1.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

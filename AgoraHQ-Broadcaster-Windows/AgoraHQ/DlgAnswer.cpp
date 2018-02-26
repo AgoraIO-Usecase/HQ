@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CDlgAnswer, CDialogEx)
 	ON_MESSAGE(WM_MessageInstantReceive, onMessageInstantReceive)
 	ON_BN_CLICKED(IDC_BUTTON_RESET, &CDlgAnswer::OnBnClickedButtonReset)
 	ON_MESSAGE(WM_UpdateInputParam, onInputParam)
+	ON_MESSAGE(WM_SetDataTimeBonus,onSetDataTimeBonus)
 END_MESSAGE_MAP()
 
 
@@ -112,6 +113,7 @@ void CDlgAnswer::initAgoraSignal()
 	
 	m_pSignalCallBack = new CSingleCallBack(m_hWnd);
 	m_pSignalInstance->getAgoraAPI()->callbackSet(m_pSignalCallBack);
+	//m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
 
 	std::string sdkVersion = m_pSignalInstance->getSDKVersion();
 
@@ -189,6 +191,8 @@ void CDlgAnswer::OnBnClickedCheckD()
 void CDlgAnswer::OnBnClickedButtonGetquestion()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
 	sprintf_s(cJsonStr, "{\"type\": \"publish\"}");
 	OutputDebugStringA(cJsonStr);
@@ -204,6 +208,8 @@ void CDlgAnswer::OnBnClickedButtonGetquestion()
 void CDlgAnswer::OnBnClickedButtonStartMark()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
 	int timeStamp = ::time(NULL);
 	sprintf_s(cJsonStr, "{\"type\":\"setSEI\",\"data\" :	{\"questionId\":%d,\"timeStamp\":%d}}", m_nQuestionId, timeStamp);
@@ -220,6 +226,8 @@ void CDlgAnswer::OnBnClickedButtonStartMark()
 void CDlgAnswer::OnBnClickedButtonStopanswer()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
 	sprintf_s(cJsonStr, "{\"type\":\"stopAnswer\"}");
 	OutputDebugStringA(cJsonStr);
@@ -230,6 +238,8 @@ void CDlgAnswer::OnBnClickedButtonStopanswer()
 void CDlgAnswer::OnBnClickedButtonReset()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
 	sprintf_s(cJsonStr, "{\"type\":\"reset\"}");
 	OutputDebugStringA(cJsonStr);
@@ -263,8 +273,16 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	}
 
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"encrypt\":\"v1\"}",curLanguage.data());
-	//sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\"}", curLanguage.data());
+	std::string strEncrypt = (gHQConfig.getEnableEncrypt());
+	
+	if (strEncrypt =="" || "0" == strEncrypt){
+
+		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\"}", curLanguage.data());
+	}
+	else{
+
+		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"encrypt\":\"v1\"}", curLanguage.data());
+	}
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
@@ -362,6 +380,7 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 	//LOG_MSG(logDesc, LogType_CallBack);
 	OutputDebugStringA(logDesc);
 	OutputDebugStringA("\r\n");
+	//lpData->msg = "{\"type\":\"ListOfWinners\",\"data\":{\"num\":2,\"playerName\" : [\"play1\", \"play2\"]}}";
 
 	rapidjson::Document document;
 	if (document.Parse<0>(lpData->msg.data()).HasParseError()){
@@ -440,7 +459,7 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 		std::vector<tagListOfWinners> vecWinnersTemp;
 		int nNum = document["data"]["num"].GetInt();
 		rapidjson::Document::ValueIterator it = document["data"]["playerName"].Begin();
-		for (int nIndex = 0; nNum > nIndex; nIndex++){
+		for (int nIndex = 0; nNum > nIndex ; nIndex++){
 			tagListOfWinners winnerTemp;
 			winnerTemp.nPlayerId = nIndex;
 			winnerTemp.strPlayerName = (*it).GetString();
@@ -459,7 +478,7 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 
 			std::string errMsg = document["data"]["err"].GetString();
 			//AfxMessageBox(s2cs(errMsg), MB_OK);
-			m_ctlNoticeInfo.SetWindowTextW(s2cs("NoticeInfo" + errMsg));
+			m_ctlNoticeInfo.SetWindowTextW(s2cs("[NoticeInfo]: " + errMsg));
 		}
 	}
 	
@@ -605,6 +624,7 @@ void CDlgAnswer::updateStatusToPublish()
 	m_trlQuestion.SetWindowTextW(_T("Congratulations, you have joined the room channel, please click the SendQuestion button below to get the Question!"));
 	m_btnUpdateQuestion.ShowWindow(SW_SHOW);
 	m_btnStopAnswer.ShowWindow(SW_SHOW);
+	m_btnResetQuestion.ShowWindow(SW_SHOW);
 }
 
 LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
@@ -625,4 +645,23 @@ LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
 	}
 
 	return TRUE;
+}
+
+LRESULT CDlgAnswer::onSetDataTimeBonus(WPARAM wParam, LPARAM lParam)
+{
+	LPAG_SetDataTimeBonus lpData = (LPAG_SetDataTimeBonus)wParam;
+	if (lpData){
+
+		char cJsonStr[512] = { '\0' };
+		sprintf_s(cJsonStr, "{\"data\" : {\"DataTime\" : \"%s\",\"nBouns\" : %d,\"nRoundID\" : %d},	\"type\" : \"SetDataTimeAndBonus\"}", lpData->strDataTime.data(), lpData->nBonus, lpData->nRoundId);
+		OutputDebugStringA(cJsonStr);
+		OutputDebugStringA("\n");
+		if (m_pSignalInstance){
+			m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+		}
+
+		delete lpData; lpData = nullptr;
+	}
+
+	return true;
 }
