@@ -27,12 +27,9 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private final Context mContext;
     protected final LayoutInflater mInflater;
 
-
     public void updateData(Message message) {
         mMsglist.add(message);
-
         notifyDataSetChanged();
-
     }
 
     public MessageRecyclerViewAdapter(Context context, ArrayList<Message> list) {
@@ -56,7 +53,6 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         MessageHolder myHolder = (MessageHolder) holder;
         String sender = msg.getSender();
-        Log.d("zhang ", "sender " + sender + "   currentUser  = " + GameControl.currentUser.getName());
         if (sender.equals(GameControl.currentUser.getName().toString()) && msg.getIsMe()) {
             // myHolder.itemView.setBackgroundResource(R.drawable.rounded_bg_blue);
             myHolder.msgTitle.setText("[" + sender + "] ");
@@ -86,17 +82,12 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public class MessageHolder extends RecyclerView.ViewHolder {
         public TextView msgContent;
         public TextView msgTitle;
-
         public ImageView headImage;
-
         public MessageHolder(View v) {
             super(v);
             msgContent = (TextView) v.findViewById(R.id.msg_content);
             msgTitle = v.findViewById(R.id.msg_title);
-
             headImage = v.findViewById(R.id.msg_headImage);
-
-
         }
     }
 }

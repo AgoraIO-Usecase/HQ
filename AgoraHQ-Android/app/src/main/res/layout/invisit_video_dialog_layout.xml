@@ -28,6 +28,7 @@
             android:layout_weight="1"
             android:id="@+id/refuse_video_invitation"
             android:text="@string/refuse_video_invitation"
+            android:textColor="@color/black"
             android:background="@drawable/game_gang_up_back"
             android:alpha="0.7"
             android:typeface="monospace"/>
@@ -38,6 +39,7 @@
             android:layout_weight="1"
             android:id="@+id/accept_video_invitation"
             android:text="@string/accept_video_invitation"
+            android:textColor="@color/black"
             android:background="@drawable/game_gang_up_back"
             android:alpha="0.7"
             android:typeface="monospace"/>

@@ -14,48 +14,29 @@ import io.agora.rtc.RtcEngine;
  */
 
 public class GameControl {
-
     public static boolean clientWheatherCanPlay = true;
-
     public static boolean serverWheatherCanPlay = true;
-
     public static Question currentQuestion;
-
     public static final boolean SHOW_LOG = true;
-
     public static boolean controlCheckThread = true;
-
     public static User currentUser;
-
-
     public static int MESSAGE_ID = 2;
-
     public static Drawable currentUserHeadImage;
-
     public static String currentUserName;
-
+    public static String signalAccount;
 
     public static void setCurrentQuestion(Question question) {
         currentQuestion = question;
     }
 
     public static void logD(String message) {
-
-        if(SHOW_LOG) {
+        if (SHOW_LOG) {
             Log.d("agora_signal", message);
         }
     }
 
     public static int timeOut = 10;
-
     public static int total = 10;
-
     public static boolean gameResult = true;
-
-
-    public static WeakReference<RtcEngine> rtcEngine;
-
-    public static WeakReference<RtcEngine> gangUpRtcEngine;
-
     public static int result = -1;
 }
