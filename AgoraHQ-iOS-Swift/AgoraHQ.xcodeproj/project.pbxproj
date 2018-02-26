@@ -34,6 +34,7 @@
 		0F3138E5200379A400EA9374 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3138E4200379A400EA9374 /* Constant.swift */; };
 		0F45FF91202984E900EA7992 /* UidCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F45FF90202984E900EA7992 /* UidCell.swift */; };
 		0F51200620045DD4007F0336 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F51200520045DD3007F0336 /* CommonExtensions.swift */; };
+		0F5259F9203EAB150071D985 /* SymmetricCryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5259F8203EAB150071D985 /* SymmetricCryptor.swift */; };
 		0F614CD0202C152D00B3BABC /* MoreInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F614CCF202C152D00B3BABC /* MoreInfoViewController.swift */; };
 		0F68FB882015C04200E2437B /* AgoraHQSigKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F68FB872015C04200E2437B /* AgoraHQSigKit.framework */; };
 		0F68FB8A2015C61D00E2437B /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F68FB892015C61D00E2437B /* libsqlite3.tbd */; };
@@ -43,6 +44,8 @@
 		0FC0101D2007420F006DB1FA /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC0101C2007420F006DB1FA /* libcrypto.a */; };
 		0FCC9348200511C2001BAEAA /* AlertUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCC9347200511C2001BAEAA /* AlertUtil.swift */; };
 		0FCC934A2005DF5E001BAEAA /* ServerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCC93492005DF5E001BAEAA /* ServerHelper.swift */; };
+		0FF9640A204139970055E292 /* CongratulationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF96409204139970055E292 /* CongratulationView.swift */; };
+		0FF9640C204139A60055E292 /* CongratulationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0FF9640B204139A60055E292 /* CongratulationView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +102,7 @@
 		0F45FF90202984E900EA7992 /* UidCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UidCell.swift; sourceTree = "<group>"; };
 		0F51200520045DD3007F0336 /* CommonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
 		0F5120082004BDD2007F0336 /* AgoraHQ-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgoraHQ-Bridging-Header.h"; sourceTree = "<group>"; };
+		0F5259F8203EAB150071D985 /* SymmetricCryptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymmetricCryptor.swift; sourceTree = "<group>"; };
 		0F614CCF202C152D00B3BABC /* MoreInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreInfoViewController.swift; sourceTree = "<group>"; };
 		0F68FB872015C04200E2437B /* AgoraHQSigKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AgoraHQSigKit.framework; path = libs/AgoraHQSigKit.framework; sourceTree = "<group>"; };
 		0F68FB892015C61D00E2437B /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -109,6 +113,8 @@
 		0FC0101C2007420F006DB1FA /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = libs/libcrypto.a; sourceTree = "<group>"; };
 		0FCC9347200511C2001BAEAA /* AlertUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertUtil.swift; sourceTree = "<group>"; };
 		0FCC93492005DF5E001BAEAA /* ServerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHelper.swift; sourceTree = "<group>"; };
+		0FF96409204139970055E292 /* CongratulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratulationView.swift; sourceTree = "<group>"; };
+		0FF9640B204139A60055E292 /* CongratulationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CongratulationView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +261,7 @@
 				0FCC9347200511C2001BAEAA /* AlertUtil.swift */,
 				0FCC93492005DF5E001BAEAA /* ServerHelper.swift */,
 				0F51200520045DD3007F0336 /* CommonExtensions.swift */,
+				0F5259F8203EAB150071D985 /* SymmetricCryptor.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -276,6 +283,8 @@
 				0F45FF90202984E900EA7992 /* UidCell.swift */,
 				0F3138DF20036F2900EA9374 /* QuestionView.swift */,
 				0F3138E120036F4D00EA9374 /* QuestionView.xib */,
+				0FF96409204139970055E292 /* CongratulationView.swift */,
+				0FF9640B204139A60055E292 /* CongratulationView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -399,6 +408,7 @@
 				0F3138E220036F4D00EA9374 /* QuestionView.xib in Resources */,
 				0F2C761C2003212F00784575 /* LaunchScreen.storyboard in Resources */,
 				0F2C76192003212F00784575 /* Assets.xcassets in Resources */,
+				0FF9640C204139A60055E292 /* CongratulationView.xib in Resources */,
 				0F2C76172003212F00784575 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,12 +435,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F3138E5200379A400EA9374 /* Constant.swift in Sources */,
+				0F5259F9203EAB150071D985 /* SymmetricCryptor.swift in Sources */,
 				0F45FF91202984E900EA7992 /* UidCell.swift in Sources */,
 				0F3138D62003600000EA9374 /* KeyCenter.swift in Sources */,
 				0F614CD0202C152D00B3BABC /* MoreInfoViewController.swift in Sources */,
 				0F51200620045DD4007F0336 /* CommonExtensions.swift in Sources */,
 				0F2C764520033E6600784575 /* GameRoomViewController.swift in Sources */,
 				0FB72D5B2003408D009623F9 /* ChatCell.swift in Sources */,
+				0FF9640A204139970055E292 /* CongratulationView.swift in Sources */,
 				0F2C76122003212F00784575 /* AppDelegate.swift in Sources */,
 				0F3138E020036F2900EA9374 /* QuestionView.swift in Sources */,
 				0FCC934A2005DF5E001BAEAA /* ServerHelper.swift in Sources */,
@@ -664,7 +676,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 48TB6ZZL5S;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -683,8 +695,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraHQ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "47400579-56c9-4a89-a62a-c6eba365dff9";
-				PROVISIONING_PROFILE_SPECIFIER = AgoraIODev2017;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraHQ/AgoraHQ-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

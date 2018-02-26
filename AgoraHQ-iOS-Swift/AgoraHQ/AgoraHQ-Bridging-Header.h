@@ -3,4 +3,5 @@
 //
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCrypto.h>
 #import "DynamicKey.h"

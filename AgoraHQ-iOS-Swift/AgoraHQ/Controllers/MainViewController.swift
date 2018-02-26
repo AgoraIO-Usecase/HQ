@@ -27,6 +27,9 @@ class MainViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         checkUserStatus()
+        channelNameTextField.text = "1280690020"
+        beginButton.isEnabled = true
+        print("================== \(server)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -88,9 +91,9 @@ class MainViewController: UIViewController{
 
     @IBAction func doStartButtonPressed(_ sender: UIButton) {
         let time = NSDate().timeIntervalSince1970 + 3600
-        let token = KeyCenter.AppcertificateID.isEmpty ? "_no_need_token" : compTokenBy(appID: KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, account: UserDefaults.standard.string(forKey: "account")!, expirtdTime: UInt32(time))
+        let token = KeyCenter.AppcertificateID.isEmpty ? "_no_need_token" : compTokenBy(appID: KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, account: UserDefaults.standard.string(forKey: "name")!, expirtdTime: UInt32(time))
         agoraHQSigKit.login(UserDefaults.standard.string(forKey: "name")!, token: token, channel: self.channelNameTextField.text)
-        print("==================================", UserDefaults.standard.string(forKey: "account")!)
+        print("==================================", UserDefaults.standard.string(forKey: "name")!)
     }
     
     @IBAction func doLoginButtonPressed(_ sender: UIButton) {

@@ -70,7 +70,7 @@ class QuestionView: UIView {
         button.superview?.backgroundColor = selectedColor
         button.setTitleColor(UIColor.white, for: .normal)
         let poster = ServerHelper()
-        let paramDic = ["uid": UserDefaults.standard.string(forKey: "account")!,
+        let paramDic = ["uid": UserDefaults.standard.string(forKey: "name")!,
                         "gid": channelName!,
                         "sid": Int(UserDefaults.standard.string(forKey: "sid")!)!,
                         "result": button.tag] as [String : Any]

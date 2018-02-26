@@ -40,6 +40,7 @@ class GameRoomViewController: UIViewController {
     var question: String!
     var answers = [String]()
     var result: NSDictionary!
+    var totalNum: UInt = 12
     
     var backgroundLayer : CAGradientLayer?
     
@@ -97,6 +98,10 @@ class GameRoomViewController: UIViewController {
     var audioSetTime: Int = 0
     var audioSetted = false
     
+    // decryt
+    var decryptKey: String!
+    var decryptIv: String = "00000000000agora"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -108,6 +113,8 @@ class GameRoomViewController: UIViewController {
         }
         agoraHQSigKit.delegate = self
         
+        decryptKey = channelName
+        
         cheatButton.titleLabel?.adjustsFontSizeToFitWidth = true
         disconnectButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
@@ -116,9 +123,7 @@ class GameRoomViewController: UIViewController {
         addTouchEventToTableView(chatTableView)
         addKeyboardObserver()
         joinMediaChannel()
-//        addgradientLayer()
         checkStatus()
-        
     }
     
     // 设置消息view背景渐变
@@ -160,7 +165,7 @@ class GameRoomViewController: UIViewController {
         }
         
         poster.delegate = self
-        let paramDic = ["uid": UserDefaults.standard.string(forKey: "account")! ,
+        let paramDic = ["uid": UserDefaults.standard.string(forKey: "name")! ,
                         "gid": channelName!]
         poster.postAction(to: reliveUrl, with: paramDic)
     }
@@ -252,6 +257,7 @@ class GameRoomViewController: UIViewController {
     
     @IBAction func doDisconnectButtonPressed(_ sender: UIButton) {
         isInConnection = false
+        invitedUid = nil
         rtcEngine.muteLocalVideoStream(true)
         rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}")
         invitedView?.removeFromSuperview()
@@ -337,12 +343,32 @@ class GameRoomViewController: UIViewController {
         questionView.removeFromSuperview()
         isAnswering = false
         timer.invalidate()
+        
+        let id = UserDefaults.standard.integer(forKey: "sid") + 1
+        if id == totalNum && UserDefaults.standard.bool(forKey: "status") {
+            showCongralationView()
+        }
+    }
+    
+    func showCongralationView() {
+        let profilePhoto = UserDefaults.standard.data(forKey: "ProfilePhoto")
+        let name = UserDefaults.standard.string(forKey: "name")
+        let image = profilePhoto == nil ? #imageLiteral(resourceName: "user_main") : UIImage(data: profilePhoto!)
+        let cview = CongratulationView.newCongratulationView(with: image!, name: name!) as? CongratulationView
+        cview?.frame = self.view.frame
+        //        cview?.frame = CGRect(x: 50, y: 100, width: ScreenWidth - 100, height: ScreenWidth - 100)
+        
+        view.addSubview(cview!)
+        cview?.containView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.3, options: [], animations: {
+            cview?.containView.transform = CGAffineTransform.identity
+        }, completion: nil)
     }
     
     // 检查是否可以答题
     func checkStatus() {
         geter.delegate = self
-        let paramDic = ["uid": UserDefaults.standard.string(forKey: "account")! ,
+        let paramDic = ["uid": UserDefaults.standard.string(forKey: "name")! ,
                         "gid": channelName!]
         print(paramDic)
         geter.getAction(to: getStatusUrl, with: paramDic)
@@ -592,13 +618,40 @@ extension GameRoomViewController: AgoraHQSigDelegate{
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
             if jsonData["type"] as! String == "quiz" {
-                let quiz = jsonData["data"] as! NSDictionary
+                var quiz = NSDictionary()
+                let encryptType = jsonData["encrypt"] as? String
+                if let type = encryptType {
+                    switch type {
+                    case "v1":
+                        guard let data = Data.init(base64Encoded: jsonData["data"] as! String, options: Data.Base64DecodingOptions(rawValue: 0)) else {
+                            print("================= Base64 Decoding failed ==============")
+                            return
+                        }
+                        let cypher = SymmetricCryptor(algorithm: .aes_128, options: kCCOptionPKCS7Padding, iv: decryptIv)
+                        if decryptKey.count < 16 {
+                            for _ in 0 ..< 16 - decryptKey.count {
+                                decryptKey.insert("0", at: decryptKey.startIndex)
+                            }
+                        } else if decryptKey.count > 16 {
+                            decryptKey.replaceSubrange(decryptKey.startIndex..<decryptKey.index(decryptKey.startIndex, offsetBy: decryptKey.count - 16), with: "")
+                        }
+                        let quizData = try cypher.decrypt(data, key: decryptKey)
+                        let quizeString = String(data: quizData, encoding: String.Encoding.utf8)
+                        print(quizeString ?? "error")
+                        quiz = try JSONSerialization.jsonObject(with: quizData, options: .mutableContainers) as! NSDictionary
+                    default:
+                        quiz = jsonData["data"] as! NSDictionary
+                    }
+                } else {
+                    quiz = jsonData["data"] as! NSDictionary
+                }
                 let sid = quiz["id"] as! Int
                 UserDefaults.standard.set(sid, forKey: "sid")
                 self.question = quiz["question"] as! String
                 self.answers = quiz["options"] as! Array<String>
                 self.questionId = sid
                 self.answerTime = quiz["timeout"] as! Int
+                self.totalNum = quiz["total"] as! UInt
             } else if jsonData["type"] as! String == "result" {
                 print(jsonData)
                 self.result = jsonData["data"] as! NSDictionary
@@ -616,7 +669,7 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                 updateChatView()
             }
         } catch  {
-            AlertUtil.showAlert(message: "Receive message error")
+            AlertUtil.showAlert(message: "Receive message error: \(error)")
             print("Error: \(error)")
         }
     }
@@ -632,7 +685,9 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                         self.inviteResponsePoster = ServerHelper()
                     }
                     let paramDic = ["accept": false,
-                                    "account": UserDefaults.standard.string(forKey: "account")!] as [String : Any]
+                                    "account": UserDefaults.standard.string(forKey: "name")!,
+                                    "mediaUid": myUid!,
+                                    "gid": channelName] as [String : Any]
                     self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
                     
                     AlertUtil.showAlert(message: NSLocalizedString("Host invite you to connect, But your are still in team mode!", comment: "can not connect"))
@@ -644,12 +699,18 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                     if self.inviteResponsePoster == nil {
                         self.inviteResponsePoster = ServerHelper()
                     }
+                    if self.invitedView != nil {
+                        self.invitedView?.removeFromSuperview()
+                    }
                     let paramDic = ["accept": true,
-                                    "account": UserDefaults.standard.string(forKey: "account")!] as [String : Any]
+                                    "account": UserDefaults.standard.string(forKey: "name")!,
+                                    "mediaUid": self.myUid!,
+                                    "gid": self.channelName] as [String : Any]
                     self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
                     
                     self.rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":400}}")
                     let canvas = AgoraRtcVideoCanvas()
+                    self.invitedUid = self.myUid
                     self.invitedView = UIView()
                     self.invitedView?.translatesAutoresizingMaskIntoConstraints = false
                     self.invitedView?.layer.cornerRadius = 10
@@ -673,7 +734,9 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                         self.inviteResponsePoster = ServerHelper()
                     }
                     let paramDic = ["accept": false,
-                                    "account": UserDefaults.standard.string(forKey: "account")!] as [String : Any]
+                                    "account": UserDefaults.standard.string(forKey: "name")!,
+                                    "mediaUid": self.myUid!,
+                                    "gid": self.channelName] as [String : Any]
                     self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
                 })
                 
@@ -681,6 +744,11 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                 requestController.addAction(rejectAction)
                 
                 present(requestController, animated: true, completion: nil)
+                
+            } else if jsonData["type"] as! String == "inviteEnd" {
+                
+                self.doDisconnectButtonPressed(self.disconnectButton)
+                
             }
         } catch  {
             AlertUtil.showAlert(message: "Receive message error")
