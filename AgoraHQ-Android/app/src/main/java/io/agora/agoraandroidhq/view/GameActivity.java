@@ -118,6 +118,16 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private ImageView congratulationHeadImage;
     private TextView congratulationTextView;
     private ImageView cancelCongratulation;
+    // private Button button_show;
+    private LinearLayout game_layout;
+    private Button submit_btn;
+    private LinearLayout question_layout;
+    // private ArrayList<String> questionData = new ArrayList<String>();
+    private ArrayList<CheckBox> checkBox_item = new ArrayList<CheckBox>();
+    private ArrayList<View> board = new ArrayList<View>();
+    private TextView game_title;
+    private TextView wheath_canPlay_TextView;
+    private TextView time_reduce;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -847,7 +857,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         if (frameLayout.getChildCount() > 0) {
             return;
         }
-
         isInVideoWithBroadcast = true;
         GameControl.logD(tag + "setUpLocalVideoCall  isInVideoWithBroadcast = " + isInVideoWithBroadcast);
         mRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":30}}");
@@ -859,17 +868,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         surfaceView.setZOrderMediaOverlay(true);
         frameLayout.addView(surfaceView);
     }
-
-    // private Button button_show;
-    private LinearLayout game_layout;
-    private Button submit_btn;
-    private LinearLayout question_layout;
-    // private ArrayList<String> questionData = new ArrayList<String>();
-    private ArrayList<CheckBox> checkBox_item = new ArrayList<CheckBox>();
-    private ArrayList<View> board = new ArrayList<View>();
-    private TextView game_title;
-    private TextView wheath_canPlay_TextView;
-    private TextView time_reduce;
 
     private void initQuestionLayout() {
         // button_show = findViewById(R.id.show_question_btn);
@@ -1090,7 +1088,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             }
         });
     }
-
 
     private void showInvitationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
@@ -1374,7 +1371,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             @Override
             public void run() {
                 gangUpRecycleViewAdapter.addGangUpUidList(uid + "");
-
             }
         });
     }

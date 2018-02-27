@@ -35,9 +35,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import io.agora.agoraandroidhq.HqApplication;
 import io.agora.agoraandroidhq.R;
 import io.agora.agoraandroidhq.tools.Constants;
@@ -46,7 +43,6 @@ import io.agora.agoraandroidhq.tools.DecryptHelpter;
 import io.agora.agoraandroidhq.tools.GameControl;
 import io.agora.agoraandroidhq.tools.SharedPreferenceHelper;
 import io.agora.rtc.RtcEngine;
-
 
 public class MainActivity extends BaseActivity {
 
@@ -66,7 +62,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main_view);
         initUIandEvent();
         setUiListener();
-
     }
 
     private void testDecry() {
