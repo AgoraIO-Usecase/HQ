@@ -80,7 +80,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private boolean isFirst = true;
     private ExecutorService executorService;
     private AgoraSignal agoraSignal;
-    private boolean wheatherChangeGameReuslt = true;
     private RecyclerView recyclerView;
     private MessageRecyclerViewAdapter messageRecyclerViewAdapter;
     private LinearLayout messageLinearLayou;
@@ -426,13 +425,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                     if (questionTime != 0 && (questionTime != GameControl.timeOut)) {
                                         questionTime = 0;
                                     }
-
-                                    if (wheatherChangeGameReuslt) {
-
-                                        GameControl.gameResult = false;
-                                        wheatherChangeGameReuslt = false;
-                                    }
-
                                 } else {
                                     time_reduce.setText(R.string.answer_correct_message);
                                     time_reduce.setTextColor(Color.GREEN);
@@ -459,14 +451,14 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                             break;
 
                         case "quiz":
-
                             Question question = (Question) jsonObject;
-
-
-                            if (question.getId() == 1) {
-                                GameControl.gameResult = true;
-                                wheatherChangeGameReuslt = true;
+                            if (question.getId() == 0) {
+                                GameControl.clientWheatherCanPlay = true;
+                                GameControl.serverWheatherCanPlay = true;
+                                submit_btn.setText(R.string.submit_message);
+                                submit_btn.setTextColor(Color.BLACK);
                             }
+
                             GameControl.logD(tag + "save Question :  id = " + question.getId() + "  " + question.getTimeOut());
                             if (question != null) {
                                 GameControl.setCurrentQuestion(question);

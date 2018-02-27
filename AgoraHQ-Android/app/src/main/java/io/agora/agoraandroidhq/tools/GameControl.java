@@ -37,6 +37,5 @@ public class GameControl {
 
     public static int timeOut = 10;
     public static int total = 10;
-    public static boolean gameResult = true;
     public static int result = -1;
 }

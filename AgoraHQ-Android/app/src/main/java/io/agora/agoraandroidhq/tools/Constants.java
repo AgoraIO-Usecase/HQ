@@ -7,7 +7,6 @@ import io.agora.agoraandroidhq.R;
  */
 
 public class Constants {
-
     public static final int broadCastUid = 1;
     public static  String HTTP_RELIVE;
     public static  String HTTP_SEND_ANSWER_TO_SERVER;
