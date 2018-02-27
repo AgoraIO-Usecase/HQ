@@ -64,15 +64,6 @@ public class MainActivity extends BaseActivity {
         setUiListener();
     }
 
-    private void testDecry() {
-        String data = DecryptData.getKey("23924839");
-        GameControl.logD("key-------" + data);
-        String data2 = DecryptData.getKey("2443059094054");
-        GameControl.logD("key-------" + data2);
-        String data3 = DecryptData.getKey("284958492584932584025843589403258493058403258490");
-        GameControl.logD("key-------" + data3);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -124,7 +115,6 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 String userName = editText.getText().toString();
                 if (TextUtils.isEmpty(userName)) {
                     editText.setHint("Label");
@@ -140,10 +130,8 @@ public class MainActivity extends BaseActivity {
     public void startClick(View view) {
         String ChannelName = channelNameEditText.getText().toString();
         String userName = labelName.getText().toString();
-
         if (TextUtils.isEmpty(ChannelName)) {
             Toast.makeText(MainActivity.this, R.string.text_channel_name_can_not_be_null, Toast.LENGTH_SHORT).show();
-
         } else {
             playGame.setClickable(false);
             Intent intent = new Intent(MainActivity.this, GameActivity.class);
@@ -200,7 +188,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         } else if (requestCode == 0) {
-
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -253,7 +240,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumns = {MediaStore.Images.Media.DATA};
@@ -264,14 +250,11 @@ public class MainActivity extends BaseActivity {
             GameControl.logD(tag + "bitmapSIze  filePath  =  " + imagePath);
             if (imagePath != null) {
                 //GameControl.logD("bitmapSIze =  " + bitmap.getByteCount());
-
                 //Bitmap bitmaps = resizeBitmap(imagePath, 80, 80);
                 Bitmap bitmaps = getFitSampleBitmap(imagePath, 150, 150);
                 GameControl.logD(tag + "bitmap Size = " + bitmaps.getByteCount());
-
                 if (bitmaps != null) {
                    /* Bitmap bitmap = ((BitmapDrawable) ((ImageView) labelImage).getDrawable()).getBitmap();
-
                     if(bitmap!=null){
                         bitmap.recycle();
                         bitmap = null;

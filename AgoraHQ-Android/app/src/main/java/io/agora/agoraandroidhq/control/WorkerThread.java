@@ -22,7 +22,6 @@ import io.agora.rtc.video.VideoCanvas;
 
 public class WorkerThread extends Thread {
 
-
     private final Context mContext;
     private static final int ACTION_WORKER_THREAD_QUIT = 0X1010; // quit this thread
     private static final int ACTION_WORKER_JOIN_CHANNEL = 0X2010;
@@ -82,7 +81,6 @@ public class WorkerThread extends Thread {
     }
 
     private WorkerThreadHandler mWorkerHandler;
-
     private boolean mReady;
 
     public final void waitForReady() {
@@ -182,7 +180,6 @@ public class WorkerThread extends Thread {
             mWorkerHandler.sendMessage(envelop);
             return;
         }
-
         ensureGangUpRtcEngineReadyLock();
         gangUpRtcEngine.enableAudio();
         //rtcEngine.enableAudio();

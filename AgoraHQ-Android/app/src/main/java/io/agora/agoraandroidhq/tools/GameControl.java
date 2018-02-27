@@ -14,6 +14,7 @@ import io.agora.rtc.RtcEngine;
  */
 
 public class GameControl {
+
     public static boolean clientWheatherCanPlay = true;
     public static boolean serverWheatherCanPlay = true;
     public static Question currentQuestion;
