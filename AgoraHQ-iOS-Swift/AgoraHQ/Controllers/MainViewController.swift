@@ -27,9 +27,6 @@ class MainViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         checkUserStatus()
-        channelNameTextField.text = "1280690020"
-        beginButton.isEnabled = true
-        print("================== \(server)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
