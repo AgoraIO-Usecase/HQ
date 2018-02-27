@@ -18,30 +18,23 @@ public class User {
     public String name = "Test" + random.nextInt(1000);
     public String channelName;
     public boolean wheatherCanPlay;
-
     // public static String name = "Agora";
     // public static Uri portUri = Uri.parse("http://7xs9j5.com1.z0.glb.clouddn.com/liveapp/anlingrong.jpg");
-
-
     public String getAccount() {
         return account;
     }
-
-
     public String getName() {
         return name;
     }
-
-
     public void setChannelName(String channelName) {
         this.channelName = channelName;
     }
-
     public String getChannelName() {
         return channelName;
     }
-
     public Drawable drawable;
-
-
+    public String signalAccount;
+    public String getSignalAccount(){
+        return signalAccount;
+    }
 }

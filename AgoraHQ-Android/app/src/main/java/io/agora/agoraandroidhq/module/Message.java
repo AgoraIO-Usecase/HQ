@@ -9,9 +9,7 @@ public class Message {
     private String sender;
     private String content;
     private int type ;
-
     private boolean isMe;
-
     public Message(int type , String sender,String content){
         this.type = type;
         this.sender = sender;
@@ -31,11 +29,9 @@ public class Message {
     public String getContent(){
         return content;
     }
-
     public boolean getIsMe(){
         return isMe;
     }
-
     public void setIsMe(boolean isMe){
         this.isMe = isMe;
     }

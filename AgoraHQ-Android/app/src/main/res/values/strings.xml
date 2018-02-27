@@ -27,10 +27,10 @@
     <string name="game_title">Agora HQ</string>
     <string name="ranking_list">排行榜</string>
     <string name="text_invite_friends">邀请好友</string>
-    <string name="http_relive">http://123.155.153.87:9000/v1/relive</string>
-    <string name="http_send_answer_to_server">http://123.155.153.87:9000/v1/answer</string>
-    <string name="http_check_wheather_can_play">http://123.155.153.87:9000/v1/canplay?gid=</string>
-    <string name="http_reply_wheather_accept_video">http://123.155.153.87:9000/v1/inviteResponse</string>
+    <string name="http_relive">http://123.155.153.87:9500/v1/relive</string>
+    <string name="http_send_answer_to_server">http://123.155.153.87:9500/v1/answer</string>
+    <string name="http_check_wheather_can_play">http://123.155.153.87:9500/v1/canplay?gid=</string>
+    <string name="http_reply_wheather_accept_video">http://123.155.153.87:9500/v1/inviteResponse</string>
     <string name="string_money_300">¥300</string>
     <string name="string_money_120">¥120</string>
     <string name="string_get_more">获取更多</string>

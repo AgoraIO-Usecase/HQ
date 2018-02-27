@@ -19,40 +19,33 @@ import io.agora.agoraandroidhq.module.Message;
  * Created by zhangtao on 2018/2/7.
  */
 
-public class GangUpRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class GangUpRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ArrayList<String> mUidList;
-
     private final Context mContext;
     protected final LayoutInflater mInflater;
-
+    private String tag = "[GangUpRecycleViewAdapter]  ";
 
     public void updateData() {
         notifyDataSetChanged();
     }
 
-
-    public void addGangUpUidList(String uid){
-
+    public void addGangUpUidList(String uid) {
         mUidList.add(uid);
         notifyDataSetChanged();
-        GameControl.logD("sub addGangUpUidList uid  =  "+uid +"  mUidList Size = "+mUidList.size());
+        GameControl.logD(tag + "sub addGangUpUidList uid  =  " + uid + "  mUidList Size = " + mUidList.size());
     }
 
-    public void removeUidFromGangUpList(String uid){
+    public void removeUidFromGangUpList(String uid) {
         mUidList.remove(uid);
         notifyDataSetChanged();
-        GameControl.logD("sub removeUidFromGangUpList uid  =  "+uid +"  mUidList Size = "+mUidList.size());
-
+        GameControl.logD(tag + "sub removeUidFromGangUpList uid  =  " + uid + "  mUidList Size = " + mUidList.size());
     }
 
-    public void clearGangUpUidList(){
-
+    public void clearGangUpUidList() {
         mUidList.clear();
-
         notifyDataSetChanged();
-        GameControl.logD("sub clearGangUpUidList uid  =  " );
+        GameControl.logD(tag + "sub clearGangUpUidList uid  =  ");
     }
-
 
     public GangUpRecycleViewAdapter(Context context) {
         mContext = context;
@@ -69,33 +62,19 @@ public class GangUpRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        GameControl.logD("sub onBindViewHolder uidListSize  =  "+mUidList.size() );
+        GameControl.logD(tag + "sub onBindViewHolder uidListSize  =  " + mUidList.size());
         if (mUidList == null | mUidList.size() == 0) {
             return;
         }
         String uid = mUidList.get(position);
 
         GangUpRecycleViewAdapter.MessageHolder myHolder = (GangUpRecycleViewAdapter.MessageHolder) holder;
-        //String sender = msg.getSender();
-       // Log.d("zhang ", "sender " + sender + "   currentUser  = " + GameControl.currentUser.getName());
         if (uid.equals(GameControl.currentUser.getAccount().toString())) {
-            /*myHolder.itemView.setBackgroundResource(R.drawable.rounded_bg_blue);
-            myHolder.msgTitle.setText("[" + sender + "] ");
-            myHolder.msgContent.setBackgroundResource(R.drawable.rounded_bg_blue);
-            myHolder.msgContent.setText(msg.getContent());*/
             myHolder.uidContent.setBackgroundResource(R.drawable.rounded_bg_blue);
-
-            myHolder.uidContent.setText(uid+"");
-           // myHolder.msgContent.setAlpha(0.5f);
+            myHolder.uidContent.setText(uid + "");
             myHolder.uidHeadImage.setImageDrawable(GameControl.currentUser.drawable);
         } else {
-            // myHolder.itemView.setBackgroundResource(R.drawable.rounded_bg);
-           /* myHolder.msgTitle.setText("[" + sender + "] ");
-            myHolder.msgContent.setBackgroundResource(R.drawable.rounded_bg);
-            myHolder.msgContent.setText(msg.getContent());
-            myHolder.msgContent.setAlpha(0.5f);*/
-           myHolder.uidContent.setText(uid+"");
-
+            myHolder.uidContent.setText(uid + "");
         }
     }
 
@@ -111,23 +90,12 @@ public class GangUpRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public class MessageHolder extends RecyclerView.ViewHolder {
         public TextView uidContent;
-
-
         public ImageView uidHeadImage;
 
         public MessageHolder(View v) {
             super(v);
-           /* msgContent = (TextView) v.findViewById(R.id.msg_content);
-            msgTitle = v.findViewById(R.id.msg_title);
-
-            headImage = v.findViewById(R.id.msg_headImage);*/
-
-           uidContent = v.findViewById(R.id.gang_up_recycleview_item_uid);
-
-           uidHeadImage = v.findViewById(R.id.gang_up_recycleview_item_headImage);
-
-
+            uidContent = v.findViewById(R.id.gang_up_recycleview_item_uid);
+            uidHeadImage = v.findViewById(R.id.gang_up_recycleview_item_headImage);
         }
     }
-
 }
