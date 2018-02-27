@@ -127,6 +127,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private TextView game_title;
     private TextView wheath_canPlay_TextView;
     private TextView time_reduce;
+    private ImageView answerFaceImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -174,6 +175,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         congratulationView = findViewById(R.id.congratulation_view);
         cancelCongratulation = findViewById(R.id.congratulation_cancel);
         cancelCongratulation.setClickable(true);
+        answerFaceImage = findViewById(R.id.answer_face);
     }
 
     @Override
@@ -416,7 +418,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                 if ((res != chooseResult)) {
                                     int answer = res + 1;
                                     time_reduce.setText(getString(R.string.answer_error_message));
-
+                                    answerFaceImage.setImageResource(R.drawable.answer_wrong);
+                                    answerFaceImage.setVisibility(View.VISIBLE);
                                     time_reduce.setTextColor(Color.RED);
                                     time_reduce.setVisibility(View.VISIBLE);
                                     //game_title.setVisibility(View.INVISIBLE);
@@ -427,6 +430,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                     }
                                 } else {
                                     time_reduce.setText(R.string.answer_correct_message);
+                                    answerFaceImage.setImageResource(R.drawable.answer_right);
+                                    answerFaceImage.setVisibility(View.VISIBLE);
                                     time_reduce.setTextColor(Color.GREEN);
                                     time_reduce.setVisibility(View.VISIBLE);
                                     //game_title.setVisibility(View.INVISIBLE);
@@ -641,6 +646,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         GameActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                answerFaceImage.setVisibility(View.GONE);
                 GameControl.logD(tag + "GameControl serverWheatherCanPlay = " + GameControl.serverWheatherCanPlay + "  GameControl.clientWheatherCanPlay  = " + GameControl.clientWheatherCanPlay);
                 if (GameControl.serverWheatherCanPlay && GameControl.clientWheatherCanPlay) {
                     showquestionView(GameControl.currentQuestion);
