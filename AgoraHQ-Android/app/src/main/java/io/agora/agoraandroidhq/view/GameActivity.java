@@ -188,6 +188,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             workerThread.gangUpLeaveChannel();
             workerThread.leaveChannel();
         }
+        if(workerThread.eventHandler() != null){
+            workerThread.eventHandler().removeEventHandler(this);
+        }
         questionFlag = false;
         if (agoraSignal != null) {
             agoraSignal.removeEnventHandler();
