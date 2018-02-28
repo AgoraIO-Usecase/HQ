@@ -88,9 +88,9 @@ class MainViewController: UIViewController{
 
     @IBAction func doStartButtonPressed(_ sender: UIButton) {
         let time = NSDate().timeIntervalSince1970 + 3600
-        let token = KeyCenter.AppcertificateID.isEmpty ? "_no_need_token" : compTokenBy(appID: KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, account: UserDefaults.standard.string(forKey: "account")!, expirtdTime: UInt32(time))
+        let token = KeyCenter.AppcertificateID.isEmpty ? "_no_need_token" : compTokenBy(appID: KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, account: UserDefaults.standard.string(forKey: "name")!, expirtdTime: UInt32(time))
         agoraHQSigKit.login(UserDefaults.standard.string(forKey: "name")!, token: token, channel: self.channelNameTextField.text)
-        print("==================================", UserDefaults.standard.string(forKey: "account")!)
+        print("==================================", UserDefaults.standard.string(forKey: "name")!)
     }
     
     @IBAction func doLoginButtonPressed(_ sender: UIButton) {

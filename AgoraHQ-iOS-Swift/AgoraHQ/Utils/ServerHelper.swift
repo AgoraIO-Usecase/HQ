@@ -24,6 +24,19 @@ class ServerHelper: NSObject {
         if paramDic.count > 0 {
             //设置为POST请求
             request.httpMethod = "POST"
+            
+            // if post json
+            
+//            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//            do {
+//                let paraData = try JSONSerialization.data(withJSONObject: paramDic, options: .prettyPrinted)
+//                request.httpBody = paraData
+//                let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: paraData, options: .mutableContainers) as! NSDictionary
+//                print(jsonData)
+//            } catch {
+//                print(error)
+//            }
+            
             //拆分字典,subDic是其中一项，将key与value变成字符串
             for subDic in paramDic {
                 let tmpStr = "\(subDic.0)=\(subDic.1)"
@@ -35,6 +48,7 @@ class ServerHelper: NSObject {
             let paraData = paramStr.data(using: String.Encoding.utf8)
             //设置请求体
             request.httpBody = paraData
+            print("++++++++++++++++++++++++", paramStr)
         }
         
         //默认session配置

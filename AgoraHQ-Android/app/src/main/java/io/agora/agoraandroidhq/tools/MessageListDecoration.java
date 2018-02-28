@@ -13,10 +13,8 @@ public class MessageListDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         int itemCount = parent.getAdapter().getItemCount();
         int viewPosition = parent.getChildAdapterPosition(view);
-
         outRect.left = divider;
         outRect.right = divider;
-
         if (viewPosition == 0) {
             outRect.top = header;
             outRect.bottom = divider / 2;

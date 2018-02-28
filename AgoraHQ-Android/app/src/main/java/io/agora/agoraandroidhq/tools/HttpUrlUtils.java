@@ -29,23 +29,17 @@ public class HttpUrlUtils {
         void onResponse(String data) throws JSONException;
     }
 
-
     public void execHttpAsyncTask(String url, boolean isPost, HttpUrlUtils.OnResponse callback, Map data) {
-
         new HttpAsyncTask(url, isPost, callback, data).execute();
     }
 
     private class HttpAsyncTask extends AsyncTask {
         private String url;
-
         private boolean isPost;
-
         private HttpURLConnection conn;
         private Map data;
         private HttpUrlUtils.OnResponse callback;
         private String serverData;
-
-
         public HttpAsyncTask(String url, boolean isPost, HttpUrlUtils.OnResponse callback, Map data) {
             this.url = url;
             this.isPost = isPost;
@@ -73,7 +67,9 @@ public class HttpUrlUtils {
 
             try {
                 if (isPost) {
+
                     serverData = chageDataToserver(data);
+                    GameControl.logD("changeDataToserver  " + serverData.toString());
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -106,24 +102,10 @@ public class HttpUrlUtils {
                     e.printStackTrace();
                 }
             }
-            //   conn.setInstanceFollowRedirects(true);
-
         }
-
 
         @Override
         protected Object doInBackground(Object[] objects) {
-           /*if(!isPost) {
-               try {
-                 //  conn.connect();
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
-           }*/
-
-            //logD("Post =  " + isPost + " post to server data  = " + data);
-            //logD("Post url = " + url);
-
             DataOutputStream out = null;
             if (isPost) {
 
@@ -133,19 +115,19 @@ public class HttpUrlUtils {
 
                     e.printStackTrace();
 
-                    return Constants.MESSAGE_TOAST+"";
+                    return Constants.MESSAGE_TOAST + "";
                 }
                 try {
                     out.writeBytes(serverData);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return Constants.MESSAGE_TOAST+"";
+                    return Constants.MESSAGE_TOAST + "";
                 }
                 try {
                     out.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return Constants.MESSAGE_TOAST+"";
+                    return Constants.MESSAGE_TOAST + "";
                 }
             } else {
                 try {
@@ -153,7 +135,6 @@ public class HttpUrlUtils {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
 
             int code = 0;
@@ -163,7 +144,7 @@ public class HttpUrlUtils {
                 e.printStackTrace();
             }
 
-            logD("ResponseCode = " + code);
+            GameControl.logD("ResponseCode = " + code);
             if (code == 200) {
                 InputStream in = null;
                 try {
@@ -200,7 +181,7 @@ public class HttpUrlUtils {
                 logD("data from server" + json);
                 return json;
             } else {
-                logD("ResponseCode  =    " +"error");
+                logD("ResponseCode  =    " + "error");
                 return "";
             }
         }
@@ -209,7 +190,7 @@ public class HttpUrlUtils {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             logD("onPostExecute");
-            if(callback !=null) {
+            if (callback != null) {
                 try {
                     callback.onResponse((String) o);
                 } catch (JSONException e) {
@@ -219,13 +200,9 @@ public class HttpUrlUtils {
         }
     }
 
-
     private void logD(String message) {
         Log.d("zhang  HttpUrlUtils", message);
     }
-
-
-
 
     public String chageDataToserver(Map parameters) throws UnsupportedEncodingException {
 

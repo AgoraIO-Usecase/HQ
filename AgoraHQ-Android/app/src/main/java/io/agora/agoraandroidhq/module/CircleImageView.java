@@ -57,8 +57,6 @@ public class CircleImageView extends ImageView {
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint.setColor(Color.WHITE);
-
-
     }
 
     @Override
@@ -85,15 +83,4 @@ public class CircleImageView extends ImageView {
         super.onDraw(cns);
        // cns.restoreToCount(saveCount);
     }
-
-
-   /* @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-
-        if(visibility==View.VISIBLE){
-            GameControl.logD("invalidate ImageVIew");
-            invalidate();
-        }
-    }*/
 }

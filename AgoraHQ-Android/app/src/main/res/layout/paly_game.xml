@@ -12,33 +12,33 @@
         android:layout_height="match_parent"></FrameLayout>
 
     <FrameLayout
+        android:id="@+id/small_video"
         android:layout_width="140dp"
         android:layout_height="250dp"
-        android:id="@+id/small_video"
         android:layout_gravity="bottom|right"
+        android:layout_marginBottom="50dp"
         android:layout_marginRight="10dp"
-        android:visibility="gone"
         android:background="@drawable/small_video_back"
-        android:layout_marginBottom="50dp"></FrameLayout>
+        android:visibility="gone"></FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gangUpUidRecycleView"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="13dp"
         android:layout_gravity="right"
-        android:visibility="visible"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="100dp"
         android:alpha="0.5"
         android:background="@drawable/game_gang_up_back"
-        ></android.support.v7.widget.RecyclerView>
+        android:visibility="visible"></android.support.v7.widget.RecyclerView>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="35dp">
+        android:layout_marginTop="35dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/back_image"
@@ -49,33 +49,34 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="right">
+            android:gravity="right"
+            android:orientation="vertical">
+
             <Button
+                android:id="@+id/game_gang_up_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_gravity="right"
-                android:id="@+id/game_gang_up_btn"
                 android:alpha="0.5"
-                android:padding="3dp"
                 android:background="@drawable/game_gang_up_back"
                 android:onClick="gangUpClick"
+                android:padding="3dp"
                 android:text="@string/gang_up_string" />
 
             <Button
+                android:id="@+id/disConnectVideo"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_gravity="right"
-                android:id="@+id/disConnectVideo"
                 android:layout_marginTop="10dp"
                 android:alpha="0.5"
-                android:padding="3dp"
                 android:background="@drawable/game_gang_up_back"
                 android:clickable="false"
-                android:textSize="10sp"
-                android:visibility="gone"
                 android:onClick="disConnectVideo"
-                android:text="Disconnect" />
+                android:padding="3dp"
+                android:text="Disconnect"
+                android:textSize="10sp"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
 
@@ -132,9 +133,6 @@
          layout="@layout/widget_input_panel"></include>-->
 
 
-
-
-
     <ImageView
         android:id="@+id/game_result"
         android:layout_width="300dp"
@@ -179,7 +177,8 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/question_layout"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -193,7 +192,7 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/red"
                 android:textSize="20sp"
-                android:typeface="monospace" />
+                android:textStyle="bold"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -203,6 +202,15 @@
                 android:layout_marginTop="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/question_agora_title" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:id="@+id/answer_face"
+                android:src="@drawable/answer_right"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="50dp"/>
 
 
         </FrameLayout>
@@ -246,6 +254,60 @@
     </LinearLayout>
 
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/congratulation_view"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:background="@drawable/congratulation1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <io.agora.agoraandroidhq.module.CircleImageView
+                android:id="@+id/congratulation_headImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+
+            <TextView
+                android:id="@+id/congratulation_name"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="agora"
+                android:layout_marginBottom="25dp"
+                android:textColor="@drawable/white" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/congra_head" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/cancel"
+            android:id="@+id/congratulation_cancel"
+            android:layout_marginTop="250dp"/>
+
+    </FrameLayout>
 
 
 </FrameLayout>
