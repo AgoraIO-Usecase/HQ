@@ -210,8 +210,8 @@ public class MainActivity extends BaseActivity {
         io.agora.agoraandroidhq.control.WorkerThread workerThread = ((HqApplication) getApplication()).getWorkerThread();
         if (workerThread != null) {
             workerThread.destoryEngine();
+            ((HqApplication) getApplication()).deInitWorkerThread();
         }
-        ((HqApplication) getApplication()).deInitWorkerThread();
     }
 
     @Override
