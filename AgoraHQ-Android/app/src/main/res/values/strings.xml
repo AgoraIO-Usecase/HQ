@@ -44,6 +44,7 @@
     <string name="refuse_video_invitation">拒绝</string>
     <string name="accept_video_invitation">接受</string>
     <string name="can_not_team_mode">不能开黑</string>
+    <string name="need_permission_toast">Need Permission !</string>
 
     <drawable name="button_press">#8888</drawable>
 </resources>

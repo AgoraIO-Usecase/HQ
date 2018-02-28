@@ -46,6 +46,7 @@
     <string name="refuse_video_invitation">Refuse</string>
     <string name="accept_video_invitation">Accept</string>
     <string name="can_not_team_mode">You can not team mode now</string>
+    <string name="need_permission_toast">Need Permission !</string>
 
 
 </resources>

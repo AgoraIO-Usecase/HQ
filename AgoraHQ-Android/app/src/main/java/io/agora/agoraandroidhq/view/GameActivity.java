@@ -679,7 +679,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     requestCode);
             return false;
         }
-        if (Manifest.permission.CAMERA.equals(permission)) {
+        if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
             //joinAgoraLiveChannel();
             rtcEngineJoinChannel();
         }
@@ -700,7 +700,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                 } else {
-                    // finish();
+                    toastHelper(getResources().getString(R.string.need_permission_toast));
+                    finish();
                 }
                 break;
             }
@@ -713,6 +714,15 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                     //  ((AGApplication) getApplication()).initWorkerThread();
+                } else {
+                    toastHelper(getResources().getString(R.string.need_permission_toast));
+                    finish();
+                }
+                break;
+            }
+            case 2: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     try {
                         //joinAgoraLiveChannel();
                         rtcEngineJoinChannel();
@@ -720,16 +730,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                 } else {
-                    // finish();
-                }
-                break;
-            }
-            case 2: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-                    // finish();
+                    toastHelper(getResources().getString(R.string.need_permission_toast));
+                    finish();
                 }
                 break;
             }
