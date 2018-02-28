@@ -207,9 +207,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         checkBox_item = null;
         board.clear();
         board = null;
-        questionTimeHandler = null;
         executorService.shutdown();
         executorService = null;
+        questionTimeHandler = null;
         System.gc();
     }
 
@@ -634,10 +634,12 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                     questionTime = questionTime - 1;
-                    Message message = questionTimeHandler.obtainMessage();
-                    message.what = 0;
-                    message.obj = questionTime;
-                    questionTimeHandler.sendMessage(message);
+                    if(questionTimeHandler != null) {
+                        Message message = questionTimeHandler.obtainMessage();
+                        message.what = 0;
+                        message.obj = questionTime;
+                        questionTimeHandler.sendMessage(message);
+                    }
                     if (questionTime == -1) {
                         questionFlag = false;
                     }
