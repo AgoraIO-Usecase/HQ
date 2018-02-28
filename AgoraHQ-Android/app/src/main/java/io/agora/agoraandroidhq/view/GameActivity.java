@@ -159,7 +159,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         recyclerView.setAdapter(messageRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new MessageListDecoration());
-
         if (messageRecyclerViewAdapter.getItemCount() > 0) {
             recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
         }
@@ -169,7 +168,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         gangUpUidRecycleView.setAdapter(gangUpRecycleViewAdapter);
         gangUpUidRecycleView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         localSmallVideo = findViewById(R.id.small_video);
-
         congratulationHeadImage = findViewById(R.id.congratulation_headImage);
         congratulationTextView = findViewById(R.id.congratulation_name);
         congratulationView = findViewById(R.id.congratulation_view);
@@ -352,7 +350,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     private void loginAgoraSignal() {
-        agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
+       // agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
+        agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, GameControl.currentUserName, getChannelName());
         agoraSignal.addEventHandler(agoraHandler);
         agoraSignal.login();
     }
@@ -1091,7 +1090,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     gangUpAlertDialog.dismiss();
                     disConnectBtn.setVisibility(View.VISIBLE);
                     disConnectBtn.setClickable(true);
-                    AgoraSignal.wheatherAcceptVideoWithBroadCast(true, GameControl.currentUser.signalAccount, GameControl.currentUser.account, GameControl.currentUser.channelName);
+                    AgoraSignal.wheatherAcceptVideoWithBroadCast(true, GameControl.currentUserName, GameControl.currentUser.account, GameControl.currentUser.channelName);
                 }
             }
         });
@@ -1099,7 +1098,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             @Override
             public void onClick(View v) {
                 gangUpAlertDialog.dismiss();
-                AgoraSignal.wheatherAcceptVideoWithBroadCast(false, GameControl.currentUser.signalAccount, GameControl.currentUser.account, GameControl.currentUser.channelName);
+                AgoraSignal.wheatherAcceptVideoWithBroadCast(false, GameControl.currentUserName, GameControl.currentUser.account, GameControl.currentUser.channelName);
             }
         });
         dialog.show();
