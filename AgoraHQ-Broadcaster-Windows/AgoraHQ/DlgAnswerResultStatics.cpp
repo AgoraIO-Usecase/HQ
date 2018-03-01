@@ -135,9 +135,9 @@ void CDlgAnswerResultStatics::setContext(const tagQuestionStatics &questionStati
 
 void CDlgAnswerResultStatics::setContext(const std::vector<tagListOfWinners> &vecListOfWinners)
 {
+	m_ltrResult.DeleteAllItems();
 	m_ltrResult.ShowWindow(SW_HIDE);
-	m_ltrResult.RemoveAllGroups();
-	m_ltrListofWinners.RemoveAllGroups();
+	m_ltrListofWinners.DeleteAllItems();
 	m_ltrListofWinners.ShowWindow(SW_SHOW);
 	
 	int nCount = 1;

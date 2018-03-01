@@ -115,7 +115,7 @@ void CDlgAnswer::initAgoraSignal()
 	
 	m_pSignalCallBack = new CSingleCallBack(m_hWnd);
 	m_pSignalInstance->getAgoraAPI()->callbackSet(m_pSignalCallBack);
-	m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
+	//m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
 
 	std::string sdkVersion = m_pSignalInstance->getSDKVersion();
 
@@ -196,7 +196,7 @@ void CDlgAnswer::OnBnClickedButtonGetquestion()
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\": \"publish\"}");
+	sprintf_s(cJsonStr, "{\"type\": \"publish\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
@@ -231,7 +231,7 @@ void CDlgAnswer::OnBnClickedButtonStopanswer()
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\":\"stopAnswer\"}");
+	sprintf_s(cJsonStr, "{\"type\":\"stopAnswer\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
@@ -243,7 +243,7 @@ void CDlgAnswer::OnBnClickedButtonReset()
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\":\"reset\"}");
+	sprintf_s(cJsonStr, "{\"type\":\"reset\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
@@ -279,16 +279,16 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	
 	if (strEncrypt =="" || "0" == strEncrypt){
 
-		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\"}", curLanguage.data());
+		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"msgid\":%u}", curLanguage.data(),GetTickCount());
 	}
 	else{
 
-		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"encrypt\":\"v1\"}", curLanguage.data());
+		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"encrypt\":\"v1\",\"msgid\":%u}", curLanguage.data(),GetTickCount());
 	}
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
-	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
-	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+
+	gFileApp.write(cJsonStr);
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
 
 	return TRUE;
@@ -390,6 +390,7 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 	//LOG_MSG(logDesc, LogType_CallBack);
 	OutputDebugStringA(logDesc);
 	OutputDebugStringA("\r\n");
+	gFileApp.write(logDesc);
 	//lpData->msg = "{\"type\":\"ListOfWinners\",\"data\":{\"num\":2,\"playerName\" : [\"play1\", \"play2\"]}}";
 
 	rapidjson::Document document;
@@ -634,7 +635,7 @@ void CDlgAnswer::updateStatusToPublish()
 	m_trlQuestion.SetWindowTextW(_T("Congratulations, you have joined the room channel, please click the SendQuestion button below to get the Question!"));
 	m_btnUpdateQuestion.ShowWindow(SW_SHOW);
 	m_btnStopAnswer.ShowWindow(SW_SHOW);
-	m_btnResetQuestion.ShowWindow(SW_SHOW);
+	//m_btnResetQuestion.ShowWindow(SW_SHOW);
 }
 
 LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
@@ -644,10 +645,12 @@ LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
 		//invite audience/ guest
 		char cJsonStr[512] = { '\0' };
 		int timeStamp = ::time(NULL);
-		sprintf_s(cJsonStr, "{\"type\":\"inviteRequest\",\"data\":{\"uid\":\"%s\"}}", lpData->strParam.data());
+		sprintf_s(cJsonStr, "{\"type\":\"inviteRequest\",\"data\":{\"uid\":\"%s\"},\"msgid\":%u}", lpData->strParam.data(),GetTickCount());
 		OutputDebugStringA(cJsonStr);
 		OutputDebugStringA("\r\n");
 		if (m_pSignalInstance){
+
+			gFileApp.write(cJsonStr);
 			m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
 		}
 
@@ -663,7 +666,7 @@ LRESULT CDlgAnswer::onSetDataTimeBonus(WPARAM wParam, LPARAM lParam)
 	if (lpData){
 
 		char cJsonStr[512] = { '\0' };
-		sprintf_s(cJsonStr, "{\"data\" : {\"DataTime\" : \"%s\",\"nBouns\" : %d,\"nRoundID\" : %d},	\"type\" : \"SetDataTimeAndBonus\"}", lpData->strDataTime.data(), lpData->nBonus, lpData->nRoundId);
+		sprintf_s(cJsonStr, "{\"data\" : {\"DataTime\" : \"%s\",\"nBouns\" : %d,\"nRoundID\" : %d},	\"type\" : \"SetDataTimeAndBonus\",\"msgid\":%u}", lpData->strDataTime.data(), lpData->nBonus, lpData->nRoundId,GetTickCount());
 		OutputDebugStringA(cJsonStr);
 		OutputDebugStringA("\n");
 		if (m_pSignalInstance){

@@ -234,6 +234,7 @@ void CAgoraHQDlg::OnTimer(UINT_PTR nIDEvent)
 		CString csStrFormat;
 		csStrFormat.Format(_T("\t Invitees: %s\n\t EnableVideo : %d \n\t EnableAudio: %d\n\t nTimeout: %d\n\t TimeOut Rejected invitation default .."),
 			s2cs(m_agInviteRemoteAudience.remoteAccount),m_agInviteRemoteAudience.enableVideo,m_agInviteRemoteAudience.enableAudio,m_agInviteRemoteAudience.nTimeOut);
+		gFileApp.write(cs2s(csStrFormat));
 
 #if 1
 		m_agInviteRemoteAudience.isValid = false;
@@ -539,7 +540,7 @@ LRESULT CAgoraHQDlg::onFirstRemoteVideoDecoded(WPARAM wParam, LPARAM lParam)
 	if (lpData){
 
 		char logMsg[512] = { '\0' };
-		sprintf_s(logMsg, "AgoraHQDlg::onFirstRemoteVideoDecoded : %d\n", lpData->uid);
+		sprintf_s(logMsg, "AgoraHQDlg::onFirstRemoteVideoDecoded : %u\n", lpData->uid);
 		OutputDebugStringA(logMsg);
 
 		if (lpData->uid == m_nInviteRemote){
@@ -556,7 +557,9 @@ LRESULT CAgoraHQDlg::onFirstRemoteVideoDecoded(WPARAM wParam, LPARAM lParam)
 
 			if (m_lpRtcEngine){
 
+				gFileApp.write("onFirstRemoteVideoDecoded setRemoteVideo");
 				m_lpRtcEngine->setupRemoteVideo(vcRemote);
+				m_ctlRemoteWnd.ShowWindow(SW_SHOW);
 				OutputDebugStringA("firstRemoteVideoDecoded setRemoteVideo.\n");
 			}
 		}
@@ -589,7 +592,10 @@ LRESULT CAgoraHQDlg::onFirstRmoteVideoFrame(WPARAM wParam, LPARAM lParam)
 
 			if (m_lpRtcEngine){
 
+				gFileApp.write("onFirstRmoteVideoFrame setRemoteVideo");
 				m_lpRtcEngine->setupRemoteVideo(vcRemote);
+				m_ctlRemoteWnd.ShowWindow(SW_SHOW);
+				OutputDebugStringA("onFirstRmoteVideoFrame setRemoteVideo.\n");
 			}
 		}
 		else{
@@ -634,7 +640,7 @@ LRESULT CAgoraHQDlg::onUserMuteVideo(WPARAM wParam, LPARAM lParam)
 	if (lpData){
 
 		char logMsg[512] = { '\0' };
-		sprintf_s(logMsg, "onUserMuteVideo: %d %d\n", lpData->uid, lpData->muted);
+		sprintf_s(logMsg, "onUserMuteVideo: %u %d\n", lpData->uid, lpData->muted);
 		OutputDebugStringA(logMsg);
 
 		if (lpData->muted){
@@ -652,6 +658,7 @@ LRESULT CAgoraHQDlg::onUserMuteVideo(WPARAM wParam, LPARAM lParam)
 					m_lpRtcEngine->setupRemoteVideo(vcRemote);
 					m_mapRemoteView[it->first] = nullptr;
 					OutputDebugStringA("onUserMuteVideo setRemoteVideo. HIDDEN\n");
+					gFileApp.write("onUserMuteVideo setRemoteVideo. HIDDEN");
 				}
 
 				m_mapRemoteView.erase(it);
@@ -678,6 +685,7 @@ LRESULT CAgoraHQDlg::onUserMuteVideo(WPARAM wParam, LPARAM lParam)
 					m_lpRtcEngine->setupRemoteVideo(vcRemote);
 					m_ctlRemoteWnd.ShowWindow(SW_SHOW);
 					OutputDebugStringA("onUserMuteVideo setRemoteVideo.SHOW\n");
+					gFileApp.write("onUserMuteVideo setRemoteVideo.SHOW");
 				}
 			}
 		}
@@ -748,7 +756,9 @@ LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 						if (m_lpRtcEngine){
 
 							m_lpRtcEngine->setupRemoteVideo(vcRemote);
-
+							m_ctlRemoteWnd.ShowWindow(SW_SHOW);
+							OutputDebugStringA("onInviteRemoteAudience setUpRemoteVideo\n");
+							gFileApp.write("onInviteRemoteAudience setUpRemoteVideo");
 						}
 					}
 					else{
@@ -761,6 +771,7 @@ LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 			}
 		}
 		else{
+			gFileApp.write("onInviteRemoteAudience now is not Accpet..");
 			m_agInviteRemoteAudience.enableAudio = lpData->enableAudio;
 			m_agInviteRemoteAudience.enableVideo = lpData->enableVideo;
 			m_agInviteRemoteAudience.nTimeOut = lpData->nTimeOut;
@@ -795,6 +806,7 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 				if (m_nInviteRemote == it->first){
 					if (nullptr != it->second){
 						OutputDebugStringA("repeat signling Invite remote \n");
+						gFileApp.write("repeat signling Invite remote");
 						break;
 					}
 
@@ -810,7 +822,9 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 
 					if (m_lpRtcEngine){
 
+						gFileApp.write("callback accept setUpRemoteVideo");
 						m_lpRtcEngine->setupRemoteVideo(vcRemote);
+						m_ctlRemoteWnd.ShowWindow(SW_SHOW);
 						OutputDebugStringA("callback accept setUpRemoteVideo\n");
 					}
 				}
@@ -826,6 +840,7 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 			CString csStrFormat;
 			csStrFormat.Format(_T("\t Invitees: %s\n\t EnableVideo : %d \n\t EnableAudio: %d\n\t nTimeout: %d\n\t Rejected invitation.."),
 				s2cs(m_agInviteRemoteAudience.remoteAccount), m_agInviteRemoteAudience.enableVideo, m_agInviteRemoteAudience.enableAudio, m_agInviteRemoteAudience.nTimeOut);
+			gFileApp.write(cs2s(csStrFormat));
 
 			AfxMessageBox(csStrFormat);
 		}

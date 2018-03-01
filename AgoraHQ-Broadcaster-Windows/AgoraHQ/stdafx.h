@@ -58,7 +58,8 @@ using namespace agora_sdk_win;
 #include "AgoraObject.h"
 
 #include "FileIO.h"
-extern CConfigHQ gHQConfig;
+extern CConfigHQ gHQConfig; 
+extern CFileIO gFileApp;
 
 typedef struct tagQuestionAnswer
 {
