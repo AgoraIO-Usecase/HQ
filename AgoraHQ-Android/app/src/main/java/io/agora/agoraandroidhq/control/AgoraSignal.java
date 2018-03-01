@@ -32,35 +32,32 @@ public class AgoraSignal {
     private String appId;
     private AgoraHQSigSDK agoraHQSigSDK;
     private Context context;
-    private String uid;
+    private String signalAccount;
     private String channelName;
 
-
-    private AgoraSignal(Context context, String appId, String uid, String channelName) {
+    private AgoraSignal(Context context, String appId, String signalAccount, String channelName) {
         this.appId = appId;
         this.context = context;
-        this.uid = uid;
+        this.signalAccount = signalAccount;
         this.channelName = channelName;
         agoraHQSigSDK = new AgoraHQSigSDK(context, appId);
         messageHandler = new CopyOnWriteArrayList<Handler>();
-
-
     }
 
-    public static AgoraSignal newInstance(Context context, String appId, String uid, String channelName) {
+    public static AgoraSignal newInstance(Context context, String appId, String signalAccount, String channelName) {
         if (agoraSignal != null) {
             return agoraSignal;
         } else {
 
             WeakReference<Context> weakReference = new WeakReference<Context>(context);
-            agoraSignal = new AgoraSignal(weakReference.get(), appId, uid, channelName);
+            agoraSignal = new AgoraSignal(weakReference.get(), appId, signalAccount, channelName);
             return agoraSignal;
         }
     }
 
 
     public void login() {
-        loginAgoraSignal(uid);
+        loginAgoraSignal(signalAccount);
     }
 
     public void addEventHandler(android.os.Handler handler) {
@@ -154,9 +151,9 @@ public class AgoraSignal {
 
     public static void checkRelive(HttpUrlUtils.OnResponse callback) throws JSONException {
         Map data = new HashMap();
-        GameControl.logD(tag + "checkRelive   uid =  " + GameControl.currentUser.account + "   gid =  " + GameControl.currentUser.channelName);
-        data.put("uid", GameControl.currentUser.account);
-        data.put("gid", GameControl.currentUser.channelName);
+        GameControl.logD(tag + "checkRelive   uid =  " + GameControl.currentUser.getMediaUid() + "   gid =  " + GameControl.currentUser.getChannelName());
+        data.put("uid", GameControl.currentUser.getSignalAccount());
+        data.put("gid", GameControl.currentUser.getChannelName());
         HttpUrlUtils utils = new HttpUrlUtils();
         utils.execHttpAsyncTask(io.agora.agoraandroidhq.tools.Constants.HTTP_RELIVE, true, callback, data);
     }
@@ -175,9 +172,9 @@ public class AgoraSignal {
 
     public static void sendAnswerToserver(int sid, int result, HttpUrlUtils.OnResponse callback) throws JSONException {
         Map data = new HashMap();
-        GameControl.logD(tag + "sendAnswerToserver   uid  =  " + GameControl.currentUser.account + "   gid =  " + GameControl.currentUser.channelName + "  sid = " + sid + "  result = " + result);
-        data.put("uid", GameControl.currentUser.account);
-        data.put("gid", GameControl.currentUser.channelName);
+        GameControl.logD(tag + "sendAnswerToserver   uid  =  " + GameControl.currentUser.getMediaUid() + "   gid =  " + GameControl.currentUser.getChannelName() + "  sid = " + sid + "  result = " + result);
+        data.put("uid", GameControl.currentUser.getSignalAccount());
+        data.put("gid", GameControl.currentUser.getChannelName());
         data.put("sid", sid);
         data.put("result", result);
         HttpUrlUtils utils = new HttpUrlUtils();
@@ -186,7 +183,7 @@ public class AgoraSignal {
 
     public static void checkWheatherCanPlay(HttpUrlUtils.OnResponse callback) throws JSONException {
         // String url = "http://123.155.153.87:8000/v1/canplay?gid=10001&uid=24324242";
-        String url = Constants.HTTP_CHECK_WHEATHER_CAN_PLAY + GameControl.currentUser.channelName + "&uid=" + GameControl.currentUser.account;
+        String url = Constants.HTTP_CHECK_WHEATHER_CAN_PLAY + GameControl.currentUser.getChannelName() + "&uid=" + GameControl.currentUser.getMediaUid();
         GameControl.logD(tag + "checkWheatherCanPlay  =  " + url);
         HttpUrlUtils utils = new HttpUrlUtils();
         utils.execHttpAsyncTask(url, false, callback, null);

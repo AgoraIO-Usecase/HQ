@@ -14,12 +14,11 @@ import io.agora.agoraandroidhq.tools.GameControl;
 public class SendMessageHelper {
 
     private static String tag = "[SendMessageHelper]  ";
-
     public static String sendMessageString(String message) throws JSONException {
         StringBuilder stringBuilder = new StringBuilder("{");
         stringBuilder.append("\\\"type\\\":").append("\\\"chat\\\"").append(",");
         stringBuilder.append("\\\"data\\\":").append("\\\"").append(message).append("\\\"").append(",");
-        stringBuilder.append("\\\"name\\\":").append("\\\"").append(GameControl.currentUser.getName()).append("\\\"");
+        stringBuilder.append("\\\"name\\\":").append("\\\"").append(GameControl.currentUser.getUserName()).append("\\\"");
         stringBuilder.append("}");
         GameControl.logD(tag + "sendMessageString  =  " + stringBuilder.toString());
         try {
@@ -35,7 +34,7 @@ public class SendMessageHelper {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", "chat");
         jsonObject.put("data", message);
-        jsonObject.put("name", GameControl.currentUser.getName());
+        jsonObject.put("name", GameControl.currentUser.getUserName());
         return jsonObject.toString();
     }
 }

@@ -187,9 +187,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         if (workerThread != null) {
             workerThread.gangUpLeaveChannel();
             workerThread.leaveChannel();
-        }
-        if(workerThread.eventHandler() != null){
-            workerThread.eventHandler().removeEventHandler(this);
+            if (workerThread.eventHandler() != null) {
+                workerThread.eventHandler().removeEventHandler(this);
+            }
         }
         questionFlag = false;
         if (agoraSignal != null) {
@@ -208,7 +208,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         checkBox_item = null;
         board.clear();
         board = null;
-        executorService.shutdown();
+        if (executorService != null) {
+            executorService.shutdownNow();
+        }
         executorService = null;
         questionTimeHandler = null;
         System.gc();
@@ -310,18 +312,17 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
 
     private User getUser() {
         User currentUser = new User();
-        currentUser.name = GameControl.currentUserName;
-        currentUser.drawable = GameControl.currentUserHeadImage;
-        String channelName = getChannelName();
-        currentUser.setChannelName(channelName);
+        currentUser.setUserName(GameControl.currentUserName);
+        currentUser.setDrawable(GameControl.currentUserHeadImage);
+        currentUser.setChannelName(getChannelName());
+        currentUser.setSignalAccount(GameControl.signalAccount);
         GameControl.currentUser = currentUser;
-        currentUser.signalAccount = GameControl.signalAccount;
         return currentUser;
     }
 
     private void init() throws Exception {
-        loginAgoraSignal();
         getUser();
+        loginAgoraSignal();
         GameControl.logD(tag + "init");
         initQuestionLayout();
         //startCheckWheatherCanPlay();
@@ -353,8 +354,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     private void loginAgoraSignal() {
-       // agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
-        agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, GameControl.currentUserName, getChannelName());
+        GameControl.logD(tag+" loginAgoraSignal  account  "+ GameControl.currentUserName +"  channelName  "+getChannelName());
+        // agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
+        agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, GameControl.currentUser.getSignalAccount(), getChannelName());
         agoraSignal.addEventHandler(agoraHandler);
         agoraSignal.login();
     }
@@ -376,7 +378,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     break;
 
                 case Constants.AGORA_SIGNAL_RECEIVE:
-
                     String mess = (String) msg.obj;
                     Object jsonObject = null;
 
@@ -387,7 +388,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     }
 
                     if (jsonObject == null) {
-
                         return;
                     }
 
@@ -636,7 +636,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                     questionTime = questionTime - 1;
-                    if(questionTimeHandler != null) {
+                    if (questionTimeHandler != null) {
                         Message message = questionTimeHandler.obtainMessage();
                         message.what = 0;
                         message.obj = questionTime;
@@ -929,7 +929,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
 
     private void showCongratulationView() {
         congratulationTextView.setText(GameControl.currentUserName);
-        congratulationHeadImage.setImageDrawable(GameControl.currentUser.drawable);
+        congratulationHeadImage.setImageDrawable(GameControl.currentUser.getDrawable());
         Animation animationUtils = AnimationUtils.loadAnimation(GameActivity.this, R.anim.scale_animation);
         animationUtils.setFillAfter(true);
         congratulationView.startAnimation(animationUtils);
@@ -1093,7 +1093,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     gangUpAlertDialog.dismiss();
                     disConnectBtn.setVisibility(View.VISIBLE);
                     disConnectBtn.setClickable(true);
-                    AgoraSignal.wheatherAcceptVideoWithBroadCast(true, GameControl.currentUserName, GameControl.currentUser.account, GameControl.currentUser.channelName);
+                    GameControl.logD(tag+" GameContorl.currentUser.getAccount =  true "+GameControl.currentUser.getSignalAccount()+" getMediaUid"+GameControl.currentUser.getMediaUid()+" getChannelName " +GameControl.currentUser.getChannelName());
+                    AgoraSignal.wheatherAcceptVideoWithBroadCast(true, GameControl.currentUser.getSignalAccount(), GameControl.currentUser.getMediaUid(), GameControl.currentUser.getChannelName());
                 }
             }
         });
@@ -1101,7 +1102,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             @Override
             public void onClick(View v) {
                 gangUpAlertDialog.dismiss();
-                AgoraSignal.wheatherAcceptVideoWithBroadCast(false, GameControl.currentUserName, GameControl.currentUser.account, GameControl.currentUser.channelName);
+                GameControl.logD(tag+" GameContorl.currentUser.getAccount =  false  "+GameControl.currentUser.getSignalAccount()+" getMediaUid"+GameControl.currentUser.getMediaUid()+" getChannelName " +GameControl.currentUser.getChannelName());
+                AgoraSignal.wheatherAcceptVideoWithBroadCast(false, GameControl.currentUser.getSignalAccount(), GameControl.currentUser.getMediaUid(), GameControl.currentUser.getChannelName());
             }
         });
         dialog.show();
@@ -1143,14 +1145,14 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             if (gangUpAlertDialog != null) {
                 gangUpAlertDialog.dismiss();
             }
-            String realChannelName = GameControl.currentUser.channelName + "_" + channelName;
+            String realChannelName = GameControl.currentUser.getChannelName() + "_" + channelName;
            /* gangUpRtcEngine.enableAudio();
             //rtcEngine.enableAudio();
 
             gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}");
             gangUpRtcEngine.joinChannel(null, realChannelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
 */
-            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.account));
+            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.getMediaUid()));
             if (gangUpRtcEngine == null) {
                 gangUpRtcEngine = workerThread.getGangUpRtcEngine();
             }
@@ -1166,14 +1168,14 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             if (gangUpAlertDialog != null) {
                 gangUpAlertDialog.dismiss();
             }
-            String realChannelName = GameControl.currentUser.channelName + "_" + channelName;
+            String realChannelName = GameControl.currentUser.getChannelName() + "_" + channelName;
            /* gangUpRtcEngine.enableAudio();
             //rtcEngine.enableAudio();
 
             gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}");
             gangUpRtcEngine.joinChannel(null, realChannelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
 */
-            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.account));
+            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.getMediaUid()));
             gangUpRtcEngine = workerThread.getGangUpRtcEngine();
         }
     }
