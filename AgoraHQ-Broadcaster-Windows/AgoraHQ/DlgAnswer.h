@@ -97,4 +97,6 @@ private:
 	CDlgAnswerResultStatics m_DlgResult;
 	int m_nQuestionId;
 	CAGEngineEventHandler* m_pAgEngineEventHandle;
+
+	CFileIO m_fileSigLog;
 };

@@ -21,11 +21,13 @@ CDlgAnswer::CDlgAnswer(CWnd* pParent /*=NULL*/)
 	m_nQuestionId(-1),
 	m_pAgEngineEventHandle(nullptr)
 {
-
+	std::string strLogPath = getSigSdkLogPath();
+	m_fileSigLog.openLog(strLogPath);
 }
 
 CDlgAnswer::~CDlgAnswer()
 {
+	m_fileSigLog.close();
 }
 
 void CDlgAnswer::DoDataExchange(CDataExchange* pDX)
@@ -113,7 +115,7 @@ void CDlgAnswer::initAgoraSignal()
 	
 	m_pSignalCallBack = new CSingleCallBack(m_hWnd);
 	m_pSignalInstance->getAgoraAPI()->callbackSet(m_pSignalCallBack);
-	//m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
+	m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
 
 	std::string sdkVersion = m_pSignalInstance->getSDKVersion();
 
@@ -286,6 +288,8 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
 
 	return TRUE;
 }
@@ -303,6 +307,7 @@ HRESULT CDlgAnswer::onLogout(WPARAM wParam, LPARAM lParam)
 HRESULT CDlgAnswer::onLogFailed(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_LOGINFAILED lpData = (PAG_SIGNAL_LOGINFAILED)wParam;
+	m_fileSigLog.write(int2str(lpData->ecode));
 	delete lpData; lpData = nullptr;
 
 	return TRUE;
@@ -313,6 +318,9 @@ HRESULT CDlgAnswer::onLogFailed(WPARAM wParam, LPARAM lParam)
 LRESULT CDlgAnswer::onError(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_ERROR lpData = (PAG_SIGNAL_ERROR)wParam;
+
+	m_fileSigLog.openLog(lpData->desc);
+
 	delete lpData; lpData = nullptr;
 
 	return TRUE;
@@ -323,6 +331,8 @@ LRESULT CDlgAnswer::onError(WPARAM wParam, LPARAM lParam)
 LRESULT CDlgAnswer::onLog(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_LOG lpData = (PAG_SIGNAL_LOG)wParam;
+
+	m_fileSigLog.write(lpData->txt);
 	delete lpData; lpData = nullptr;
 
 	return TRUE;

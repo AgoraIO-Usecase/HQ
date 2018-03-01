@@ -46,7 +46,10 @@ void closeCurrentProcess();
 bool registerStartUp();
 DWORD openProcess(const std::string &processName,const std::string &cmdLine);
 
-CString getSdkLogPath();
+//Log
+std::string getSigSdkLogPath();
+std::string getMediaSdkLogPath();
+std::string getHQLogPath();
 std::string getChannelName();
 
 #endif

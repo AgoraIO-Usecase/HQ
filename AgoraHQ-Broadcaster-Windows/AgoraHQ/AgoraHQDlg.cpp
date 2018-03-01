@@ -146,7 +146,10 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化代码
 	SetBackgroundColor(RGB(0xff,0xff,0xff),TRUE);
 
-	gHQConfig.setAppId("363f97d9690e4c0a9780499ab14a16c0");
+	if ("" == gHQConfig.getAppId()){
+
+		gHQConfig.setAppId("319294c67d174c878cc7922551e6e773");
+	}
 	getChannelName();
 	m_strAppId = gHQConfig.getAppId();
 	if ("" == m_strAppId){
@@ -393,7 +396,7 @@ void CAgoraHQDlg::initAgoraMediaRtc()
 	m_lpRtcEngine = CAgoraObject::GetEngine();
 	ASSERT(m_lpRtcEngine);
 
-	CString strSdkLogFilePath = getSdkLogPath();
+	CString strSdkLogFilePath = s2cs(getMediaSdkLogPath());
 	m_lpAgoraObject->SetLogFilePath(strSdkLogFilePath);
 	m_lpAgoraObject->EnableLastmileTest(TRUE);
 	m_lpAgoraObject->EnableLocalMirrorImage(FALSE);
