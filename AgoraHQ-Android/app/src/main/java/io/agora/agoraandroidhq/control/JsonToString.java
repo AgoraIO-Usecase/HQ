@@ -53,7 +53,7 @@ public class JsonToString {
                 String encrypt = jsonObject.getString("encrypt");
                 GameControl.logD("quiz2222");
                 //String encryptData = dataObjects.toString();
-                String key = GameControl.currentUser.channelName;
+                String key = GameControl.currentUser.getChannelName();
                 String decryptKey = DecryptData.getKey(key);
                 String dataDecrypt = DecryptHelpter.decryptData(encrypt, decryptKey,jsonObject);
                 GameControl.logD("quiz333333");
@@ -63,18 +63,6 @@ public class JsonToString {
                 } else {
                     jsonDataDecrypt = new JSONObject(dataDecrypt);
                 }
-
-                /*int id = dataObjects.getInt("id");
-                String question = dataObjects.getString("question");
-                String type = dataObjects.getString("type");
-                int total_question = dataObjects.getInt("total");
-                int timeOut = dataObjects.getInt("timeout");
-                JSONArray array = dataObjects.getJSONArray("options");
-                GameControl.logD("jsonToString  =  id=" + id + " ");
-                ArrayList list = new ArrayList();
-                for (int i = 0; i < array.length(); i++) {
-                    list.add(array.get(i));
-                }*/
 
                 int id = jsonDataDecrypt.getInt("id");
                 String question = jsonDataDecrypt.getString("question");

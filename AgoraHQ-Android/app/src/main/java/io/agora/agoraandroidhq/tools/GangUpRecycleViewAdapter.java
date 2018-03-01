@@ -67,12 +67,11 @@ public class GangUpRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.
             return;
         }
         String uid = mUidList.get(position);
-
         GangUpRecycleViewAdapter.MessageHolder myHolder = (GangUpRecycleViewAdapter.MessageHolder) holder;
-        if (uid.equals(GameControl.currentUser.getAccount().toString())) {
+        if (uid.equals(GameControl.currentUser.getMediaUid().toString())) {
             myHolder.uidContent.setBackgroundResource(R.drawable.rounded_bg_blue);
             myHolder.uidContent.setText(uid + "");
-            myHolder.uidHeadImage.setImageDrawable(GameControl.currentUser.drawable);
+            myHolder.uidHeadImage.setImageDrawable(GameControl.currentUser.getDrawable());
         } else {
             myHolder.uidContent.setText(uid + "");
         }

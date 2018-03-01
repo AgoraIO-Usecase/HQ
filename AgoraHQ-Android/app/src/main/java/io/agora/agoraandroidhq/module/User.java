@@ -12,29 +12,47 @@ import java.util.Random;
 
 public class User {
 
-    public Random random = new Random();
+    private Random random = new Random();
     //public static String uid = "232894";
-    public String account = "2434" + random.nextInt(10000);
-    public String name = "Test" + random.nextInt(1000);
-    public String channelName;
-    public boolean wheatherCanPlay;
-    // public static String name = "Agora";
-    // public static Uri portUri = Uri.parse("http://7xs9j5.com1.z0.glb.clouddn.com/liveapp/anlingrong.jpg");
-    public String getAccount() {
-        return account;
+    private String mediaUid = "2434" + random.nextInt(10000);
+    private String userName;
+    private String channelName;
+    private Drawable drawable;
+    private String signalAccount;
+
+    public void setDrawable(Drawable drawable) {
+        this.drawable = drawable;
     }
-    public String getName() {
-        return name;
+
+    public Drawable getDrawable() {
+        return drawable;
     }
+
+    public String getMediaUid() {
+        return mediaUid;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
     public void setChannelName(String channelName) {
         this.channelName = channelName;
     }
+
     public String getChannelName() {
         return channelName;
     }
-    public Drawable drawable;
-    public String signalAccount;
-    public String getSignalAccount(){
+
+    public String getSignalAccount() {
         return signalAccount;
+    }
+
+    public void setSignalAccount(String signalAccount) {
+        this.signalAccount = signalAccount;
     }
 }

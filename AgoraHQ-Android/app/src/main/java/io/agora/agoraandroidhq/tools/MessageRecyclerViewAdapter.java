@@ -53,13 +53,13 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         MessageHolder myHolder = (MessageHolder) holder;
         String sender = msg.getSender();
-        if (sender.equals(GameControl.currentUser.getName().toString()) && msg.getIsMe()) {
+        if (sender.equals(GameControl.currentUser.getUserName().toString()) && msg.getIsMe()) {
             // myHolder.itemView.setBackgroundResource(R.drawable.rounded_bg_blue);
             myHolder.msgTitle.setText("[" + sender + "] ");
             myHolder.msgContent.setBackgroundResource(R.drawable.rounded_bg_blue);
             myHolder.msgContent.setText(msg.getContent());
             myHolder.msgContent.setAlpha(0.5f);
-            myHolder.headImage.setImageDrawable(GameControl.currentUser.drawable);
+            myHolder.headImage.setImageDrawable(GameControl.currentUser.getDrawable());
         } else {
             // myHolder.itemView.setBackgroundResource(R.drawable.rounded_bg);
             myHolder.msgTitle.setText("[" + sender + "] ");

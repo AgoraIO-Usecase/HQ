@@ -141,6 +141,7 @@ public class MainActivity extends BaseActivity {
             sharedPreferenceHelper.saveName(userName);
             GameControl.currentUserHeadImage = labelImage.getDrawable();
             GameControl.currentUserName = labelName.getText().toString();
+            GameControl.signalAccount = labelName.getText().toString();
             // GameControl.logD("saveName = " + userName);
         }
     }
