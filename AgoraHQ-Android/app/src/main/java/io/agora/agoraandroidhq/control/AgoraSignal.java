@@ -171,19 +171,21 @@ public class AgoraSignal {
     }
 
     public static void sendAnswerToserver(int sid, int result, HttpUrlUtils.OnResponse callback) throws JSONException {
-        Map data = new HashMap();
-        GameControl.logD(tag + "sendAnswerToserver   uid  =  " + GameControl.currentUser.getMediaUid() + "   gid =  " + GameControl.currentUser.getChannelName() + "  sid = " + sid + "  result = " + result);
-        data.put("uid", GameControl.currentUser.getSignalAccount());
-        data.put("gid", GameControl.currentUser.getChannelName());
-        data.put("sid", sid);
-        data.put("result", result);
-        HttpUrlUtils utils = new HttpUrlUtils();
-        utils.execHttpAsyncTask(io.agora.agoraandroidhq.tools.Constants.HTTP_SEND_ANSWER_TO_SERVER, true, callback, data);
+        if (GameControl.serverWheatherCanPlay && GameControl.clientWheatherCanPlay) {
+            Map data = new HashMap();
+            GameControl.logD(tag + "sendAnswerToserver   uid  =  " + GameControl.currentUser.getMediaUid() + "   gid =  " + GameControl.currentUser.getChannelName() + "  sid = " + sid + "  result = " + result);
+            data.put("uid", GameControl.currentUser.getSignalAccount());
+            data.put("gid", GameControl.currentUser.getChannelName());
+            data.put("sid", sid);
+            data.put("result", result);
+            HttpUrlUtils utils = new HttpUrlUtils();
+            utils.execHttpAsyncTask(io.agora.agoraandroidhq.tools.Constants.HTTP_SEND_ANSWER_TO_SERVER, true, callback, data);
+        }
     }
 
     public static void checkWheatherCanPlay(HttpUrlUtils.OnResponse callback) throws JSONException {
         // String url = "http://123.155.153.87:8000/v1/canplay?gid=10001&uid=24324242";
-        String url = Constants.HTTP_CHECK_WHEATHER_CAN_PLAY + GameControl.currentUser.getChannelName() + "&uid=" + GameControl.currentUser.getMediaUid();
+        String url = Constants.HTTP_CHECK_WHEATHER_CAN_PLAY + GameControl.currentUser.getChannelName() + "&uid=" + GameControl.currentUser.getSignalAccount();
         GameControl.logD(tag + "checkWheatherCanPlay  =  " + url);
         HttpUrlUtils utils = new HttpUrlUtils();
         utils.execHttpAsyncTask(url, false, callback, null);

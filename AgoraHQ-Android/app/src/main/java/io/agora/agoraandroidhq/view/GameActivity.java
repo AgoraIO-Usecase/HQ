@@ -326,7 +326,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         GameControl.logD(tag + "init");
         initQuestionLayout();
         //startCheckWheatherCanPlay();
-        // checkWheatherCanPlay();
+        checkWheatherCanPlay(false);
         GameControl.controlCheckThread = true;
         checkSelfPermissions();
         executorService = createExcetorService();
@@ -354,7 +354,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     private void loginAgoraSignal() {
-        GameControl.logD(tag+" loginAgoraSignal  account  "+ GameControl.currentUserName +"  channelName  "+getChannelName());
+        GameControl.logD(tag + " loginAgoraSignal  account  " + GameControl.currentUserName + "  channelName  " + getChannelName());
         // agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
         agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, GameControl.currentUser.getSignalAccount(), getChannelName());
         agoraSignal.addEventHandler(agoraHandler);
@@ -436,7 +436,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                     time_reduce.setText(R.string.answer_correct_message);
                                     answerFaceImage.setImageResource(R.drawable.answer_right);
                                     answerFaceImage.setVisibility(View.VISIBLE);
-                                    time_reduce.setTextColor(Color.GREEN);
+                                    time_reduce.setTextColor(getResources().getColor(R.color.correct_back_blue));
                                     time_reduce.setVisibility(View.VISIBLE);
                                     //game_title.setVisibility(View.INVISIBLE);
                                     GameControl.clientWheatherCanPlay = true;
@@ -480,7 +480,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                             }
                             try {
                                 if (!isFirst) {
-                                    checkWheatherCanPlay();
+                                    checkWheatherCanPlay(false);
                                     isFirst = false;
                                 }
                             } catch (JSONException e) {
@@ -546,7 +546,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 GameControl.logD(tag + "startCheckWheatherCanPalyThread");
                 try {
                     if (isFirst) {
-                        checkWheatherCanPlay();
+                        checkWheatherCanPlay(false);
                         isFirst = false;
                     }
                 } catch (JSONException e) {
@@ -556,10 +556,11 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         });
     }
 
-    private void checkWheatherCanPlay() throws JSONException {
+    private void checkWheatherCanPlay(final boolean isRelive ) throws JSONException {
         AgoraSignal.checkWheatherCanPlay(new HttpUrlUtils.OnResponse() {
             @Override
             public void onResponse(String data) throws JSONException {
+                GameControl.logD(tag + " GameControl.checkWheatherCanPlay11 " + data);
                 if (data.equals(Constants.MESSAGE_TOAST)) {
                     return;
                 }
@@ -567,7 +568,30 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 if (data != null) {
                     JSONObject object = new JSONObject(data);
                     boolean wheatherCanPlay = object.getBoolean("result");
-                    GameControl.serverWheatherCanPlay = wheatherCanPlay;
+                    if (wheatherCanPlay) {
+                        GameControl.logD(tag + " GameControl.checkWheatherCanPlay22 " + data);
+                        GameControl.serverWheatherCanPlay = true;
+                        GameControl.clientWheatherCanPlay = true;
+                        GameControl.logD(tag + " GameControl.checkWheatherCanPlay33 " + GameControl.serverWheatherCanPlay+"  "+ GameControl.clientWheatherCanPlay);
+                        if(isRelive) {
+                            if (GameControl.clientWheatherCanPlay && GameControl.serverWheatherCanPlay) {
+                                GameActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        wheath_canPlay_TextView.setVisibility(View.GONE);
+                                        submit_btn.setText(R.string.submit_message);
+                                        submit_btn.setTextColor(Color.BLACK);
+                                        Toast.makeText(GameActivity.this, R.string.relive_success_message, Toast.LENGTH_SHORT).show();
+                                        showquestionView(GameControl.currentQuestion);
+                                    }
+                                });
+                            }
+                        }
+                    }else{
+                        String errMessage = object.getString("err");
+                        toastHelper(errMessage);
+                    }
+                    GameControl.logD(tag + " GameControl.serverWheatherCanPlay " + wheatherCanPlay);
                     object = null;
                 }
             }
@@ -1014,7 +1038,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             String tag = view.getTag() + "";
             if (tag.equals(positions + "")) {
                 // GameControl.logD("correctChild  =  setBackGround");
-                view.setBackgroundColor(Color.GREEN);
+                view.setBackgroundColor(getResources().getColor(R.color.correct_back_blue));
             }
         }
     }
@@ -1051,21 +1075,13 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     System.out.println(Toast.makeText(GameActivity.this, R.string.connect_net_error_or_server_error, Toast.LENGTH_SHORT));
                 }
                 if (data.equals("{}")) {
-                    GameControl.serverWheatherCanPlay = true;
-                    GameControl.clientWheatherCanPlay = true;
-                    GameActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            wheath_canPlay_TextView.setVisibility(View.GONE);
-                            submit_btn.setText(R.string.submit_message);
-                            submit_btn.setTextColor(Color.BLACK);
-                            Toast.makeText(GameActivity.this, R.string.relive_success_message, Toast.LENGTH_SHORT).show();
-                            showquestionView(GameControl.currentQuestion);
-                        }
-                    });
+
+                    checkWheatherCanPlay(true);
+                    GameControl.logD(tag+"buttonToRelive  "+" clientWheatherCanPlay "+GameControl.clientWheatherCanPlay+" serverWheatherCanPlay "+ GameControl.serverWheatherCanPlay);
                 } else {
                     GameControl.serverWheatherCanPlay = false;
                     Toast.makeText(GameActivity.this, R.string.fail_to_relive_message, Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -1093,7 +1109,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     gangUpAlertDialog.dismiss();
                     disConnectBtn.setVisibility(View.VISIBLE);
                     disConnectBtn.setClickable(true);
-                    GameControl.logD(tag+" GameContorl.currentUser.getAccount =  true "+GameControl.currentUser.getSignalAccount()+" getMediaUid"+GameControl.currentUser.getMediaUid()+" getChannelName " +GameControl.currentUser.getChannelName());
+                    GameControl.logD(tag + " GameContorl.currentUser.getAccount =  true " + GameControl.currentUser.getSignalAccount() + " getMediaUid" + GameControl.currentUser.getMediaUid() + " getChannelName " + GameControl.currentUser.getChannelName());
                     AgoraSignal.wheatherAcceptVideoWithBroadCast(true, GameControl.currentUser.getSignalAccount(), GameControl.currentUser.getMediaUid(), GameControl.currentUser.getChannelName());
                 }
             }
@@ -1102,7 +1118,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             @Override
             public void onClick(View v) {
                 gangUpAlertDialog.dismiss();
-                GameControl.logD(tag+" GameContorl.currentUser.getAccount =  false  "+GameControl.currentUser.getSignalAccount()+" getMediaUid"+GameControl.currentUser.getMediaUid()+" getChannelName " +GameControl.currentUser.getChannelName());
+                GameControl.logD(tag + " GameContorl.currentUser.getAccount =  false  " + GameControl.currentUser.getSignalAccount() + " getMediaUid" + GameControl.currentUser.getMediaUid() + " getChannelName " + GameControl.currentUser.getChannelName());
                 AgoraSignal.wheatherAcceptVideoWithBroadCast(false, GameControl.currentUser.getSignalAccount(), GameControl.currentUser.getMediaUid(), GameControl.currentUser.getChannelName());
             }
         });
