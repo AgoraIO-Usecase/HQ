@@ -177,7 +177,8 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/question_layout"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -191,7 +192,7 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/red"
                 android:textSize="20sp"
-                android:typeface="monospace" />
+                android:textStyle="bold"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -201,6 +202,15 @@
                 android:layout_marginTop="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/question_agora_title" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:id="@+id/answer_face"
+                android:src="@drawable/answer_right"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="50dp"/>
 
 
         </FrameLayout>

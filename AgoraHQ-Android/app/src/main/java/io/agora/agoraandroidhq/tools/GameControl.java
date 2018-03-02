@@ -14,6 +14,7 @@ import io.agora.rtc.RtcEngine;
  */
 
 public class GameControl {
+
     public static boolean clientWheatherCanPlay = true;
     public static boolean serverWheatherCanPlay = true;
     public static Question currentQuestion;
@@ -24,19 +25,15 @@ public class GameControl {
     public static Drawable currentUserHeadImage;
     public static String currentUserName;
     public static String signalAccount;
-
+    public static int timeOut = 10;
+    public static int total = 10;
+    public static int result = -1;
     public static void setCurrentQuestion(Question question) {
         currentQuestion = question;
     }
-
     public static void logD(String message) {
         if (SHOW_LOG) {
             Log.d("agora_signal", message);
         }
     }
-
-    public static int timeOut = 10;
-    public static int total = 10;
-    public static boolean gameResult = true;
-    public static int result = -1;
 }

@@ -84,6 +84,7 @@ void CDlgAnswerResultStatics::OnBnClickedButtonCancle()
 void CDlgAnswerResultStatics::setContext(const tagQuestionStatics &questionStatics)
 {
 	m_ltrListofWinners.ShowWindow(SW_HIDE);
+	m_ltrResult.ShowWindow(SW_SHOW);
 
 	CString strQuestionId = s2cs(int2str(questionStatics.nsid + 1));
 	CString strTotal = s2cs(int2str(questionStatics.nTotal));
@@ -134,8 +135,10 @@ void CDlgAnswerResultStatics::setContext(const tagQuestionStatics &questionStati
 
 void CDlgAnswerResultStatics::setContext(const std::vector<tagListOfWinners> &vecListOfWinners)
 {
+	m_ltrResult.DeleteAllItems();
 	m_ltrResult.ShowWindow(SW_HIDE);
-//	m_ltrListofWinners.RemoveAllGroups();
+	m_ltrListofWinners.DeleteAllItems();
+	m_ltrListofWinners.ShowWindow(SW_SHOW);
 	
 	int nCount = 1;
 	for (std::vector<tagListOfWinners>::const_iterator it = vecListOfWinners.begin(); vecListOfWinners.end() != it; it++){

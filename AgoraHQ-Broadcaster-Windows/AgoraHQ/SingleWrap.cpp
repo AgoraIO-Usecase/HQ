@@ -226,6 +226,7 @@ void CSingleCallBack::onQueryUserStatusResult(char const * name, size_t name_siz
 
 void CSingleCallBack::onDbg(char const * a, size_t a_size, char const * b, size_t b_size)
 {
+	int i = 0;
 }
 
 void CSingleCallBack::onBCCall_result(char const * reason, size_t reason_size, char const * json_ret, size_t json_ret_size, char const * callID, size_t callID_size)

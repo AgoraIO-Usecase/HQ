@@ -8,6 +8,7 @@
 class CDlgAnswer;
 class CDlgConfig;
 class CDlgInput;
+class CDlgSetTimeBonus;
 // CAgoraHQDlg ¶Ô»°¿ò
 
 class CAgoraHQDlg : public CDialogEx
@@ -41,6 +42,7 @@ public:
 	afx_msg void OnBnClickedButtonMediaParam();
 	afx_msg void OnBnClickedButtonJoinchannel();
 	afx_msg void OnBnClickedButtonInvitemedia();
+	afx_msg void OnBnClickedButtonSettimebonus();
 
 	LRESULT onJoinChannelSuccess(WPARAM wParam,LPARAM lParam);
 	LRESULT onWarning(WPARAM wParam,LPARAM lParam);
@@ -53,6 +55,7 @@ public:
 	LRESULT onFirstRmoteVideoFrame(WPARAM wParam,LPARAM lParam);
 	LRESULT onUserJoined(WPARAM wParam, LPARAM lParam);
 	LRESULT onUserOff(WPARAM wParam, LPARAM lParam);
+	LRESULT onUserMuteVideo(WPARAM wParam,LPARAM lParam);
 	LRESULT onConnectionLost(WPARAM wParam, LPARAM lParam);
 
 	LRESULT onNewChannelName(WPARAM wParam, LPARAM lParam);
@@ -74,6 +77,7 @@ private:
 	CAGButton m_btnMediaParam;
 	CAGButton m_btnHQConfig;
 	CAGButton m_btnInviteRemote;
+	CAGButton m_btnSetTimeBonus;
 	CStatic m_ctlShowPic;
 	CStatic m_ctlRemoteWnd;
 	CStatic m_ctlAnswerArea;
@@ -93,6 +97,7 @@ private:
 
 	CDlgConfig* m_pDlgConfig;
 	CDlgInput* m_pDlgInputParam;
+	CDlgSetTimeBonus* m_pDlgSetTimeBonus;
 
 	HWND m_wndRemote;
 	uid_t m_nInviteRemote;

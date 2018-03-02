@@ -22,7 +22,6 @@ import io.agora.rtc.video.VideoCanvas;
 
 public class WorkerThread extends Thread {
 
-
     private final Context mContext;
     private static final int ACTION_WORKER_THREAD_QUIT = 0X1010; // quit this thread
     private static final int ACTION_WORKER_JOIN_CHANNEL = 0X2010;
@@ -82,7 +81,6 @@ public class WorkerThread extends Thread {
     }
 
     private WorkerThreadHandler mWorkerHandler;
-
     private boolean mReady;
 
     public final void waitForReady() {
@@ -115,16 +113,17 @@ public class WorkerThread extends Thread {
             mWorkerHandler.sendMessage(envelop);
             return;
         }
+        ensureRtcEngineReadyLock();
         mRtcEngine.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER, null);
         //rtcEngine.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER, null);
         mRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}");
         mRtcEngine.enableAudioVolumeIndication(1000, 3);
         // rtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
-        GameControl.logD(tag + "channelName   account  = " + GameControl.currentUser.channelName + "   " + GameControl.currentUser.account);
+        GameControl.logD(tag + "channelName   account  = " + GameControl.currentUser.getChannelName() + "   " + GameControl.currentUser.getMediaUid());
         mRtcEngine.enableVideo();
         mRtcEngine.enableLocalVideo(false);
         mRtcEngine.setVideoProfile(io.agora.rtc.Constants.VIDEO_PROFILE_360P, true);
-        mRtcEngine.joinChannel(null, GameControl.currentUser.channelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
+        mRtcEngine.joinChannel(null, GameControl.currentUser.getChannelName(), "Extra Optional Data", Integer.parseInt(GameControl.currentUser.getMediaUid())); // if you do not specify the uid, we will generate the uid for you
     }
 
     public final void leaveChannel() {
@@ -182,7 +181,6 @@ public class WorkerThread extends Thread {
             mWorkerHandler.sendMessage(envelop);
             return;
         }
-
         ensureGangUpRtcEngineReadyLock();
         gangUpRtcEngine.enableAudio();
         //rtcEngine.enableAudio();

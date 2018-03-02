@@ -23,7 +23,6 @@ import io.agora.rtc.RtcEngine;
 public abstract class BaseActivity extends Activity {
 
     private String tag = "[BaseActivity]  ";
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +32,8 @@ public abstract class BaseActivity extends Activity {
     }
 
     protected abstract void initUIandEvent();
-
     protected abstract void deInitUIandEvent();
-
     protected abstract void setUiListener();
-
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -70,7 +66,6 @@ public abstract class BaseActivity extends Activity {
             }
         });
     }
-
 
     protected void initConstantsHttp() {
         //Can not change this

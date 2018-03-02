@@ -10,6 +10,7 @@
 #include "DlgAnswer.h"
 #include "DlgConfig.h"
 #include "DlgInput.h"
+#include "DlgSetTimeBonus.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -58,7 +59,8 @@ CAgoraHQDlg::CAgoraHQDlg(CWnd* pParent /*=NULL*/)
 	m_pDlgConfig(nullptr),
 	m_nLastmileQuality(-1),
 	m_pDlgInputParam(nullptr),
-	m_wndRemote(nullptr)
+	m_wndRemote(nullptr),
+	m_pDlgSetTimeBonus(nullptr)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_agInviteRemoteAudience.isAccpet = false;
@@ -77,6 +79,7 @@ void CAgoraHQDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_HQ_CONFIG, m_btnHQConfig);
 	DDX_Control(pDX, IDC_BUTTON_INVITEMEDIA, m_btnInviteRemote);
 	DDX_Control(pDX, IDC_STATIC_SDKVersion, m_ctlSdkVersion);
+	DDX_Control(pDX, IDC_BUTTON_SetTimeBonus, m_btnSetTimeBonus);
 }
 
 BEGIN_MESSAGE_MAP(CAgoraHQDlg, CDialogEx)
@@ -99,11 +102,13 @@ BEGIN_MESSAGE_MAP(CAgoraHQDlg, CDialogEx)
 	ON_MESSAGE(WM_MSGID(EID_FIRST_REMOTE_VIDEO_FRAME), onFirstRmoteVideoFrame)
 	ON_MESSAGE(WM_MSGID(EID_USER_JOINED), onUserJoined)
 	ON_MESSAGE(WM_MSGID(EID_USER_OFFLINE), onUserOff)
+	ON_MESSAGE(WM_MSGID(EID_USER_MUTE_VIDEO), onUserMuteVideo)
 	ON_MESSAGE(WM_MSGID(EID_CONNECTION_LOST), onConnectionLost)
 	ON_MESSAGE((WM_NewChannelName), onNewChannelName)
-	ON_MESSAGE(WM_InviteRemoteAudience,onInviteRemoteAudience)
-	ON_MESSAGE(WM_InviteCallBackAccpet,onInviteCallBackAccept)
+	ON_MESSAGE(WM_InviteRemoteAudience, onInviteRemoteAudience)
+	ON_MESSAGE(WM_InviteCallBackAccpet, onInviteCallBackAccept)
 	ON_BN_CLICKED(IDC_BUTTON_INVITEMEDIA, &CAgoraHQDlg::OnBnClickedButtonInvitemedia)
+	ON_BN_CLICKED(IDC_BUTTON_SetTimeBonus, &CAgoraHQDlg::OnBnClickedButtonSettimebonus)
 END_MESSAGE_MAP()
 
 
@@ -141,7 +146,10 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化代码
 	SetBackgroundColor(RGB(0xff,0xff,0xff),TRUE);
 
-	gHQConfig.setAppId("363f97d9690e4c0a9780499ab14a16c0");
+	if ("" == gHQConfig.getAppId()){
+
+		gHQConfig.setAppId("319294c67d174c878cc7922551e6e773");
+	}
 	getChannelName();
 	m_strAppId = gHQConfig.getAppId();
 	if ("" == m_strAppId){
@@ -224,8 +232,9 @@ void CAgoraHQDlg::OnTimer(UINT_PTR nIDEvent)
 		KillTimer(EVENT_TIMER_INVITEREMOTE);
 
 		CString csStrFormat;
-		csStrFormat.Format(_T("\t Invitees: %s\n\t EnableVideo : %d \n\t EnableAudio: %d\n\t nTimeout: %d\n\t Rejected invitation.."),
+		csStrFormat.Format(_T("\t Invitees: %s\n\t EnableVideo : %d \n\t EnableAudio: %d\n\t nTimeout: %d\n\t TimeOut Rejected invitation default .."),
 			s2cs(m_agInviteRemoteAudience.remoteAccount),m_agInviteRemoteAudience.enableVideo,m_agInviteRemoteAudience.enableAudio,m_agInviteRemoteAudience.nTimeOut);
+		gFileApp.write(cs2s(csStrFormat));
 
 #if 1
 		m_agInviteRemoteAudience.isValid = false;
@@ -364,6 +373,16 @@ void CAgoraHQDlg::uninitCtrl()
 		delete m_pDlgAnswer;
 		m_pDlgAnswer = nullptr;
 	}
+
+	if (m_pDlgInputParam){
+		delete m_pDlgInputParam;
+		m_pDlgInputParam = nullptr;
+	}
+
+	if (m_pDlgSetTimeBonus){
+		delete m_pDlgSetTimeBonus;
+		m_pDlgSetTimeBonus = nullptr;
+	}
 }
 
 void CAgoraHQDlg::initAgoraMediaRtc()
@@ -378,7 +397,7 @@ void CAgoraHQDlg::initAgoraMediaRtc()
 	m_lpRtcEngine = CAgoraObject::GetEngine();
 	ASSERT(m_lpRtcEngine);
 
-	CString strSdkLogFilePath = getSdkLogPath();
+	CString strSdkLogFilePath = s2cs(getMediaSdkLogPath());
 	m_lpAgoraObject->SetLogFilePath(strSdkLogFilePath);
 	m_lpAgoraObject->EnableLastmileTest(TRUE);
 	m_lpAgoraObject->EnableLocalMirrorImage(FALSE);
@@ -520,8 +539,11 @@ LRESULT CAgoraHQDlg::onFirstRemoteVideoDecoded(WPARAM wParam, LPARAM lParam)
 	LPAGE_FIRST_REMOTE_VIDEO_DECODED lpData = (LPAGE_FIRST_REMOTE_VIDEO_DECODED)wParam;
 	if (lpData){
 
-		m_nInviteRemote =str2int(m_agInviteRemoteAudience.remoteAccount);
-		if (lpData->uid == m_nInviteRemote && m_agInviteRemoteAudience.isAccpet && m_agInviteRemoteAudience.isValid){
+		char logMsg[512] = { '\0' };
+		sprintf_s(logMsg, "AgoraHQDlg::onFirstRemoteVideoDecoded : %u\n", lpData->uid);
+		OutputDebugStringA(logMsg);
+
+		if (lpData->uid == m_nInviteRemote){
 
 			VideoCanvas vcRemote;
 			vcRemote.renderMode = RENDER_MODE_HIDDEN;
@@ -535,8 +557,10 @@ LRESULT CAgoraHQDlg::onFirstRemoteVideoDecoded(WPARAM wParam, LPARAM lParam)
 
 			if (m_lpRtcEngine){
 
+				gFileApp.write("onFirstRemoteVideoDecoded setRemoteVideo");
 				m_lpRtcEngine->setupRemoteVideo(vcRemote);
-
+				m_ctlRemoteWnd.ShowWindow(SW_SHOW);
+				OutputDebugStringA("firstRemoteVideoDecoded setRemoteVideo.\n");
 			}
 		}
 		else{
@@ -553,13 +577,13 @@ LRESULT CAgoraHQDlg::onFirstRmoteVideoFrame(WPARAM wParam, LPARAM lParam)
 	LPAGE_FIRST_REMOTE_VIDEO_FRAME lpData = (LPAGE_FIRST_REMOTE_VIDEO_FRAME)wParam;
 	if (lpData){
 
-		m_nInviteRemote = str2int(m_agInviteRemoteAudience.remoteAccount);
 		if (lpData->uid == m_nInviteRemote && m_agInviteRemoteAudience.isValid && m_agInviteRemoteAudience.isAccpet){
 
 			VideoCanvas vcRemote;
 			vcRemote.renderMode = RENDER_MODE_HIDDEN;
 			vcRemote.uid = lpData->uid;
 			vcRemote.view = m_ctlRemoteWnd;
+			m_mapRemoteView[lpData->uid] = m_ctlRemoteWnd;
 
 			CRect  crLocal;
 			m_ctlShowPic.GetWindowRect(&crLocal);
@@ -568,7 +592,10 @@ LRESULT CAgoraHQDlg::onFirstRmoteVideoFrame(WPARAM wParam, LPARAM lParam)
 
 			if (m_lpRtcEngine){
 
+				gFileApp.write("onFirstRmoteVideoFrame setRemoteVideo");
 				m_lpRtcEngine->setupRemoteVideo(vcRemote);
+				m_ctlRemoteWnd.ShowWindow(SW_SHOW);
+				OutputDebugStringA("onFirstRmoteVideoFrame setRemoteVideo.\n");
 			}
 		}
 		else{
@@ -588,7 +615,6 @@ LRESULT CAgoraHQDlg::onUserJoined(WPARAM wParam, LPARAM lParam)
 
 		if (0 < lpData->uid ){
 
-			m_mapRemoteView[lpData->uid] = nullptr;
 		}
 
 		delete lpData; lpData = nullptr;
@@ -602,9 +628,66 @@ LRESULT CAgoraHQDlg::onUserOff(WPARAM wParam, LPARAM lParam)
 	LPAGE_USER_OFFLINE lpData = (LPAGE_USER_OFFLINE)wParam;
 	if (lpData){
 
-		std::map<uid_t, HWND>::iterator it = m_mapRemoteView.find(lpData->uid);
-		if (m_mapRemoteView.end() != it){
-			m_mapRemoteView.erase(it);
+		delete lpData; lpData = nullptr;
+	}
+
+	return TRUE;
+}
+
+LRESULT CAgoraHQDlg::onUserMuteVideo(WPARAM wParam, LPARAM lParam)
+{
+	LPAGE_USER_MUTE_VIDEO lpData = (LPAGE_USER_MUTE_VIDEO)wParam;
+	if (lpData){
+
+		char logMsg[512] = { '\0' };
+		sprintf_s(logMsg, "onUserMuteVideo: %u %d\n", lpData->uid, lpData->muted);
+		OutputDebugStringA(logMsg);
+
+		if (lpData->muted){
+
+			m_ctlRemoteWnd.ShowWindow(SW_HIDE);
+			std::map<uid_t, HWND>::iterator it = m_mapRemoteView.find(lpData->uid);
+			if (m_mapRemoteView.end() != it){
+
+				VideoCanvas vcRemote;
+				vcRemote.renderMode = RENDER_MODE_HIDDEN;
+				vcRemote.uid = lpData->uid;
+				vcRemote.view = nullptr;
+				if (m_lpRtcEngine){
+
+					m_lpRtcEngine->setupRemoteVideo(vcRemote);
+					m_mapRemoteView[it->first] = nullptr;
+					OutputDebugStringA("onUserMuteVideo setRemoteVideo. HIDDEN\n");
+					gFileApp.write("onUserMuteVideo setRemoteVideo. HIDDEN");
+				}
+
+				m_mapRemoteView.erase(it);
+				Invalidate();
+			}
+		}
+		else{
+
+			m_mapRemoteView[lpData->uid] = m_wndRemote;
+			if (m_nInviteRemote == lpData->uid){
+
+				VideoCanvas vcRemote;
+				vcRemote.renderMode = RENDER_MODE_HIDDEN;
+				vcRemote.uid = lpData->uid;
+				vcRemote.view = m_ctlRemoteWnd;
+
+				CRect  crLocal;
+				m_ctlShowPic.GetWindowRect(&crLocal);
+				ScreenToClient(crLocal);
+				m_ctlShowPic.SetWindowPos(&m_ctlRemoteWnd, crLocal.left, crLocal.top, crLocal.right - crLocal.left, crLocal.bottom - crLocal.top, SWP_SHOWWINDOW);
+
+				if (m_lpRtcEngine){
+
+					m_lpRtcEngine->setupRemoteVideo(vcRemote);
+					m_ctlRemoteWnd.ShowWindow(SW_SHOW);
+					OutputDebugStringA("onUserMuteVideo setRemoteVideo.SHOW\n");
+					gFileApp.write("onUserMuteVideo setRemoteVideo.SHOW");
+				}
+			}
 		}
 
 		delete lpData; lpData = nullptr;
@@ -645,6 +728,7 @@ LRESULT CAgoraHQDlg::onNewChannelName(WPARAM wParam, LPARAM lParam)
 LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 {
 	LPAG_INVITE_REMOTEAUDEINCE lpData = (PAG_INVITE_REMOTEAUDIENCE)wParam;
+	OutputDebugStringA("onInviteRemoteAudience\n");
 	if (lpData){
 
 		if (lpData->isAccpet){
@@ -672,7 +756,9 @@ LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 						if (m_lpRtcEngine){
 
 							m_lpRtcEngine->setupRemoteVideo(vcRemote);
-
+							m_ctlRemoteWnd.ShowWindow(SW_SHOW);
+							OutputDebugStringA("onInviteRemoteAudience setUpRemoteVideo\n");
+							gFileApp.write("onInviteRemoteAudience setUpRemoteVideo");
 						}
 					}
 					else{
@@ -685,6 +771,7 @@ LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 			}
 		}
 		else{
+			gFileApp.write("onInviteRemoteAudience now is not Accpet..");
 			m_agInviteRemoteAudience.enableAudio = lpData->enableAudio;
 			m_agInviteRemoteAudience.enableVideo = lpData->enableVideo;
 			m_agInviteRemoteAudience.nTimeOut = lpData->nTimeOut;
@@ -704,25 +791,28 @@ LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 
 LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 {
-	BOOL bAccpet = bool(wParam);
+	LPAG_INVITE_CALLBACKACCEPT lpData = (LPAG_INVITE_CALLBACKACCEPT)wParam;
+	OutputDebugStringA("onInviteCallBackAccept\n");
 	if (m_agInviteRemoteAudience.isValid){
 		KillTimer(EVENT_TIMER_INVITEREMOTE);
 
-		if (m_lpAgoraObject && bAccpet){
-			m_lpAgoraObject->MuteRemoteAudio(str2int(m_agInviteRemoteAudience.remoteAccount), !m_agInviteRemoteAudience.enableAudio);
-			m_lpAgoraObject->MuteRemoteVideo(str2int(m_agInviteRemoteAudience.remoteAccount), !m_agInviteRemoteAudience.enableVideo);
-			m_nInviteRemote = str2int(m_agInviteRemoteAudience.remoteAccount);
+		m_nInviteRemote = str2long(lpData->remoteMediaUid);
+		if (m_lpAgoraObject && lpData->isAccept && m_agInviteRemoteAudience.remoteAccount == lpData->remoteSigAccount){
+			m_lpAgoraObject->MuteRemoteAudio(str2long(lpData->remoteMediaUid), !m_agInviteRemoteAudience.enableAudio);
+			m_lpAgoraObject->MuteRemoteVideo(str2long(lpData->remoteMediaUid), !m_agInviteRemoteAudience.enableVideo);
 
 			for (std::map<UINT, HWND>::iterator it = m_mapRemoteView.begin(); m_mapRemoteView.end() != it; it++){
+				m_nInviteRemote = str2long(lpData->remoteMediaUid);
 				if (m_nInviteRemote == it->first){
 					if (nullptr != it->second){
 						OutputDebugStringA("repeat signling Invite remote \n");
+						gFileApp.write("repeat signling Invite remote");
 						break;
 					}
 
 					VideoCanvas vcRemote;
 					vcRemote.renderMode = RENDER_MODE_HIDDEN;
-					vcRemote.uid = it->first;
+					vcRemote.uid = str2long(lpData->remoteMediaUid);
 					vcRemote.view = m_ctlRemoteWnd;
 
 					CRect  crLocal;
@@ -732,8 +822,10 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 
 					if (m_lpRtcEngine){
 
+						gFileApp.write("callback accept setUpRemoteVideo");
 						m_lpRtcEngine->setupRemoteVideo(vcRemote);
-
+						m_ctlRemoteWnd.ShowWindow(SW_SHOW);
+						OutputDebugStringA("callback accept setUpRemoteVideo\n");
 					}
 				}
 				else{
@@ -748,6 +840,7 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 			CString csStrFormat;
 			csStrFormat.Format(_T("\t Invitees: %s\n\t EnableVideo : %d \n\t EnableAudio: %d\n\t nTimeout: %d\n\t Rejected invitation.."),
 				s2cs(m_agInviteRemoteAudience.remoteAccount), m_agInviteRemoteAudience.enableVideo, m_agInviteRemoteAudience.enableAudio, m_agInviteRemoteAudience.nTimeOut);
+			gFileApp.write(cs2s(csStrFormat));
 
 			AfxMessageBox(csStrFormat);
 		}
@@ -771,4 +864,19 @@ void CAgoraHQDlg::OnBnClickedButtonInvitemedia()
 	m_pDlgInputParam->showWindow(eTagMsgtype::eType_Instance);
 	m_agInviteRemoteAudience.isAccpet = false;
 	m_agInviteRemoteAudience.remoteAccount = "";
+	m_agInviteRemoteAudience.enableAudio = false;
+	m_agInviteRemoteAudience.enableVideo = false;
+	m_agInviteRemoteAudience.isValid = false;
+}
+
+void CAgoraHQDlg::OnBnClickedButtonSettimebonus()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	if (nullptr == m_pDlgSetTimeBonus){
+		m_pDlgSetTimeBonus = new CDlgSetTimeBonus();
+		m_pDlgSetTimeBonus->Create(CDlgSetTimeBonus::IDD);
+	}
+
+	m_pDlgSetTimeBonus->CenterWindow();
+	m_pDlgSetTimeBonus->ShowWindow(SW_SHOW);
 }

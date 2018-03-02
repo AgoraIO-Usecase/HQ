@@ -80,7 +80,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private boolean isFirst = true;
     private ExecutorService executorService;
     private AgoraSignal agoraSignal;
-    private boolean wheatherChangeGameReuslt = true;
     private RecyclerView recyclerView;
     private MessageRecyclerViewAdapter messageRecyclerViewAdapter;
     private LinearLayout messageLinearLayou;
@@ -128,6 +127,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private TextView game_title;
     private TextView wheath_canPlay_TextView;
     private TextView time_reduce;
+    private ImageView answerFaceImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -159,7 +159,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         recyclerView.setAdapter(messageRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new MessageListDecoration());
-
         if (messageRecyclerViewAdapter.getItemCount() > 0) {
             recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
         }
@@ -169,12 +168,12 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         gangUpUidRecycleView.setAdapter(gangUpRecycleViewAdapter);
         gangUpUidRecycleView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         localSmallVideo = findViewById(R.id.small_video);
-
         congratulationHeadImage = findViewById(R.id.congratulation_headImage);
         congratulationTextView = findViewById(R.id.congratulation_name);
         congratulationView = findViewById(R.id.congratulation_view);
         cancelCongratulation = findViewById(R.id.congratulation_cancel);
         cancelCongratulation.setClickable(true);
+        answerFaceImage = findViewById(R.id.answer_face);
     }
 
     @Override
@@ -185,8 +184,13 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         GameControl.currentQuestion = null;
         GameControl.currentUser = null;
         GameControl.currentUserHeadImage = null;
-        workerThread.gangUpLeaveChannel();
-        workerThread.leaveChannel();
+        if (workerThread != null) {
+            workerThread.gangUpLeaveChannel();
+            workerThread.leaveChannel();
+            if (workerThread.eventHandler() != null) {
+                workerThread.eventHandler().removeEventHandler(this);
+            }
+        }
         questionFlag = false;
         if (agoraSignal != null) {
             agoraSignal.removeEnventHandler();
@@ -204,9 +208,11 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         checkBox_item = null;
         board.clear();
         board = null;
-        questionTimeHandler = null;
-        executorService.shutdown();
+        if (executorService != null) {
+            executorService.shutdownNow();
+        }
         executorService = null;
+        questionTimeHandler = null;
         System.gc();
     }
 
@@ -306,22 +312,21 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
 
     private User getUser() {
         User currentUser = new User();
-        currentUser.name = GameControl.currentUserName;
-        currentUser.drawable = GameControl.currentUserHeadImage;
-        String channelName = getChannelName();
-        currentUser.setChannelName(channelName);
+        currentUser.setUserName(GameControl.currentUserName);
+        currentUser.setDrawable(GameControl.currentUserHeadImage);
+        currentUser.setChannelName(getChannelName());
+        currentUser.setSignalAccount(GameControl.signalAccount);
         GameControl.currentUser = currentUser;
-        currentUser.signalAccount = GameControl.signalAccount;
         return currentUser;
     }
 
     private void init() throws Exception {
-        loginAgoraSignal();
         getUser();
+        loginAgoraSignal();
         GameControl.logD(tag + "init");
         initQuestionLayout();
         //startCheckWheatherCanPlay();
-        // checkWheatherCanPlay();
+        checkWheatherCanPlay(false);
         GameControl.controlCheckThread = true;
         checkSelfPermissions();
         executorService = createExcetorService();
@@ -349,7 +354,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     private void loginAgoraSignal() {
-        agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
+        GameControl.logD(tag + " loginAgoraSignal  account  " + GameControl.currentUserName + "  channelName  " + getChannelName());
+        // agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
+        agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, GameControl.currentUser.getSignalAccount(), getChannelName());
         agoraSignal.addEventHandler(agoraHandler);
         agoraSignal.login();
     }
@@ -371,7 +378,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     break;
 
                 case Constants.AGORA_SIGNAL_RECEIVE:
-
                     String mess = (String) msg.obj;
                     Object jsonObject = null;
 
@@ -382,7 +388,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     }
 
                     if (jsonObject == null) {
-
                         return;
                     }
 
@@ -417,7 +422,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                 if ((res != chooseResult)) {
                                     int answer = res + 1;
                                     time_reduce.setText(getString(R.string.answer_error_message));
-
+                                    answerFaceImage.setImageResource(R.drawable.answer_wrong);
+                                    answerFaceImage.setVisibility(View.VISIBLE);
                                     time_reduce.setTextColor(Color.RED);
                                     time_reduce.setVisibility(View.VISIBLE);
                                     //game_title.setVisibility(View.INVISIBLE);
@@ -426,16 +432,11 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                     if (questionTime != 0 && (questionTime != GameControl.timeOut)) {
                                         questionTime = 0;
                                     }
-
-                                    if (wheatherChangeGameReuslt) {
-
-                                        GameControl.gameResult = false;
-                                        wheatherChangeGameReuslt = false;
-                                    }
-
                                 } else {
                                     time_reduce.setText(R.string.answer_correct_message);
-                                    time_reduce.setTextColor(Color.GREEN);
+                                    answerFaceImage.setImageResource(R.drawable.answer_right);
+                                    answerFaceImage.setVisibility(View.VISIBLE);
+                                    time_reduce.setTextColor(getResources().getColor(R.color.correct_back_blue));
                                     time_reduce.setVisibility(View.VISIBLE);
                                     //game_title.setVisibility(View.INVISIBLE);
                                     GameControl.clientWheatherCanPlay = true;
@@ -454,29 +455,24 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                     questionTimeHandler.sendEmptyMessageDelayed(2, 5000);
                                 }
                             }
-
                             GameControl.result = -1;
                             break;
-
                         case "quiz":
-
                             Question question = (Question) jsonObject;
-
-
-                            if (question.getId() == 1) {
-                                GameControl.gameResult = true;
-                                wheatherChangeGameReuslt = true;
+                            if (question.getId() == 0) {
+                                GameControl.clientWheatherCanPlay = true;
+                                GameControl.serverWheatherCanPlay = true;
+                                submit_btn.setText(R.string.submit_message);
+                                submit_btn.setTextColor(Color.BLACK);
                             }
                             GameControl.logD(tag + "save Question :  id = " + question.getId() + "  " + question.getTimeOut());
                             if (question != null) {
                                 GameControl.setCurrentQuestion(question);
                                 int total = GameControl.currentQuestion.getTotalQuestion();
                                 int timeOut = GameControl.currentQuestion.getTimeOut();
-
                                 if (total != 0) {
                                     GameControl.total = total;
                                 }
-
                                 if (timeOut != 0) {
                                     GameControl.timeOut = timeOut;
                                     time_reduce.setText(timeOut + " s");
@@ -484,8 +480,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                             }
                             try {
                                 if (!isFirst) {
-                                    checkWheatherCanPlay();
-
+                                    checkWheatherCanPlay(false);
                                     isFirst = false;
                                 }
                             } catch (JSONException e) {
@@ -502,9 +497,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                             break;
                     }
                     break;
-
                 case Constants.AGORA_SIGNAL_SEND:
-
                     String sendMessage = (String) msg.obj;
                     GameControl.logD(tag + "sendMessage  = " + sendMessage);
                     io.agora.agoraandroidhq.module.Message jsonObjects = null;
@@ -515,7 +508,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     }
                     GameControl.logD(tag + "sendMessage  sendName  sendContent " + jsonObjects.getContent() + "   " + jsonObjects.getSender());
                     String sendName = jsonObjects.getSender();
-
                     String content = jsonObjects.getContent();
                     GameControl.logD(tag + "sendMessage = ");
                     io.agora.agoraandroidhq.module.Message message = new io.agora.agoraandroidhq.module.Message(sendName, content);
@@ -526,7 +518,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
                     recyclerView.smoothScrollToPosition(messageRecyclerViewAdapter.getItemCount() - 1);
                     break;
                 case Constants.MESSAGE_SEND_ERROR:
@@ -553,11 +544,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     e.printStackTrace();
                 }
                 GameControl.logD(tag + "startCheckWheatherCanPalyThread");
-
                 try {
                     if (isFirst) {
-                        checkWheatherCanPlay();
-
+                        checkWheatherCanPlay(false);
                         isFirst = false;
                     }
                 } catch (JSONException e) {
@@ -567,10 +556,11 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         });
     }
 
-    private void checkWheatherCanPlay() throws JSONException {
+    private void checkWheatherCanPlay(final boolean isRelive ) throws JSONException {
         AgoraSignal.checkWheatherCanPlay(new HttpUrlUtils.OnResponse() {
             @Override
             public void onResponse(String data) throws JSONException {
+                GameControl.logD(tag + " GameControl.checkWheatherCanPlay11 " + data);
                 if (data.equals(Constants.MESSAGE_TOAST)) {
                     return;
                 }
@@ -578,7 +568,30 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 if (data != null) {
                     JSONObject object = new JSONObject(data);
                     boolean wheatherCanPlay = object.getBoolean("result");
-                    GameControl.serverWheatherCanPlay = wheatherCanPlay;
+                    if (wheatherCanPlay) {
+                        GameControl.logD(tag + " GameControl.checkWheatherCanPlay22 " + data);
+                        GameControl.serverWheatherCanPlay = true;
+                        GameControl.clientWheatherCanPlay = true;
+                        GameControl.logD(tag + " GameControl.checkWheatherCanPlay33 " + GameControl.serverWheatherCanPlay+"  "+ GameControl.clientWheatherCanPlay);
+                        if(isRelive) {
+                            if (GameControl.clientWheatherCanPlay && GameControl.serverWheatherCanPlay) {
+                                GameActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        wheath_canPlay_TextView.setVisibility(View.GONE);
+                                        submit_btn.setText(R.string.submit_message);
+                                        submit_btn.setTextColor(Color.BLACK);
+                                        Toast.makeText(GameActivity.this, R.string.relive_success_message, Toast.LENGTH_SHORT).show();
+                                        showquestionView(GameControl.currentQuestion);
+                                    }
+                                });
+                            }
+                        }
+                    }else{
+                        String errMessage = object.getString("err");
+                        toastHelper(errMessage);
+                    }
+                    GameControl.logD(tag + " GameControl.serverWheatherCanPlay " + wheatherCanPlay);
                     object = null;
                 }
             }
@@ -595,15 +608,12 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     int questime = (int) msg.obj;
                     GameControl.logD(tag + "questionReduceTime  =  " + questime);
                     if (questime < 0) {
-
                         questionTime = GameControl.timeOut;
                         return;
                     }
                     time_reduce.setTextColor(Color.RED);
                     time_reduce.setText(questime + " s");
-
                     if (questime == 0) {
-
                         questionFlag = false;
                         if (GameControl.serverWheatherCanPlay && GameControl.clientWheatherCanPlay) {
                             //GameControl.clientWheatherCanPlay = false;
@@ -614,12 +624,10 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         }
                         game_layout.setVisibility(View.GONE);
                         questionTime = GameControl.timeOut;
-
                         GameControl.logD("showCongratulation  total  = " + GameControl.total + "  getId = " + GameControl.currentQuestion.getId());
                         GameControl.logD("showCongratulation  clientWheatherCanPlay= " + GameControl.clientWheatherCanPlay + "  GameControl.serverWheatherCanPlay = " + GameControl.serverWheatherCanPlay);
                     }
                     break;
-
                 case 1:
                     if (game_layout.getVisibility() == View.VISIBLE) {
                         game_layout.setVisibility(View.GONE);
@@ -644,7 +652,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             @Override
             public void run() {
                 questionTime = GameControl.timeOut;
-
                 GameControl.logD(tag + "showQuestion questionFlag = " + questionFlag);
                 while (questionFlag) {
                     try {
@@ -653,10 +660,12 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                     questionTime = questionTime - 1;
-                    Message message = questionTimeHandler.obtainMessage();
-                    message.what = 0;
-                    message.obj = questionTime;
-                    questionTimeHandler.sendMessage(message);
+                    if (questionTimeHandler != null) {
+                        Message message = questionTimeHandler.obtainMessage();
+                        message.what = 0;
+                        message.obj = questionTime;
+                        questionTimeHandler.sendMessage(message);
+                    }
                     if (questionTime == -1) {
                         questionFlag = false;
                     }
@@ -667,6 +676,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         GameActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                answerFaceImage.setVisibility(View.GONE);
                 GameControl.logD(tag + "GameControl serverWheatherCanPlay = " + GameControl.serverWheatherCanPlay + "  GameControl.clientWheatherCanPlay  = " + GameControl.clientWheatherCanPlay);
                 if (GameControl.serverWheatherCanPlay && GameControl.clientWheatherCanPlay) {
                     showquestionView(GameControl.currentQuestion);
@@ -697,7 +707,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     requestCode);
             return false;
         }
-        if (Manifest.permission.CAMERA.equals(permission)) {
+        if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
             //joinAgoraLiveChannel();
             rtcEngineJoinChannel();
         }
@@ -718,7 +728,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                 } else {
-                    // finish();
+                    toastHelper(getResources().getString(R.string.need_permission_toast));
+                    finish();
                 }
                 break;
             }
@@ -731,6 +742,15 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                     //  ((AGApplication) getApplication()).initWorkerThread();
+                } else {
+                    toastHelper(getResources().getString(R.string.need_permission_toast));
+                    finish();
+                }
+                break;
+            }
+            case 2: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     try {
                         //joinAgoraLiveChannel();
                         rtcEngineJoinChannel();
@@ -738,16 +758,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         e.printStackTrace();
                     }
                 } else {
-                    // finish();
-                }
-                break;
-            }
-            case 2: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-                    // finish();
+                    toastHelper(getResources().getString(R.string.need_permission_toast));
+                    finish();
                 }
                 break;
             }
@@ -765,7 +777,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         }
         disConnectBtn.setVisibility(View.GONE);
     }
-
 
     public void invitedEnd() {
         mRtcEngine.muteLocalVideoStream(true);
@@ -798,7 +809,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     // Tutorial Step 5
     private void setupRemoteVideo(int uid) {
         FrameLayout container = (FrameLayout) findViewById(R.id.live_view);
-
         if (container.getChildCount() >= 1) {
             return;
         }
@@ -808,7 +818,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     private void setUpSmallVideo(int uid) {
-
         FrameLayout container = findViewById(R.id.small_video);
         if (container.getChildCount() >= 1) {
             container.removeAllViews();
@@ -923,7 +932,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             AgoraSignal.sendAnswerToserver(GameControl.currentQuestion.getId(), a, new HttpUrlUtils.OnResponse() {
                 @Override
                 public void onResponse(String data) {
-
                     // logD("sendAnswerToserver   = " + data);
                     GameControl.logD(tag + "sendAnswer OnResponse  =  " + data);
                 }
@@ -945,7 +953,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
 
     private void showCongratulationView() {
         congratulationTextView.setText(GameControl.currentUserName);
-        congratulationHeadImage.setImageDrawable(GameControl.currentUser.drawable);
+        congratulationHeadImage.setImageDrawable(GameControl.currentUser.getDrawable());
         Animation animationUtils = AnimationUtils.loadAnimation(GameActivity.this, R.anim.scale_animation);
         animationUtils.setFillAfter(true);
         congratulationView.startAnimation(animationUtils);
@@ -1030,7 +1038,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             String tag = view.getTag() + "";
             if (tag.equals(positions + "")) {
                 // GameControl.logD("correctChild  =  setBackGround");
-                view.setBackgroundColor(Color.GREEN);
+                view.setBackgroundColor(getResources().getColor(R.color.correct_back_blue));
             }
         }
     }
@@ -1066,24 +1074,14 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 if (data.equals(Constants.MESSAGE_TOAST)) {
                     System.out.println(Toast.makeText(GameActivity.this, R.string.connect_net_error_or_server_error, Toast.LENGTH_SHORT));
                 }
-
                 if (data.equals("{}")) {
-                    GameControl.serverWheatherCanPlay = true;
-                    GameControl.clientWheatherCanPlay = true;
 
-                    GameActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            wheath_canPlay_TextView.setVisibility(View.GONE);
-                            submit_btn.setText(R.string.submit_message);
-                            submit_btn.setTextColor(Color.BLACK);
-                            Toast.makeText(GameActivity.this, R.string.relive_success_message, Toast.LENGTH_SHORT).show();
-                            showquestionView(GameControl.currentQuestion);
-                        }
-                    });
+                    checkWheatherCanPlay(true);
+                    GameControl.logD(tag+"buttonToRelive  "+" clientWheatherCanPlay "+GameControl.clientWheatherCanPlay+" serverWheatherCanPlay "+ GameControl.serverWheatherCanPlay);
                 } else {
                     GameControl.serverWheatherCanPlay = false;
                     Toast.makeText(GameActivity.this, R.string.fail_to_relive_message, Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -1111,16 +1109,17 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     gangUpAlertDialog.dismiss();
                     disConnectBtn.setVisibility(View.VISIBLE);
                     disConnectBtn.setClickable(true);
-                    AgoraSignal.wheatherAcceptVideoWithBroadCast(true, GameControl.currentUser.signalAccount, GameControl.currentUser.account, GameControl.currentUser.channelName);
+                    GameControl.logD(tag + " GameContorl.currentUser.getAccount =  true " + GameControl.currentUser.getSignalAccount() + " getMediaUid" + GameControl.currentUser.getMediaUid() + " getChannelName " + GameControl.currentUser.getChannelName());
+                    AgoraSignal.wheatherAcceptVideoWithBroadCast(true, GameControl.currentUser.getSignalAccount(), GameControl.currentUser.getMediaUid(), GameControl.currentUser.getChannelName());
                 }
             }
         });
-
         refuseVideoInvationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gangUpAlertDialog.dismiss();
-                AgoraSignal.wheatherAcceptVideoWithBroadCast(false, GameControl.currentUser.signalAccount, GameControl.currentUser.account, GameControl.currentUser.channelName);
+                GameControl.logD(tag + " GameContorl.currentUser.getAccount =  false  " + GameControl.currentUser.getSignalAccount() + " getMediaUid" + GameControl.currentUser.getMediaUid() + " getChannelName " + GameControl.currentUser.getChannelName());
+                AgoraSignal.wheatherAcceptVideoWithBroadCast(false, GameControl.currentUser.getSignalAccount(), GameControl.currentUser.getMediaUid(), GameControl.currentUser.getChannelName());
             }
         });
         dialog.show();
@@ -1128,12 +1127,10 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
 
     public void gangUpClick(View view) {
         GameControl.logD(tag + "gangUpClick  isInVideoWithBroadcast = " + isInVideoWithBroadcast);
-
         if (isInVideoWithBroadcast) {
             toastHelper(getString(R.string.can_not_team_mode));
             return;
         }
-
         if (isInGangUp) {
             /*gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}");
             gangUpRtcEngine.leaveChannel();*/
@@ -1164,14 +1161,14 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             if (gangUpAlertDialog != null) {
                 gangUpAlertDialog.dismiss();
             }
-            String realChannelName = GameControl.currentUser.channelName + "_" + channelName;
+            String realChannelName = GameControl.currentUser.getChannelName() + "_" + channelName;
            /* gangUpRtcEngine.enableAudio();
             //rtcEngine.enableAudio();
 
             gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}");
             gangUpRtcEngine.joinChannel(null, realChannelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
 */
-            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.account));
+            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.getMediaUid()));
             if (gangUpRtcEngine == null) {
                 gangUpRtcEngine = workerThread.getGangUpRtcEngine();
             }
@@ -1187,14 +1184,14 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             if (gangUpAlertDialog != null) {
                 gangUpAlertDialog.dismiss();
             }
-            String realChannelName = GameControl.currentUser.channelName + "_" + channelName;
+            String realChannelName = GameControl.currentUser.getChannelName() + "_" + channelName;
            /* gangUpRtcEngine.enableAudio();
             //rtcEngine.enableAudio();
 
             gangUpRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":50}}");
             gangUpRtcEngine.joinChannel(null, realChannelName, "Extra Optional Data", Integer.parseInt(GameControl.currentUser.account)); // if you do not specify the uid, we will generate the uid for you
 */
-            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.account));
+            workerThread.gangUpJoinChannel(realChannelName, Integer.parseInt(GameControl.currentUser.getMediaUid()));
             gangUpRtcEngine = workerThread.getGangUpRtcEngine();
         }
     }

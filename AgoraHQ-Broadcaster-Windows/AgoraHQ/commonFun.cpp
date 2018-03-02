@@ -125,6 +125,11 @@ int str2int(const std::string &str)
 	return atoi(str.c_str());
 }
 
+int str2long(const std::string &str)
+{
+	return atoll(str.data());
+}
+
 float str2float(const std::string &str)
 {
 	return (float)atof(str.c_str());
@@ -384,7 +389,7 @@ DWORD openProcess(const std::string &processName,const std::string &cmdLine)
 	return pi.dwProcessId;
 }
 
-CString getSdkLogPath()
+std::string getSigSdkLogPath()
 {
 	CString strRet;
 	std::string strTime;
@@ -394,14 +399,54 @@ CString getSdkLogPath()
 	pirorDir = getPirorDir(getFilePath());
 	strTime = getTime();
 
-	exeName.append("HQDemo_");
+	exeName.append("HQDemo_Signal");
 	exeName.append(".log");
 
 	strRet.Format(_T("%slogger\\%s_%s"), s2cs(pirorDir), s2cs(strTime), s2cs(exeName));
 	CString logPirorDir = s2cs(getPirorDirEx(cs2s(strRet)));
 	BOOL res = CreateDirectory(logPirorDir, NULL);
 	
-	return strRet;
+	return cs2s(strRet);
+}
+
+std::string getMediaSdkLogPath()
+{
+	CString strRet;
+	std::string strTime;
+	std::string exeName;
+	std::string pirorDir;
+
+	pirorDir = getPirorDir(getFilePath());
+	strTime = getTime();
+
+	exeName.append("HQDemo_Media");
+	exeName.append(".log");
+
+	strRet.Format(_T("%slogger\\%s_%s"), s2cs(pirorDir), s2cs(strTime), s2cs(exeName));
+	CString logPirorDir = s2cs(getPirorDirEx(cs2s(strRet)));
+	BOOL res = CreateDirectory(logPirorDir, NULL);
+
+	return cs2s(strRet);
+}
+
+std::string getHQLogPath()
+{
+	CString strRet;
+	std::string strTime;
+	std::string exeName;
+	std::string pirorDir;
+
+	pirorDir = getPirorDir(getFilePath());
+	strTime = getTime();
+
+	exeName.append("HQDemo_app");
+	exeName.append(".log");
+
+	strRet.Format(_T("%slogger\\%s_%s"), s2cs(pirorDir), s2cs(strTime), s2cs(exeName));
+	CString logPirorDir = s2cs(getPirorDirEx(cs2s(strRet)));
+	BOOL res = CreateDirectory(logPirorDir, NULL);
+
+	return cs2s(strRet);
 }
 
 std::string getChannelName()

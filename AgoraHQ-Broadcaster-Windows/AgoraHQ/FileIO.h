@@ -96,6 +96,7 @@ protected:
 #define INI_LoginInfo_SignalAccount								"SignalAccount"
 #define INI_LoginInfo_ServerAccount								"ServerAccount"
 #define INI_LoginInfo_Language									"Language"
+#define INI_LoginInfo_Encrypt											"EnableEncrypt"
 
 #define INI_DeviceInfoFront												"DeviceInfoFront"
 #define INI_DeviceInfoBack												"DeviceInfoBack"
@@ -148,6 +149,7 @@ public:
 	__DECLARE_INICONFIG_FUN(SignalAccount)
 	__DECLARE_INICONFIG_FUN(ServerAccount)
 	__DECLARE_INICONFIG_FUN(Language)
+	__DECLARE_INICONFIG_FUN(EnableEncrypt)
 
 	__DECLARE_INICONFIG_SIMILAR_FUN(ProcessEnable)
 	__DECLARE_INICONFIG_SIMILAR_FUN(LoginUid)

@@ -8,5 +8,5 @@
     <color name="red">#ff44</color>
     <color name="black">#000</color>
     <color name="gray">#aab</color>
-
+    <color name="correct_back_blue">#65AAFF</color>
 </resources>

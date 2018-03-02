@@ -9,7 +9,9 @@
 #include <cstdint>
 #endif
 
-
+#ifndef NOWINMEDIA
+#include "IAgoraRtcEngine.h"
+#endif
 
 namespace agora_sdk_win
 {
@@ -33,6 +35,7 @@ namespace agora_sdk_win
         LOGIN_E_TOKENWRONG = 206,
         LOGIN_E_TOKEN_KICKED = 207,
         LOGIN_E_ALREADY_LOGIN = 208,
+        LOGIN_E_INVALID_USER = 209,
         JOINCHANNEL_E_OTHER = 300,
         SENDMESSAGE_E_OTHER = 400,
         SENDMESSAGE_E_TIMEOUT = 401,
@@ -149,8 +152,11 @@ namespace agora_sdk_win
     virtual int getSdkVersion () = 0;
     virtual void bc_call (char const * func, size_t func_size,char const * json_args, size_t json_args_size,char const * callID, size_t callID_size) = 0;
     virtual void dbg (char const * a, size_t a_size,char const * b, size_t b_size) = 0;
+    virtual void destory () = 0;
     
-
+#ifndef NOWINMEDIA
+    virtual agora::rtc::IRtcEngine* getMedia() = 0;
+#endif
   };
 }
 
@@ -158,6 +164,8 @@ namespace agora_sdk_win
 extern "C" LIB_PRE agora_sdk_win::IAgoraAPI* getAgoraSDKInstanceWin(char const * vendorID, size_t vendorID_size);
 extern "C" LIB_PRE agora_sdk_win::IAgoraAPI* createAgoraSDKInstanceWin(char const * vendorID, size_t vendorID_size);
 
-
+#ifndef NOWINMEDIA
+extern "C" LIB_PRE agora_sdk_win::IAgoraAPI* getAgoraSDKInstanceWinWithMedia(agora::rtc::IRtcEngine*, char const * vendorID, size_t vendorID_size);
+#endif
 
 #endif

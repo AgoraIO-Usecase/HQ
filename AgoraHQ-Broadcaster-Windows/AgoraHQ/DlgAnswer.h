@@ -53,6 +53,7 @@ protected:
 	HRESULT onChannelLeaved(WPARAM wParam, LPARAM lParam);
 
 	LRESULT onInputParam(WPARAM wParam, LPARAM lParam);
+	LRESULT onSetDataTimeBonus(WPARAM wParam, LPARAM lParam);
 
 protected:
 	void initCtrl();
@@ -96,4 +97,6 @@ private:
 	CDlgAnswerResultStatics m_DlgResult;
 	int m_nQuestionId;
 	CAGEngineEventHandler* m_pAgEngineEventHandle;
+
+	CFileIO m_fileSigLog;
 };
