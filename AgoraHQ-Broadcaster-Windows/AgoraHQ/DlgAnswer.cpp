@@ -115,7 +115,7 @@ void CDlgAnswer::initAgoraSignal()
 	
 	m_pSignalCallBack = new CSingleCallBack(m_hWnd);
 	m_pSignalInstance->getAgoraAPI()->callbackSet(m_pSignalCallBack);
-	//m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
+	m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
 
 	std::string sdkVersion = m_pSignalInstance->getSDKVersion();
 
