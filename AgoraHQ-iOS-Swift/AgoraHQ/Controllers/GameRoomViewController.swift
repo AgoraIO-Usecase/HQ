@@ -344,7 +344,7 @@ class GameRoomViewController: UIViewController {
         isAnswering = false
         timer.invalidate()
         
-        let id = UserDefaults.standard.integer(forKey: "sid") + 1
+        let id = self.seiId + 1
         if id == totalNum && UserDefaults.standard.bool(forKey: "status") {
             showCongralationView()
         }
