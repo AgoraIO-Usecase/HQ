@@ -535,20 +535,39 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
                 self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.invitedUid!),\"volume\":30}}")
             }
         } else if speakers.count - count == 0 && audioSetted {
-            audioSetTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (_) in
-                self.audioSetTime += 1
-                self.audioSetted = false
-                if self.hostUid != nil {
-                    self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.hostUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
-                }
-                if self.invitedUid != nil {
-                    self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.invitedUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
-                }
-                if self.audioSetTime >= 7 {
-                    self.audioSetTime = 0
-                    self.audioSetTimer?.invalidate()
-                }
-            })
+            if #available(iOS 10.0, *) {
+                audioSetTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { (_) in
+                    self.audioSetTime += 1
+                    self.audioSetted = false
+                    if self.hostUid != nil {
+                        self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.hostUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
+                    }
+                    if self.invitedUid != nil {
+                        self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.invitedUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
+                    }
+                    if self.audioSetTime >= 7 {
+                        self.audioSetTime = 0
+                        self.audioSetTimer?.invalidate()
+                    }
+                })
+            } else {
+                audioSetTimer = Timer.scheduledTimer(timeInterval: 0.1, target: true, selector: #selector(updateVolume), userInfo: nil, repeats: true)
+            }
+        }
+    }
+    
+    @objc func updateVolume() {
+        self.audioSetTime += 1
+        self.audioSetted = false
+        if self.hostUid != nil {
+            self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.hostUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
+        }
+        if self.invitedUid != nil {
+            self.rtcEngine.setParameters("{\"che.audio.playout.uid.volume\":{\"uid\":\(self.invitedUid!),\"volume\":\(30 + 10 * self.audioSetTime)}}")
+        }
+        if self.audioSetTime >= 7 {
+            self.audioSetTime = 0
+            self.audioSetTimer?.invalidate()
         }
     }
     
