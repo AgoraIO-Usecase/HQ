@@ -9,6 +9,7 @@ import android.util.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Random;
 
 /**
  * Created by zhangtao on 2018/1/30.
@@ -47,9 +48,20 @@ public class SharedPreferenceHelper {
     }
 
     public String getName() {
-        String userName = getSharedPreferences().getString("userName", "Label");
+        String userName = getSharedPreferences().getString("userName", getRandomString(7));
         GameControl.logD(tag + "getName = " + userName);
         return userName;
+    }
+
+    private String getRandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; ++i) {
+            int number = random.nextInt(52);// [0,51)
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
     }
 
     public void saveDrawable(Bitmap bitmap) {
