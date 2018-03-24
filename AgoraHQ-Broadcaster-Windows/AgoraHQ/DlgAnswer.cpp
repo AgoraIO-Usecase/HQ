@@ -21,11 +21,13 @@ CDlgAnswer::CDlgAnswer(CWnd* pParent /*=NULL*/)
 	m_nQuestionId(-1),
 	m_pAgEngineEventHandle(nullptr)
 {
-
+	std::string strLogPath = getSigSdkLogPath();
+	m_fileSigLog.openLog(strLogPath);
 }
 
 CDlgAnswer::~CDlgAnswer()
 {
+	m_fileSigLog.close();
 }
 
 void CDlgAnswer::DoDataExchange(CDataExchange* pDX)
@@ -39,6 +41,8 @@ void CDlgAnswer::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_GetQuestion, m_btnUpdateQuestion);
 	DDX_Control(pDX, IDC_BUTTON_STARTANSWER, m_btnStartAnswer);
 	DDX_Control(pDX, IDC_BUTTON_STOPANSWER, m_btnStopAnswer);
+	DDX_Control(pDX, IDC_BUTTON_RESET, m_btnResetQuestion);
+	DDX_Control(pDX, IDC_STATIC_NotifyInfo, m_ctlNoticeInfo);
 }
 
 
@@ -62,6 +66,8 @@ BEGIN_MESSAGE_MAP(CDlgAnswer, CDialogEx)
 	ON_MESSAGE(WM_MessageSendError, onMessageSendError)
 	ON_MESSAGE(WM_MessageInstantReceive, onMessageInstantReceive)
 	ON_BN_CLICKED(IDC_BUTTON_RESET, &CDlgAnswer::OnBnClickedButtonReset)
+	ON_MESSAGE(WM_UpdateInputParam, onInputParam)
+	ON_MESSAGE(WM_SetDataTimeBonus,onSetDataTimeBonus)
 END_MESSAGE_MAP()
 
 
@@ -78,8 +84,12 @@ BOOL CDlgAnswer::OnInitDialog()
 
 void CDlgAnswer::initCtrl()
 {
-	m_account = "10002";
-	m_serverAccount = "10001";
+	m_account = gHQConfig.getSignalAccount();
+	m_serverAccount = gHQConfig.getServerAccount();
+	if ("" == m_serverAccount){
+		m_serverAccount = "agora_hq_cc_server_en";
+		gHQConfig.setServerAccount(m_serverAccount);
+	}
 
 	m_btnUpdateQuestion.EnableWindow(FALSE);
 	m_btnStartAnswer.EnableWindow(FALSE);
@@ -100,10 +110,12 @@ void CDlgAnswer::initAgoraSignal()
 
 	m_pSignalInstance = CAgoraSignalInstance::getSignalInstance(m_appId);
 	ASSERT(m_pSignalInstance);
+	m_pSignalInstance->setLoginWnd(m_hWnd);
 	m_pSignalInstance->setAppCertificateId(m_appCertificatId);
 	
 	m_pSignalCallBack = new CSingleCallBack(m_hWnd);
 	m_pSignalInstance->getAgoraAPI()->callbackSet(m_pSignalCallBack);
+	m_pSignalInstance->getAgoraAPI()->dbg("lbs_100", 7, "1", 1);//HQ environment
 
 	std::string sdkVersion = m_pSignalInstance->getSDKVersion();
 
@@ -181,16 +193,25 @@ void CDlgAnswer::OnBnClickedCheckD()
 void CDlgAnswer::OnBnClickedButtonGetquestion()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\": \"publish\"}");
+	sprintf_s(cJsonStr, "{\"type\": \"publish\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+
+	m_ckAnswerA.SetCheck(FALSE);
+	m_ckAnswerB.SetCheck(FALSE);
+	m_ckAnswerC.SetCheck(FALSE);
+	m_ckAnswerD.SetCheck(FALSE);
 }
 
 void CDlgAnswer::OnBnClickedButtonStartMark()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
 	int timeStamp = ::time(NULL);
 	sprintf_s(cJsonStr, "{\"type\":\"setSEI\",\"data\" :	{\"questionId\":%d,\"timeStamp\":%d}}", m_nQuestionId, timeStamp);
@@ -207,8 +228,10 @@ void CDlgAnswer::OnBnClickedButtonStartMark()
 void CDlgAnswer::OnBnClickedButtonStopanswer()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\":\"stopAnswer\"}");
+	sprintf_s(cJsonStr, "{\"type\":\"stopAnswer\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
@@ -217,8 +240,10 @@ void CDlgAnswer::OnBnClickedButtonStopanswer()
 void CDlgAnswer::OnBnClickedButtonReset()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_ctlNoticeInfo.SetWindowTextW(_T(""));
+
 	char cJsonStr[512] = { '\0' };
-	sprintf_s(cJsonStr, "{\"type\":\"reset\"}");
+	sprintf_s(cJsonStr, "{\"type\":\"reset\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
@@ -243,6 +268,29 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(__FUNCTION__);
 	OutputDebugStringA("\r\n");
 
+	std::string curLanguage = gHQConfig.getLanguage();
+	if ("" == curLanguage){
+		curLanguage = "0";
+		gHQConfig.setLanguage(curLanguage);
+	}
+
+	char cJsonStr[512] = { '\0' };
+	std::string strEncrypt = (gHQConfig.getEnableEncrypt());
+	
+	if (strEncrypt =="" || "0" == strEncrypt){
+
+		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"msgid\":%u}", curLanguage.data(),GetTickCount());
+	}
+	else{
+
+		sprintf_s(cJsonStr, "{\"type\":\"RequestChannelName\",\"QuestionLanguage\":\"%s\",\"encrypt\":\"v1\",\"msgid\":%u}", curLanguage.data(),GetTickCount());
+	}
+	OutputDebugStringA(cJsonStr);
+	OutputDebugStringA("\r\n");
+
+	gFileApp.write(cJsonStr);
+	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+
 	return TRUE;
 }
 
@@ -259,6 +307,7 @@ HRESULT CDlgAnswer::onLogout(WPARAM wParam, LPARAM lParam)
 HRESULT CDlgAnswer::onLogFailed(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_LOGINFAILED lpData = (PAG_SIGNAL_LOGINFAILED)wParam;
+	m_fileSigLog.write(int2str(lpData->ecode));
 	delete lpData; lpData = nullptr;
 
 	return TRUE;
@@ -269,6 +318,9 @@ HRESULT CDlgAnswer::onLogFailed(WPARAM wParam, LPARAM lParam)
 LRESULT CDlgAnswer::onError(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_ERROR lpData = (PAG_SIGNAL_ERROR)wParam;
+
+	m_fileSigLog.openLog(lpData->desc);
+
 	delete lpData; lpData = nullptr;
 
 	return TRUE;
@@ -279,6 +331,8 @@ LRESULT CDlgAnswer::onError(WPARAM wParam, LPARAM lParam)
 LRESULT CDlgAnswer::onLog(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_LOG lpData = (PAG_SIGNAL_LOG)wParam;
+
+	m_fileSigLog.write(lpData->txt);
 	delete lpData; lpData = nullptr;
 
 	return TRUE;
@@ -336,13 +390,24 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 	//LOG_MSG(logDesc, LogType_CallBack);
 	OutputDebugStringA(logDesc);
 	OutputDebugStringA("\r\n");
+	gFileApp.write(logDesc);
+	//lpData->msg = "{\"type\":\"ListOfWinners\",\"data\":{\"num\":2,\"playerName\" : [\"play1\", \"play2\"]}}";
 
 	rapidjson::Document document;
 	if (document.Parse<0>(lpData->msg.data()).HasParseError()){
 		return FALSE;
 	}
 	std::string msgType((document["type"].GetString()));
-	if ("quiz" == msgType){
+	if ("channel" == msgType){
+		std::string channelName = document["data"].GetString();
+
+		LPAG_SIGNAL_NEWCHANNELNAME lpData = new  AG_SIGNAL_NEWCHANNELNAME;
+		lpData->account = m_account;
+		lpData->channelname = channelName;
+		::PostMessage(theApp.GetMainWnd()->m_hWnd, (WM_NewChannelName), (WPARAM)lpData, NULL);
+		m_trlQuestion.SetWindowTextW(_T("Click the Join Channel button on the left to send the video to the Audience!"));
+	}
+	else if ("quiz" == msgType){
 		tagQuestionAnswer answerTemp;
 		int questionId(document["data"]["id"].GetInt());
 		std::string strQuestion(document["data"]["question"].GetString());
@@ -388,6 +453,34 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 
 		notifyQuestionAnswerStatics(questionStaticsTemp);
 	}
+	else if ("inviteResponse" == msgType){
+
+		std::string strRemoteMediaUid = document["data"]["mediaUid"].GetString();
+		std::string strAccount = document["data"]["uid"].GetString(); 
+		bool bAccept = document["data"]["accept"].GetBool();
+
+		LPAG_INVITE_CALLBACKACCEPT lpData = new AG_INVITE_CALLBACKACCEPT;
+		lpData->isAccept = bAccept;
+		lpData->remoteMediaUid = strRemoteMediaUid;
+		lpData->remoteSigAccount = strAccount;
+
+		::PostMessage(theApp.GetMainWnd()->m_hWnd, WM_InviteCallBackAccpet, WPARAM(lpData),NULL);
+	}
+	else if ("ListOfWinners" == msgType){
+		std::vector<tagListOfWinners> vecWinnersTemp;
+		int nNum = document["data"]["num"].GetInt();
+		rapidjson::Document::ValueIterator it = document["data"]["playerName"].Begin();
+		for (int nIndex = 0; nNum > nIndex ; nIndex++){
+			tagListOfWinners winnerTemp;
+			winnerTemp.nPlayerId = nIndex;
+			winnerTemp.strPlayerName = (*it).GetString();
+			winnerTemp.fPlayerBonus = 0.0f;
+			vecWinnersTemp.push_back(winnerTemp);
+			it++;
+		}
+
+		notifyRoundListOfWinners(vecWinnersTemp);
+	}
 	else if ("info" == msgType){
 
 		OutputDebugStringA(lpData->msg.data());
@@ -395,7 +488,8 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 		if (document["data"]["err"].IsString()){
 
 			std::string errMsg = document["data"]["err"].GetString();
-			AfxMessageBox(s2cs(errMsg), MB_OK);
+			//AfxMessageBox(s2cs(errMsg), MB_OK);
+			m_ctlNoticeInfo.SetWindowTextW(s2cs("[NoticeInfo]: " + errMsg));
 		}
 	}
 	
@@ -468,9 +562,17 @@ void CDlgAnswer::OnClose()
 
 void CDlgAnswer::switchNewQuestion(const tagQuestionAnswer &newQuestion)
 {
+	m_btnStartAnswer.ShowWindow(SW_SHOW);
+	m_btnStopAnswer.ShowWindow(SW_SHOW);
+	m_btnResetQuestion.ShowWindow(SW_SHOW);
+	m_ckAnswerA.ShowWindow(SW_SHOW);
+	m_ckAnswerB.ShowWindow(SW_SHOW);
+	m_ckAnswerC.ShowWindow(SW_SHOW);
+	m_ckAnswerD.ShowWindow(SW_SHOW);
+
 	m_nQuestionId = newQuestion.questionId;
 	char chQuestionTitle[2048] = { '\0' };
-	sprintf_s(chQuestionTitle, "第%d题: %s", m_nQuestionId + 1, newQuestion.strQuestion.data());
+	sprintf_s(chQuestionTitle, "%d: %s", m_nQuestionId + 1, newQuestion.strQuestion.data());
 	m_trlQuestion.SetWindowTextW(s2cs(chQuestionTitle));
 	m_ckAnswerA.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[0]));
 	m_ckAnswerB.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[1])); 
@@ -489,9 +591,90 @@ void CDlgAnswer::notifyQuestionAnswerStatics(const tagQuestionStatics &QuestionS
 		m_DlgResult.Create(CDlgAnswerResultStatics::IDD);
 	}
 	rect.left = rect.left - 100;
+	rect.bottom = rect.bottom - 50;
 	//rect.right = rect.right + 100;
+	switch (QuestionStatics.nresult)
+	{
+	case 0:m_ckAnswerA.SetCheck(TRUE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(FALSE);
+		break;
+	case 1:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(TRUE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(FALSE);
+		break;
+	case 2:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(TRUE); m_ckAnswerD.SetCheck(FALSE);
+		break;;
+	case 3:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(TRUE);
+		break;
+	default:
+		break;
+	}
+
 	m_DlgResult.ShowWindow(SW_SHOW);
 	m_DlgResult.MoveWindow(&rect, TRUE);
 	m_DlgResult.setContext(QuestionStatics);
 }
 
+void CDlgAnswer::notifyRoundListOfWinners(const std::vector<tagListOfWinners> &vecListOfWinner)
+{
+	CRect rect;
+	CWnd* parentWnd = GetParent();
+	GetClientRect(&rect);
+	parentWnd->ClientToScreen(&rect);
+	if (NULL == m_DlgResult.m_hWnd){
+
+		m_DlgResult.Create(CDlgAnswerResultStatics::IDD);
+	}
+	rect.right = rect.right + 10;
+	rect.bottom = rect.bottom - 50;
+
+	m_DlgResult.ShowWindow(SW_SHOW);
+	m_DlgResult.MoveWindow(&rect, TRUE);
+	m_DlgResult.setContext(vecListOfWinner);
+}
+
+void CDlgAnswer::updateStatusToPublish()
+{
+	m_trlQuestion.SetWindowTextW(_T("Congratulations, you have joined the room channel, please click the SendQuestion button below to get the Question!"));
+	m_btnUpdateQuestion.ShowWindow(SW_SHOW);
+	m_btnStopAnswer.ShowWindow(SW_SHOW);
+	//m_btnResetQuestion.ShowWindow(SW_SHOW);
+}
+
+LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
+{
+	PAG_INPUTPARAM lpData = (PAG_INPUTPARAM)wParam;
+	if (lpData){
+		//invite audience/ guest
+		char cJsonStr[512] = { '\0' };
+		int timeStamp = ::time(NULL);
+		sprintf_s(cJsonStr, "{\"type\":\"inviteRequest\",\"data\":{\"uid\":\"%s\"},\"msgid\":%u}", lpData->strParam.data(),GetTickCount());
+		OutputDebugStringA(cJsonStr);
+		OutputDebugStringA("\r\n");
+		if (m_pSignalInstance){
+
+			gFileApp.write(cJsonStr);
+			m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+		}
+
+		delete lpData; lpData = nullptr;
+	}
+
+	return TRUE;
+}
+
+LRESULT CDlgAnswer::onSetDataTimeBonus(WPARAM wParam, LPARAM lParam)
+{
+	LPAG_SetDataTimeBonus lpData = (LPAG_SetDataTimeBonus)wParam;
+	if (lpData){
+
+		char cJsonStr[512] = { '\0' };
+		sprintf_s(cJsonStr, "{\"data\" : {\"DataTime\" : \"%s\",\"nBouns\" : %d,\"nRoundID\" : %d},	\"type\" : \"SetDataTimeAndBonus\",\"msgid\":%u}", lpData->strDataTime.data(), lpData->nBonus, lpData->nRoundId,GetTickCount());
+		OutputDebugStringA(cJsonStr);
+		OutputDebugStringA("\n");
+		if (m_pSignalInstance){
+			m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+		}
+
+		delete lpData; lpData = nullptr;
+	}
+
+	return true;
+}

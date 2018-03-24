@@ -23,12 +23,6 @@ static let AppcertificateID:  String = "Agora App Certificate"
 
 ```
 
-Next, create a developer account at [RongCloud](http://www.rongcloud.cn/), and obtain an App Key. Update  "KeyCenter.swift" with your App Key.
-
-```
-static let RCAppKey: String = "RC App Key"
-
-```
 Finally, Open Agora iOS Tutorial Objective-C.xcodeproj, connect your iPhone／iPad device, setup your development signing and run.
 
 

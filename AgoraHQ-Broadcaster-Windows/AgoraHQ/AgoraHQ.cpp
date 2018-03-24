@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "AgoraHQ.h"
 #include "AgoraHQDlg.h"
+#include "commonFun.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,6 +35,7 @@ CAgoraHQApp::CAgoraHQApp()
 
 CAgoraHQApp theApp; 
 CConfigHQ gHQConfig;
+CFileIO gFileApp;
 
 
 // CAgoraHQApp 初始化
@@ -71,6 +73,7 @@ BOOL CAgoraHQApp::InitInstance()
 	// 例如修改为公司或组织名
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
+	gFileApp.openLog(getHQLogPath());
 	CAgoraHQDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
@@ -96,6 +99,7 @@ BOOL CAgoraHQApp::InitInstance()
 		delete pShellManager;
 	}
 
+	gFileApp.close();
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。
 	return FALSE;

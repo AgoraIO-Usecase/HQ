@@ -80,6 +80,9 @@ public:
 	BOOL MuteLocalAudio(BOOL bMuted = TRUE);
 	BOOL IsLocalAudioMuted();
 
+	BOOL MuteRemoteAudio(uid_t uid,BOOL bMuted = TRUE);
+	BOOL MuteRemoteVideo(uid_t uid,BOOL bMuted = TRUE);
+
 	BOOL MuteAllRemoteAudio(BOOL bMuted = TRUE);
 	BOOL IsAllRemoteAudioMuted();
 

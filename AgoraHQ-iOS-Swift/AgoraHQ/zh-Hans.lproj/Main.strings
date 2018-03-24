@@ -4,11 +4,14 @@
 /* Class = "UIButton"; normalTitle = "Relive"; ObjectID = "07p-ko-hRF"; */
 "07p-ko-hRF.normalTitle" = "复活";
 
+/* Class = "UIButton"; normalTitle = "Gang up"; ObjectID = "Azb-9P-xss"; */
+"Azb-9P-xss.normalTitle" = "开黑";
+
 /* Class = "UIButton"; normalTitle = "Button"; ObjectID = "DJH-bs-XMF"; */
 "DJH-bs-XMF.normalTitle" = "Button";
 
 /* Class = "UILabel"; text = "Agora HQ"; ObjectID = "DVP-zu-KcS"; */
-"DVP-zu-KcS.text" = "Agora HQ";
+"DVP-zu-KcS.text" = "Agora Trivia";
 
 /* Class = "UIButton"; normalTitle = "Start"; ObjectID = "G4U-Bd-vIa"; */
 "G4U-Bd-vIa.normalTitle" = "开始答题";
@@ -25,3 +28,39 @@
 /* Class = "UILabel"; text = "$50000 Bonus"; ObjectID = "mIK-16-sjG"; */
 "mIK-16-sjG.text" = "￥50000 奖金";
 
+///* for more data  */
+"sup-2Z-LUV.normalTitle" = "获取更多";
+///* Rank list */
+"Vzb-V1-rUV.normalTitle" = "排行榜";
+///*   */
+"Llm-Zs-WWz.normalTitle"  = "邀请好友";
+
+/* Class = "UIButton"; normalTitle = "   Invite friends"; ObjectID = "Y4M-qi-zV4"; */
+"Y4M-qi-zV4.normalTitle" = "   邀请好友";
+
+/* Class = "UILabel"; text = "Life Card"; ObjectID = "gAH-7J-oHc"; */
+"gAH-7J-oHc.text" = "生命卡";
+
+/* Class = "UILabel"; text = "Please Contact"; ObjectID = "CxW-rC-smj"; */
+"CxW-rC-smj.text" = "请联系我们";
+
+/* Class = "UILabel"; text = "Invitation code"; ObjectID = "G5Q-1b-Vvh"; */
+"G5Q-1b-Vvh.text" = "邀请码";
+
+/* Class = "UILabel"; text = "Leaderboard"; ObjectID = "CCa-RW-eLa"; */
+"CCa-RW-eLa.text" = "排行榜";
+
+/* Class = "UILabel"; text = "Extra life"; ObjectID = "PDZ-Go-Veo"; */
+"PDZ-Go-Veo.text" = "额外生命值";
+
+/* Class = "UILabel"; text = "$300"; ObjectID = "4jg-mj-B0u"; */
+"4jg-mj-B0u.text" = "￥300";
+
+/* Class = "UIButton"; normalTitle = "Leaderboard"; ObjectID = "Vzb-V1-rUV"; */
+"Vzb-V1-rUV.normalTitle" = "排行榜";
+
+/* Class = "UILabel"; text = "Account Balance"; ObjectID = "alX-UB-79d"; */
+"alX-UB-79d.text" = "账户余额";
+
+/* Class = "UIButton"; normalTitle = "Disconnect"; ObjectID = "PIe-fa-5dz"; */
+"PIe-fa-5dz.normalTitle" = "下麦";

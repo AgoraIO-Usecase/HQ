@@ -158,7 +158,7 @@ bool CAgoraSignalInstance::QueryIsOnline(const std::string &account)
 bool CAgoraSignalInstance::sendInstantMsg(const std::string &account, const std::string &instanmsg)
 {
 	if (m_AgoraAPI){
-		std::string msgId = "p2pMsg";
+		std::string msgId = int2str(GetTickCount());
 		m_AgoraAPI->messageInstantSend(gbk2utf8(account).data(), gbk2utf8(account).size(), 0, gbk2utf8(instanmsg).data(), gbk2utf8(instanmsg).size(), gbk2utf8(msgId).data(), gbk2utf8(msgId).size());
 	}
 

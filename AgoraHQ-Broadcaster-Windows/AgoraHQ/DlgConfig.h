@@ -36,12 +36,16 @@ private:
 	CEdit m_edAppcertificatId;
 	CEdit m_edMediaUid;
 	CEdit m_edChannelName;
+	CEdit m_edLanguage;
+	CComboBox m_comLanguage;
+	CComboBox m_comServerAccount;
 
 	CButton m_btnSatrtPreview;
 	CButton m_btnAppcertificateEnable;
 	CComboBox m_comSolutionIndex;
 	CComboBox m_comCamera;
 	CStatic m_trlTestVideo;
+	CButton m_btnEnableEncrypt;
 
 	CAgoraCameraManager CameraManager; 
 	IRtcEngine* pRtcEngine;

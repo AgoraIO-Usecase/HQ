@@ -80,7 +80,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -119,6 +119,8 @@
     <ClInclude Include="DlgAnswer.h" />
     <ClInclude Include="DlgAnswerResultStatics.h" />
     <ClInclude Include="DlgConfig.h" />
+    <ClInclude Include="DlgInput.h" />
+    <ClInclude Include="DlgSetTimeBonus.h" />
     <ClInclude Include="DynamicKey5.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="generatorSignalToken.h" />
@@ -142,6 +144,8 @@
     <ClCompile Include="DlgAnswer.cpp" />
     <ClCompile Include="DlgAnswerResultStatics.cpp" />
     <ClCompile Include="DlgConfig.cpp" />
+    <ClCompile Include="DlgInput.cpp" />
+    <ClCompile Include="DlgSetTimeBonus.cpp" />
     <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="SignalInstance.cpp" />
     <ClCompile Include="SingleWrap.cpp" />
@@ -159,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\AgoraHQ.ico" />
+    <Image Include="res\AgoraHQ1.ico" />
     <Image Include="res\IDB_NETWORK_QUALITY.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

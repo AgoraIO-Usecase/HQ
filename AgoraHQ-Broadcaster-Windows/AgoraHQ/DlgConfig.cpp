@@ -37,6 +37,9 @@ void CDlgConfig::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_ChannelName, m_edChannelName);
 	DDX_Control(pDX, IDC_BUTTON_VIDEOTEST, m_btnSatrtPreview);
 	DDX_Control(pDX, IDC_STATIC_VIDEOTEST, m_trlTestVideo);
+	DDX_Control(pDX, IDC_COMBO_LANGUAGE, m_comLanguage);
+	DDX_Control(pDX, IDC_COMBO_ServerAccount, m_comServerAccount);
+	DDX_Control(pDX, IDC_CHECK_EnableEncrypt, m_btnEnableEncrypt);
 }
 
 
@@ -90,6 +93,12 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 	gHQConfig.setVideoSolutinIndex(int2str(nVideoIndexCurSel));
 	m_edChannelName.GetWindowTextW(strParam);
 	gHQConfig.setChannelName(cs2s(strParam));
+	int nLanguage = m_comLanguage.GetCurSel();
+	gHQConfig.setLanguage(int2str(nLanguage));
+	m_comServerAccount.GetWindowTextW(strParam);
+	gHQConfig.setServerAccount(cs2s(strParam));
+	bool bEnableEncrypt = m_btnEnableEncrypt.GetCheck();
+	gHQConfig.setEnableEncrypt(int2str(bEnableEncrypt));
 	
 	int nCurSel = m_comCamera.GetCurSel();
 	CAgoraCameraManager CameraManager;
@@ -214,11 +223,40 @@ void CDlgConfig::initCtrl()
 	m_edMediaUid.SetWindowTextW(s2cs(strMediaUid));
 	std::string strChannelName = gHQConfig.getChannelName();
 	m_edChannelName.SetWindowTextW(s2cs(strChannelName));
+	
+	m_comLanguage.AddString(_T("English"));
+	m_comLanguage.AddString(_T("Chinese"));
+	std::string curLanguage = gHQConfig.getLanguage();
+	if ("" == curLanguage || "0" == curLanguage){
+		curLanguage = "0";
+	}
+	gHQConfig.setLanguage(curLanguage);
+	m_comLanguage.SetCurSel(str2int(curLanguage));
+
+	m_comServerAccount.AddString(_T("agora_hq_cc_server_en"));
+	m_comServerAccount.AddString(_T("agora_hq_cc_server"));
+	std::string curServerAccount = gHQConfig.getServerAccount();
+	int nCurSel = m_comServerAccount.FindStringExact(0, s2cs(curServerAccount));
+	if (CB_ERR == nCurSel && "" != curServerAccount){
+		nCurSel = m_comServerAccount.AddString(s2cs(curServerAccount));
+	}
+	m_comServerAccount.SetCurSel(nCurSel);
 
 	std::string strVideoIndex = gHQConfig.getVideoSolutinIndex();
 	if ("" == strVideoIndex)
 		strVideoIndex = "15";
 	m_comSolutionIndex.SetCurSel(str2int(strVideoIndex));
+
+	std::string strEnableEncrypt = gHQConfig.getEnableEncrypt();
+	if ("" == strEnableEncrypt || "0" == strEnableEncrypt){
+
+		m_btnEnableEncrypt.SetCheck(FALSE);
+		gHQConfig.setEnableEncrypt("0");
+	}
+	else{
+
+		m_btnEnableEncrypt.SetCheck(TRUE);
+	}
 
 	std::string strCameraID = gHQConfig.getCameraDeviceID();
 	CString strDefCameraId = s2cs(strCameraID);

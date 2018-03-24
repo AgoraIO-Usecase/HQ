@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "AGEngineEventHandler.h"
 #include "AGEventDef.h"
+#include "commonFun.h"
 
 CAGEngineEventHandler::CAGEngineEventHandler(void):
 m_bActive(FALSE)
@@ -242,7 +243,6 @@ void CAGEngineEventHandler::onFirstRemoteVideoFrame(uid_t uid, int width, int he
 
 void CAGEngineEventHandler::onUserJoined(uid_t uid, int elapsed)
 {
-	return;
 	LPAGE_USER_JOINED lpData = new AGE_USER_JOINED;
 
 	lpData->uid = uid;
@@ -280,7 +280,6 @@ void CAGEngineEventHandler::onUserMuteAudio(uid_t uid, bool muted)
 
 void CAGEngineEventHandler::onUserMuteVideo(uid_t uid, bool muted)
 {
-	return;
 	LPAGE_USER_MUTE_VIDEO lpData = new AGE_USER_MUTE_VIDEO;
 
 	lpData->uid = uid;
@@ -288,7 +287,6 @@ void CAGEngineEventHandler::onUserMuteVideo(uid_t uid, bool muted)
 
 	if(m_hMainWnd != NULL)
 		::PostMessage(m_hMainWnd, WM_MSGID(EID_USER_MUTE_VIDEO), (WPARAM)lpData, 0);
-
 }
 
 void CAGEngineEventHandler::onApiCallExecuted(const char* api, int error)

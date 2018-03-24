@@ -1,0 +1,57 @@
+
+/* Class = "UIButton"; normalTitle = "revive"; ObjectID = "07p-ko-hRF"; */
+"07p-ko-hRF.normalTitle" = "revive";
+
+/* Class = "UILabel"; text = "￥300"; ObjectID = "4jg-mj-B0u"; */
+"4jg-mj-B0u.text" = "￥300";
+
+/* Class = "UILabel"; text = "Today  13:00"; ObjectID = "7T7-5D-ANP"; */
+"7T7-5D-ANP.text" = "Today  13:00";
+
+/* Class = "UIButton"; normalTitle = "Gang up"; ObjectID = "Azb-9P-xss"; */
+"Azb-9P-xss.normalTitle" = "Gang up";
+
+/* Class = "UILabel"; text = "￥300"; ObjectID = "CCa-RW-eLa"; */
+"CCa-RW-eLa.text" = "￥300";
+
+/* Class = "UITextField"; placeholder = "Channel Name"; ObjectID = "Cw9-r4-4B2"; */
+"Cw9-r4-4B2.placeholder" = "Channel Name";
+
+/* Class = "UILabel"; text = "120"; ObjectID = "FHl-zT-1np"; */
+"FHl-zT-1np.text" = "120";
+
+/* Class = "UIButton"; normalTitle = "Start"; ObjectID = "G4U-Bd-vIa"; */
+"G4U-Bd-vIa.normalTitle" = "Start";
+
+/* Class = "UILabel"; text = "Next period start time"; ObjectID = "GTc-sE-Qdo"; */
+"GTc-sE-Qdo.text" = "Next period start time";
+
+/* Class = "UIButton"; normalTitle = "Invite friends"; ObjectID = "Llm-Zs-WWz"; */
+"Llm-Zs-WWz.normalTitle" = "Invite friends";
+
+/* Class = "UIButton"; normalTitle = "   Invite friends"; ObjectID = "O96-xC-mBt"; */
+"O96-xC-mBt.normalTitle" = "   Invite friends";
+
+/* Class = "UILabel"; text = "￥300"; ObjectID = "PDZ-Go-Veo"; */
+"PDZ-Go-Veo.text" = "￥300";
+
+/* Class = "UIButton"; normalTitle = "Rank list"; ObjectID = "Vzb-V1-rUV"; */
+"Vzb-V1-rUV.normalTitle" = "Rank list";
+
+/* Class = "UILabel"; text = "￥300"; ObjectID = "alX-UB-79d"; */
+"alX-UB-79d.text" = "￥300";
+
+/* Class = "UILabel"; text = "Login"; ObjectID = "eFe-VW-RRb"; */
+"eFe-VW-RRb.text" = "Login";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "hPm-DU-W39"; */
+"hPm-DU-W39.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "iOn-RP-oZy"; */
+"iOn-RP-oZy.text" = "Label";
+
+/* Class = "UILabel"; text = "$250 Bonus"; ObjectID = "mIK-16-sjG"; */
+"mIK-16-sjG.text" = "$250 Bonus";
+
+/* Class = "UIButton"; normalTitle = "For more"; ObjectID = "sup-2Z-LUV"; */
+"sup-2Z-LUV.normalTitle" = "For more";

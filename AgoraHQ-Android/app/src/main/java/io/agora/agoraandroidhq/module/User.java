@@ -1,12 +1,10 @@
 package io.agora.agoraandroidhq.module;
 
-import android.net.Uri;
-import android.provider.Settings;
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
-import java.net.URI;
-import java.util.ArrayList;
+import java.util.Random;
 
-import io.rong.imlib.model.UserInfo;
 
 /**
  * Created by zhangtao on 2018/1/12.
@@ -14,26 +12,47 @@ import io.rong.imlib.model.UserInfo;
 
 public class User {
 
+    private Random random = new Random();
     //public static String uid = "232894";
-    public static String uid = "2424252";
-    public static String name = "Test";
+    private String mediaUid = "2434" + random.nextInt(10000);
+    private String userName;
+    private String channelName;
+    private Drawable drawable;
+    private String signalAccount;
 
-    // public static String name = "Agora";
-    public static Uri portUri = Uri.parse("http://7xs9j5.com1.z0.glb.clouddn.com/liveapp/anlingrong.jpg");
-
-    public String password;
-    public String imageUrl;
-
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setDrawable(Drawable drawable) {
+        this.drawable = drawable;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public Drawable getDrawable() {
+        return drawable;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public String getMediaUid() {
+        return mediaUid;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public String getSignalAccount() {
+        return signalAccount;
+    }
+
+    public void setSignalAccount(String signalAccount) {
+        this.signalAccount = signalAccount;
+    }
 }

@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">AgoraAndroidHQ</string>
+    <string name="app_name">Agora HQ</string>
     <string name="net_error">网络错误</string>
     <string name="error_to_resolve_token">Token 解析失败</string>
     <string name="next_game_time">下一期开始时间</string>
-    <string name="the_day_and_the_money">今天 13:00 ¥50000 奖金</string>
+    <string name="the_day_and_the_money">今天 13:00 | ¥50000 奖金</string>
     <string name="start_play_game">开始答题</string>
-    <string name="answer_error_message">选择错误 , 正确答案是</string>
-    <string name="answer_correct_message">选择正确</string>
+    <string name="answer_error_message">错误</string>
+    <string name="answer_correct_message">正确</string>
     <string name="logout_success_message">退出成功</string>
     <string name="answer_is_null_message">答案为空</string>
     <string name="choose_success_message">选择成功</string>
@@ -18,5 +18,33 @@
     <string name="submit_string">提交</string>
     <string name="btn_send_message">发送</string>
     <string name="token_incorrect_text">Token Incorrect</string>
+    <string name="login_agora_signal_fail">登陆失败</string>
+    <string name="login_agora_signal_success">登陆成功</string>
+    <string name="game_cannot_play">已失去机会 ，不能玩!</string>
+    <string name="text_do_not_have_permission">你没有权限!</string>
+    <string name="app_title">Agora HQ</string>
+    <string name="text_channel_name_can_not_be_null">Channel Name不能为空</string>
+    <string name="game_title">Agora HQ</string>
+    <string name="ranking_list">排行榜</string>
+    <string name="text_invite_friends">邀请好友</string>
+    <string name="http_relive">http://123.155.153.87:9500/v1/relive</string>
+    <string name="http_send_answer_to_server">http://123.155.153.87:9500/v1/answer</string>
+    <string name="http_check_wheather_can_play">http://123.155.153.87:9500/v1/canplay?gid=</string>
+    <string name="http_reply_wheather_accept_video">http://123.155.153.87:9500/v1/inviteResponse</string>
+    <string name="string_money_300">¥300</string>
+    <string name="string_money_120">¥120</string>
+    <string name="string_get_more">获取更多</string>
+    <string name="gang_up_string">开黑</string>
+    <string name="edittext_gang_up_channel_name">开黑频道</string>
+    <string name="leave_gang_up_room">离开开黑</string>
+    <string name="leave_gang_up_room_success">离开开黑成功</string>
+    <string name="game_create_channel_name">创建频道</string>
+    <string name="game_join_channel">加入频道</string>
+    <string name="you_rereceive_a_video_invitation"> 来自主播的视频邀请 ！</string>
+    <string name="refuse_video_invitation">拒绝</string>
+    <string name="accept_video_invitation">接受</string>
+    <string name="can_not_team_mode">不能开黑</string>
+    <string name="need_permission_toast">Need Permission !</string>
+
     <drawable name="button_press">#8888</drawable>
 </resources>

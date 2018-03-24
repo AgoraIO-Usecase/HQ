@@ -3,27 +3,82 @@
     android:id="@+id/game_view_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#419aff">
+    android:background="@drawable/game_background">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background"
-        android:scaleType="fitXY"/>
 
     <FrameLayout
         android:id="@+id/live_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/small_video"
+        android:layout_width="140dp"
+        android:layout_height="250dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/small_video_back"
+        android:visibility="gone"></FrameLayout>
 
-    <ImageView
-        android:id="@+id/back_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/gangUpUidRecycleView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="100dp"
+        android:alpha="0.5"
+        android:background="@drawable/game_gang_up_back"
+        android:visibility="visible"></android.support.v7.widget.RecyclerView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="35dp"
-        android:background="@drawable/back" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/back" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/game_gang_up_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="right"
+                android:alpha="0.5"
+                android:background="@drawable/game_gang_up_back"
+                android:onClick="gangUpClick"
+                android:padding="3dp"
+                android:text="@string/gang_up_string" />
+
+            <Button
+                android:id="@+id/disConnectVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:alpha="0.5"
+                android:background="@drawable/game_gang_up_back"
+                android:clickable="false"
+                android:onClick="disConnectVideo"
+                android:padding="3dp"
+                android:text="Disconnect"
+                android:textSize="10sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/image_sendMessage"
@@ -78,6 +133,24 @@
          layout="@layout/widget_input_panel"></include>-->
 
 
+    <ImageView
+        android:id="@+id/game_result"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+    <!-- <Button
+         android:layout_width="200dp"
+         android:layout_gravity="bottom|center_horizontal"
+         android:layout_marginBottom="100dp"
+         android:layout_height="60dp"
+         android:id="@+id/test_btn"
+         android:visibility="gone"
+         android:text="testButton"/>-->
+
     <RelativeLayout
         android:id="@+id/answer_view"
         android:layout_width="match_parent"
@@ -97,58 +170,144 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="350dp"
         android:id="@+id/game_layout"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/question_layout"
         android:orientation="vertical"
+        android:visibility="gone"
+        >
 
-        android:layout_marginTop="40dp"
-        android:background="#aaa"
-        android:layout_gravity="center_horizontal">
-        <TextView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/red"
-            android:text="10 s"
-            android:gravity="center_horizontal"
-            android:id="@+id/time_reduce"/>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/time_reduce"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/question_agora_title" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:id="@+id/answer_face"
+                android:src="@drawable/answer_right"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="50dp"/>
+
+
+        </FrameLayout>
 
         <TextView
+            android:id="@+id/game_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:id="@+id/game_title"
+            android:gravity="center"
             android:text="title"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"/>
+            android:textColor="@color/black" />
+
         <TextView
+            android:id="@+id/wheather_canplay_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/wheather_canplay_TextView"/>
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal" />
+
+        <LinearLayout
+            android:id="@+id/question_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"></LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/question_layout"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_height="20dp"></LinearLayout>
 
         <Button
+
+            android:id="@+id/submit_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/submit_btn"
             android:text="@string/submit_string"
-            android:id="@+id/submit_button"/>
+            android:textColor="@color/black"
+            android:textStyle="bold" />
     </LinearLayout>
 
-   <!-- <Button
-        android:layout_width="200dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="100dp"
-        android:layout_height="60dp"
-        android:id="@+id/test_btn"
-        android:visibility="gone"
-        android:text="testButton"/>-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/congratulation_view"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:background="@drawable/congratulation1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <io.agora.agoraandroidhq.module.CircleImageView
+                android:id="@+id/congratulation_headImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+
+            <TextView
+                android:id="@+id/congratulation_name"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="agora"
+                android:layout_marginBottom="25dp"
+                android:textColor="@drawable/white" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/congra_head" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/cancel"
+            android:id="@+id/congratulation_cancel"
+            android:layout_marginTop="250dp"/>
+
+    </FrameLayout>
 
 
 </FrameLayout>

@@ -25,6 +25,7 @@ void CDlgAnswerResultStatics::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_ANSWER_STATICS, m_ltrResult);
+	DDX_Control(pDX, IDC_LIST_ListOfWinners, m_ltrListofWinners);
 }
 
 BEGIN_MESSAGE_MAP(CDlgAnswerResultStatics, CDialogEx)
@@ -56,6 +57,14 @@ BOOL CDlgAnswerResultStatics::OnInitDialog()
 	m_ltrResult.InsertColumn(8, _T("D"), LVCFMT_CENTER, 50);
 	m_ltrResult.InsertColumn(9, _T("rightPercent"), LVCFMT_CENTER, 75);
 
+	m_ltrListofWinners.SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
+	lStyle = GetWindowLong(m_ltrResult.m_hWnd, GWL_STYLE);
+	lStyle &= ~LVS_TYPEMASK;
+	lStyle |= LVS_REPORT;
+	SetWindowLong(m_ltrListofWinners.m_hWnd, GWL_STYLE, lStyle);
+	m_ltrListofWinners.InsertColumn(0, _T("PlayerID"), LVCFMT_CENTER, 120);
+	m_ltrListofWinners.InsertColumn(1, _T("PlayerName"), LVCFMT_CENTER, 330);
+
 	return TRUE;
 }
 
@@ -74,6 +83,9 @@ void CDlgAnswerResultStatics::OnBnClickedButtonCancle()
 
 void CDlgAnswerResultStatics::setContext(const tagQuestionStatics &questionStatics)
 {
+	m_ltrListofWinners.ShowWindow(SW_HIDE);
+	m_ltrResult.ShowWindow(SW_SHOW);
+
 	CString strQuestionId = s2cs(int2str(questionStatics.nsid + 1));
 	CString strTotal = s2cs(int2str(questionStatics.nTotal));
 	CString strCorrect = s2cs(int2str(questionStatics.ncorrectNum));
@@ -119,4 +131,22 @@ void CDlgAnswerResultStatics::setContext(const tagQuestionStatics &questionStati
 	m_ltrResult.SetItemText(nCount, 9, strCorrectPercent);
 
 	Invalidate(TRUE);
+}
+
+void CDlgAnswerResultStatics::setContext(const std::vector<tagListOfWinners> &vecListOfWinners)
+{
+	m_ltrResult.DeleteAllItems();
+	m_ltrResult.ShowWindow(SW_HIDE);
+	m_ltrListofWinners.DeleteAllItems();
+	m_ltrListofWinners.ShowWindow(SW_SHOW);
+	
+	int nCount = 1;
+	for (std::vector<tagListOfWinners>::const_iterator it = vecListOfWinners.begin(); vecListOfWinners.end() != it; it++){
+		 int nRow = m_ltrListofWinners.InsertItem(nCount, _T(""));
+		CString sPlayerId = s2cs(int2str(it->nPlayerId));
+		CString sPlayerName = s2cs(it->strPlayerName);
+		m_ltrListofWinners.SetItemText(nRow, 0, sPlayerId);
+		m_ltrListofWinners.SetItemText(nRow, 1, sPlayerName);
+		nCount++;
+	}
 }

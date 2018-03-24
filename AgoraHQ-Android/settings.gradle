@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':agora-hq-sig-sdk'
