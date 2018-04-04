@@ -507,10 +507,14 @@ LRESULT CAgoraHQDlg::onLastMileQuality(WPARAM wParam, LPARAM lParam)
 {
 	LPAGE_LASTMILE_QUALITY lpData = (LPAGE_LASTMILE_QUALITY)wParam;
 	m_nLastmileQuality = lpData->quality;
+	char szBuffer[128] = { '\0' };
+	sprintf_s(szBuffer, "LastMileQuality : %d\n", m_nLastmileQuality);
+	gFileApp.write(szBuffer);
+	OutputDebugStringA(szBuffer);
 
 	delete lpData; lpData = nullptr;
 	Invalidate(TRUE);
-	m_lpAgoraObject->EnableLastmileTest(FALSE);
+	//m_lpAgoraObject->EnableLastmileTest(FALSE);
 
 	switch (m_nLastmileQuality)
 	{
@@ -525,6 +529,8 @@ LRESULT CAgoraHQDlg::onLastMileQuality(WPARAM wParam, LPARAM lParam)
 		m_btnJoinChannel.EnableWindow(FALSE);
 		break;
 	}
+
+	m_btnJoinChannel.EnableWindow(TRUE);
 
 	return TRUE;
 }
