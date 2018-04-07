@@ -9,6 +9,7 @@ import android.util.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -71,7 +72,7 @@ public class SharedPreferenceHelper {
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
         String imageBase64 = new String(Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
         editor.putString("userImage", imageBase64);
-        GameControl.logD(tag + "saveDrawable  = " + baos.toString());
+        GameControl.logD(tag + "saveDrawable  = ");
         editor.commit();
     }
 
@@ -82,8 +83,14 @@ public class SharedPreferenceHelper {
             return null;
         } else {
             ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(temp.getBytes(), Base64.DEFAULT));
+            Drawable drawable = Drawable.createFromStream(bais, "");
+            try {
+                bais.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             GameControl.logD(tag + "getDrawableForSharedPreference = " + bais.toString());
-            return Drawable.createFromStream(bais, "");
+            return drawable;
         }
     }
 

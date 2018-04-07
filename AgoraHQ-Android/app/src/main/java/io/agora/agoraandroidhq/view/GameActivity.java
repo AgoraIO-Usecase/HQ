@@ -176,6 +176,17 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         answerFaceImage = findViewById(R.id.answer_face);
     }
 
+    private void clearViewListener(){
+        imageViewBack.setOnClickListener(null);
+        gameGangUpButton.setOnClickListener(null);
+        disConnectBtn.setOnClickListener(null);
+        game_view_layout.setOnClickListener(null);
+        input_editor.addTextChangedListener(null);
+        sendButton.setOnClickListener(null);
+        sendMessageImage.setOnClickListener(null);
+        cancelCongratulation.setOnClickListener(null);
+    }
+
     @Override
     protected void deInitUIandEvent() {
 
@@ -201,9 +212,14 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 }
             });
         }
+        clearViewListener();
         mRtcEngine = null;
         recyclerView = null;
         messageRecyclerViewAdapter = null;
+        messageLinearLayou = null;
+        gangUpRecycleViewAdapter = null;
+        gangUpUidRecycleView = null;
+        gangUpAlertDialog = null;
         checkBox_item.clear();
         checkBox_item = null;
         board.clear();
@@ -367,10 +383,38 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             super.handleMessage(msg);
             switch (msg.what) {
                 case Constants.LOGIN_AGORA_SIGNAL_FAIL:
-                    GameControl.logD(tag + "LOGIN_AGORA_SIGNAL_FAIL");
-                    toastHelper(getString(R.string.login_agora_signal_fail));
+                    int reason = (int) msg.obj;
+                    GameControl.logD(tag + "LOGIN_AGORA_SIGNAL_FAIL reason:  " + reason);
+                    if (reason == 208) {
+                        toastLengthHelper("Login Signal Fail,you are already login.");
+                        return;
+                    } else if (reason == 201) {
+                        toastLengthHelper("Login Signal Fail,your net is error.");
+                        agoraSignal.login();
+                        return;
+                    } else if (reason == 204) {
+                        toastLengthHelper("Login Signal Fail,tokenexpired.");
+                        agoraSignal.login();
+                        return;
+                    } else if (reason == 206) {
+                        toastLengthHelper("Login Signal Fail,token is wrong.");
+                        agoraSignal.login();
+                        return;
+                    } else if (reason == 102) {
+                        toastLengthHelper("Logout Signal,net error.");
+                        agoraSignal.login();
+                    } else if (reason == 105) {
+                        toastLengthHelper("Logout Signal.");
+                    } else if (reason == 107) {
+                        toastLengthHelper("Logout Signal.");
+                    } else if (reason == 103) {
+                        toastLengthHelper("Logout Signal,you are kicked by others.");
+                    } else {
+                        toastLengthHelper("Login Signal Fail.");
+                        agoraSignal.login();
+                    }
+                    //toastLengthHelper(getString(R.string.login_agora_signal_fail));
                     //finish();
-                    agoraSignal.login();
                     break;
                 case Constants.LOGIN_AGORA_SIGNAL_SUCCESS:
                     GameControl.logD(tag + "LOGIN_AGORA_SIGNAL_SUCCESS");
@@ -533,6 +577,10 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         Toast.makeText(GameActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private void toastLengthHelper(String message) {
+        Toast.makeText(GameActivity.this, message, Toast.LENGTH_LONG).show();
+    }
+
     private void startCheckWheatherCanPlay() {
 
         executorService.execute(new Runnable() {
@@ -556,7 +604,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         });
     }
 
-    private void checkWheatherCanPlay(final boolean isRelive ) throws JSONException {
+    private void checkWheatherCanPlay(final boolean isRelive) throws JSONException {
         AgoraSignal.checkWheatherCanPlay(new HttpUrlUtils.OnResponse() {
             @Override
             public void onResponse(String data) throws JSONException {
@@ -572,8 +620,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         GameControl.logD(tag + " GameControl.checkWheatherCanPlay22 " + data);
                         GameControl.serverWheatherCanPlay = true;
                         GameControl.clientWheatherCanPlay = true;
-                        GameControl.logD(tag + " GameControl.checkWheatherCanPlay33 " + GameControl.serverWheatherCanPlay+"  "+ GameControl.clientWheatherCanPlay);
-                        if(isRelive) {
+                        GameControl.logD(tag + " GameControl.checkWheatherCanPlay33 " + GameControl.serverWheatherCanPlay + "  " + GameControl.clientWheatherCanPlay);
+                        if (isRelive) {
                             if (GameControl.clientWheatherCanPlay && GameControl.serverWheatherCanPlay) {
                                 GameActivity.this.runOnUiThread(new Runnable() {
                                     @Override
@@ -587,7 +635,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                                 });
                             }
                         }
-                    }else{
+                    } else {
                         String errMessage = object.getString("err");
                         toastHelper(errMessage);
                     }
@@ -606,7 +654,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             switch (msg.what) {
                 case 0:
                     int questime = (int) msg.obj;
-                    GameControl.logD(tag + "questionReduceTime  =  " + questime);
+                    //GameControl.logD(tag + "questionReduceTime  =  " + questime);
                     if (questime < 0) {
                         questionTime = GameControl.timeOut;
                         return;
@@ -1006,7 +1054,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         layoutParams.setMargins(0, 15, 0, 15);
         box.setText(text);
         box.setTextColor(Color.BLACK);
-        GameControl.logD(tag + "setTag  position = " + position);
+        //GameControl.logD(tag + "setTag  position = " + position);
         box.setTag(position);
         box.setLayoutParams(layoutParams);
         box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -1022,6 +1070,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         if (checkBox_item.get(i) == buttonView) {
 
                             GameControl.result = i;
+                            GameControl.logD(tag + "onClick  position = " + i);
                         }
                     }
                 }
@@ -1077,7 +1126,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 if (data.equals("{}")) {
 
                     checkWheatherCanPlay(true);
-                    GameControl.logD(tag+"buttonToRelive  "+" clientWheatherCanPlay "+GameControl.clientWheatherCanPlay+" serverWheatherCanPlay "+ GameControl.serverWheatherCanPlay);
+                    GameControl.logD(tag + "buttonToRelive  " + " clientWheatherCanPlay " + GameControl.clientWheatherCanPlay + " serverWheatherCanPlay " + GameControl.serverWheatherCanPlay);
                 } else {
                     GameControl.serverWheatherCanPlay = false;
                     Toast.makeText(GameActivity.this, R.string.fail_to_relive_message, Toast.LENGTH_SHORT).show();

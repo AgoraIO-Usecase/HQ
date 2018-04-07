@@ -27,13 +27,14 @@ import io.agora.signaling.hq.AgoraHQSigSDK;
 public class AgoraSignal {
 
     public static AgoraSignal agoraSignal;
-    private static CopyOnWriteArrayList<Handler> messageHandler;
+    private  CopyOnWriteArrayList<Handler> messageHandler;
     private static String tag = "[AgoraSignal]  ";
     private String appId;
     private AgoraHQSigSDK agoraHQSigSDK;
     private Context context;
     private String signalAccount;
     private String channelName;
+    private SignalEvent signalEvent;
 
     private AgoraSignal(Context context, String appId, String signalAccount, String channelName) {
         this.appId = appId;
@@ -42,6 +43,7 @@ public class AgoraSignal {
         this.channelName = channelName;
         agoraHQSigSDK = new AgoraHQSigSDK(context, appId);
         messageHandler = new CopyOnWriteArrayList<Handler>();
+        signalEvent = new SignalEvent();
     }
 
     public static AgoraSignal newInstance(Context context, String appId, String signalAccount, String channelName) {
@@ -77,39 +79,7 @@ public class AgoraSignal {
 
     private void loginAgoraSignal(String account) {
         GameControl.logD(tag + "loginAgoraSignal =  " + account + "  channelName  " + channelName);
-        agoraHQSigSDK.login(account, channelName, token, new AgoraHQSigSDK.EventHandler() {
-            @Override
-            public void onLoginSuccess() {
-                //  Log.e("MainActivity", "success");
-                GameControl.logD(tag + "onLoginSuccess");
-                handlerEvent(io.agora.agoraandroidhq.tools.Constants.LOGIN_AGORA_SIGNAL_SUCCESS, 0);
-            }
-
-            @Override
-            public void onError(int error) {
-                //Log.e("MainActivity", "error:" + error);
-                GameControl.logD(tag + "onError");
-                handlerEvent(io.agora.agoraandroidhq.tools.Constants.LOGIN_AGORA_SIGNAL_FAIL, 0);
-            }
-
-            @Override
-            public void onChannelMessageReceived(final String channel, final long msgId, final String msg) {
-                // Log.e("收到频道消息", "onChannelMessageReceived:[channel : " + channel + ", msgId : " + msgId + ", msg : " + msg + "]");
-                GameControl.logD(tag + "onChannelMessageReceived  channel = " + channel + "  msg =  " + msg);
-                if (msg != null) {
-                    handlerEvent(io.agora.agoraandroidhq.tools.Constants.AGORA_SIGNAL_RECEIVE, msg);
-                }
-            }
-
-            @Override
-            public void onMessageReceivedFrom(final String account, final long msgId, final String msg) {
-                //Log.e("收到点对点消息", "onMessageReceivedFrom:[account : " + account + ", msgId : " + msgId + ", msg : " + msg + "]");
-                GameControl.logD(tag + "onChannelMessageReceived  account = " + account + "  msg =  " + msg);
-                if (msg != null) {
-                    handlerEvent(io.agora.agoraandroidhq.tools.Constants.AGORA_SIGNAL_RECEIVE, msg);
-                }
-            }
-        });
+        agoraHQSigSDK.login(account, channelName, token, signalEvent);
     }
 
 
@@ -132,6 +102,7 @@ public class AgoraSignal {
             AgoraSignal.agoraSignal = null;
             agoraHQSigSDK = null;
             agoraSignal = null;
+            signalEvent = null;
             GameControl.logD(tag + "onLogoutSDKClick  22");
         }
     }
@@ -189,5 +160,39 @@ public class AgoraSignal {
         GameControl.logD(tag + "checkWheatherCanPlay  =  " + url);
         HttpUrlUtils utils = new HttpUrlUtils();
         utils.execHttpAsyncTask(url, false, callback, null);
+    }
+
+    class SignalEvent implements AgoraHQSigSDK.EventHandler {
+        @Override
+        public void onLoginSuccess() {
+            //  Log.e("MainActivity", "success");
+            GameControl.logD(tag + "onLoginSuccess");
+            handlerEvent(io.agora.agoraandroidhq.tools.Constants.LOGIN_AGORA_SIGNAL_SUCCESS, 0);
+        }
+
+        @Override
+        public void onError(int error) {
+            //Log.e("MainActivity", "error:" + error);
+            GameControl.logD(tag + "onError");
+            handlerEvent(io.agora.agoraandroidhq.tools.Constants.LOGIN_AGORA_SIGNAL_FAIL, error);
+        }
+
+        @Override
+        public void onChannelMessageReceived(final String channel, final long msgId, final String msg) {
+            // Log.e("收到频道消息", "onChannelMessageReceived:[channel : " + channel + ", msgId : " + msgId + ", msg : " + msg + "]");
+            GameControl.logD(tag + "onChannelMessageReceived  channel = " + channel + "  msg =  " + msg);
+            if (msg != null) {
+                handlerEvent(io.agora.agoraandroidhq.tools.Constants.AGORA_SIGNAL_RECEIVE, msg);
+            }
+        }
+
+        @Override
+        public void onMessageReceivedFrom(final String account, final long msgId, final String msg) {
+            //Log.e("收到点对点消息", "onMessageReceivedFrom:[account : " + account + ", msgId : " + msgId + ", msg : " + msg + "]");
+            GameControl.logD(tag + "onChannelMessageReceived  account = " + account + "  msg =  " + msg);
+            if (msg != null) {
+                handlerEvent(io.agora.agoraandroidhq.tools.Constants.AGORA_SIGNAL_RECEIVE, msg);
+            }
+        }
     }
 }

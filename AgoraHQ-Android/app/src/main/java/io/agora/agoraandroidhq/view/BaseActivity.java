@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ public abstract class BaseActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        GameControl.logD("onDestory");
+        Log.d("agora_signal","onDestory");
         deInitUIandEvent();
         super.onDestroy();
     }
@@ -73,9 +76,9 @@ public abstract class BaseActivity extends Activity {
         Constants.HTTP_SEND_ANSWER_TO_SERVER = getResources().getString(R.string.http_send_answer_to_server);
         Constants.HTTP_CHECK_WHEATHER_CAN_PLAY = getResources().getString(R.string.http_check_wheather_can_play);
         Constants.HTTP_REPLY_WHEATHER_ACCEPT_VIDEO = getString(R.string.http_reply_wheather_accept_video);
-        GameControl.logD(tag + "Http_relive = " + Constants.HTTP_RELIVE);
+      /*  GameControl.logD(tag + "Http_relive = " + Constants.HTTP_RELIVE);
         GameControl.logD(tag + "Http_send_answer = " + Constants.HTTP_SEND_ANSWER_TO_SERVER);
         GameControl.logD(tag + "Http_Check_Wheather_can_paly = " + Constants.HTTP_CHECK_WHEATHER_CAN_PLAY);
         GameControl.logD(tag + "Http_Check_Wheather_can_paly = " + Constants.HTTP_CHECK_WHEATHER_CAN_PLAY);
-    }
+*/    }
 }

@@ -62,19 +62,22 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.main_view);
         initUIandEvent();
         setUiListener();
+        initConstantsHttp();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         playGame.setClickable(true);
-        initConstantsHttp();
         channelNameEditText.requestFocus();
+        labelImage.setImageDrawable(null);
         setUserImageFormSharedPreference(labelImage);
     }
 
     @Override
     protected void initUIandEvent() {
+        GameControl.context = getApplicationContext();
+        GameControl.deleteLogFile();
         channelNameEditText = findViewById(R.id.channel_name_editText);
         playGame = findViewById(R.id.btnStartPlayGame);
         labelName = findViewById(R.id.user_label);
@@ -213,6 +216,7 @@ public class MainActivity extends BaseActivity {
             workerThread.destoryEngine();
             ((HqApplication) getApplication()).deInitWorkerThread();
         }
+        GameControl.context = null;
     }
 
     @Override

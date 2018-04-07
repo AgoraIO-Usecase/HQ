@@ -22,7 +22,7 @@ import io.agora.agoraandroidhq.module.Message;
 public class GangUpRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ArrayList<String> mUidList;
     private final Context mContext;
-    protected final LayoutInflater mInflater;
+    protected LayoutInflater mInflater;
     private String tag = "[GangUpRecycleViewAdapter]  ";
 
     public void updateData() {
@@ -96,5 +96,12 @@ public class GangUpRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.
             uidContent = v.findViewById(R.id.gang_up_recycleview_item_uid);
             uidHeadImage = v.findViewById(R.id.gang_up_recycleview_item_headImage);
         }
+    }
+
+    public void releaseRecycleViewAdapter(){
+        mUidList.clear();
+        mUidList = null;
+        notifyDataSetChanged();
+        mInflater = null;
     }
 }

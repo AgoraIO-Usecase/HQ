@@ -25,7 +25,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public ArrayList<Message> mMsglist;
 
     private final Context mContext;
-    protected final LayoutInflater mInflater;
+    protected LayoutInflater mInflater;
 
     public void updateData(Message message) {
         mMsglist.add(message);
@@ -89,6 +89,13 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             msgTitle = v.findViewById(R.id.msg_title);
             headImage = v.findViewById(R.id.msg_headImage);
         }
+    }
+
+    public void releaseRecycleViewAdapter(){
+        mMsglist.clear();
+        mMsglist = null;
+        notifyDataSetChanged();
+        mInflater = null;
     }
 }
 
