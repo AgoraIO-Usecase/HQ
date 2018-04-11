@@ -4,7 +4,9 @@
 // CDlgAnswer ¶Ô»°¿ò
 class CAgoraSignalInstance;
 class CSingleCallBack;
+class CAgoraHQDlg;
 #include "AGButton.h"
+#include <map>
 
 #include "DlgAnswerResultStatics.h"
 class CDlgAnswer : public CDialogEx
@@ -23,6 +25,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnClose();
+	//afx_msg void OnDestroy();
 
 	DECLARE_MESSAGE_MAP()
 
@@ -35,6 +38,7 @@ protected:
 	afx_msg void OnBnClickedButtonStopanswer();
 	afx_msg void OnBnClickedButtonSetbonuses();
 	afx_msg void OnBnClickedButtonReset();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
 	HRESULT onLoginSuccess(WPARAM wParam, LPARAM lParam);
 	HRESULT onLogout(WPARAM wParam, LPARAM lParam);
@@ -54,7 +58,12 @@ protected:
 
 	LRESULT onInputParam(WPARAM wParam, LPARAM lParam);
 	LRESULT onSetDataTimeBonus(WPARAM wParam, LPARAM lParam);
-
+	LRESULT onHttpPublish(WPARAM wParam, LPARAM lParam);
+	LRESULT onRequestChannel(WPARAM wParam, LPARAM lParam);
+	LRESULT onHttpStopAns(WPARAM wParam, LPARAM lParam);
+	LRESULT onHttpReset(WPARAM wParam, LPARAM lParam);
+	LRESULT onHttpInvite(WPARAM wParam, LPARAM lParam);
+	LRESULT onHttpInviteStatus(WPARAM wParam, LPARAM lParam);
 protected:
 	void initCtrl();
 	void uninitCtrl();
@@ -99,4 +108,14 @@ private:
 	CAGEngineEventHandler* m_pAgEngineEventHandle;
 
 	CFileIO m_fileSigLog;
+
+
+	int invite_status_count = 0;
+	int invite_status_max = 30;
+	int invite_status_interval = 1000;//1s 
+	int invite_status_timer_event_id = 1001;
+	std::map<std::string, CString> m_mapChn;
+	//std::map<std::string, >
+public:
+	CAgoraHQDlg* m_pAgoraHQDlg;
 };

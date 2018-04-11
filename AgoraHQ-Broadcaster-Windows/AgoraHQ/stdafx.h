@@ -84,6 +84,13 @@ typedef struct tagListOfWinners
 	float fPlayerBonus;
 };
 
+#include <curl.h>
+#ifdef DEBUG
+    #pragma comment(lib, "libcurl-d_imp.lib")
+#else
+    #pragma comment(lib, "libcurl_imp.lib")
+#endif
+
 #ifdef _UNICODE
 #if defined _M_IX86
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")

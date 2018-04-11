@@ -9,7 +9,7 @@
 #endif
 
 #include "resource.h"		// 主符号
-
+class CUrlServiceCallback;
 
 // CAgoraHQApp: 
 // 有关此类的实现，请参阅 AgoraHQ.cpp
@@ -23,10 +23,12 @@ public:
 // 重写
 public:
 	virtual BOOL InitInstance();
-
+	virtual int ExitInstance();
 // 实现
 
 	DECLARE_MESSAGE_MAP()
+public:
+	CUrlServiceCallback* url_service_callback = nullptr;
 };
 
 extern CAgoraHQApp theApp;

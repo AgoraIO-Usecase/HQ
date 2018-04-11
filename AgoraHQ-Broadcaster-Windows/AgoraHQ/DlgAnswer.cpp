@@ -3,13 +3,15 @@
 
 #include "stdafx.h"
 #include "AgoraHQ.h"
+#include "AgoraHQDlg.h"
 #include "DlgAnswer.h"
 #include "afxdialogex.h"
 #include "SingleWrap.h"
 #include "SignalInstance.h"
 #include "generatorSignalToken.h"
 #include "commonFun.h"
-
+#include "UrlService/CurlService.h"
+#include "CustomMsg.h"
 // CDlgAnswer 对话框
 
 IMPLEMENT_DYNAMIC(CDlgAnswer, CDialogEx)
@@ -27,6 +29,9 @@ CDlgAnswer::CDlgAnswer(CWnd* pParent /*=NULL*/)
 
 CDlgAnswer::~CDlgAnswer()
 {
+	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(NULL);
+	uninitAgoraSignal();
+	uninitCtrl();
 	m_fileSigLog.close();
 }
 
@@ -48,6 +53,7 @@ void CDlgAnswer::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgAnswer, CDialogEx)
 	ON_WM_CLOSE()
+	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_CHECK_A, &CDlgAnswer::OnBnClickedCheckA)
 	ON_BN_CLICKED(IDC_CHECK_B, &CDlgAnswer::OnBnClickedCheckB)
 	ON_BN_CLICKED(IDC_CHECK_C, &CDlgAnswer::OnBnClickedCheckC)
@@ -56,18 +62,24 @@ BEGIN_MESSAGE_MAP(CDlgAnswer, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_STARTANSWER, &CDlgAnswer::OnBnClickedButtonStartMark)
 	ON_BN_CLICKED(IDC_BUTTON_STOPANSWER, &CDlgAnswer::OnBnClickedButtonStopanswer)
 	ON_BN_CLICKED(IDC_BUTTON_SETBONUSES, &CDlgAnswer::OnBnClickedButtonSetbonuses)
-	ON_MESSAGE(WM_LoginSuccess,onLoginSuccess)
-	ON_MESSAGE(WM_LogOut,onLogout)
-	ON_MESSAGE(WM_LoginFailed,onLogFailed)
-	ON_MESSAGE(WM_Error,onError)
-	ON_MESSAGE(WM_Log,onLog)
+	ON_MESSAGE(WM_LoginSuccess, onLoginSuccess)
+	ON_MESSAGE(WM_LogOut, onLogout)
+	ON_MESSAGE(WM_LoginFailed, onLogFailed)
+	ON_MESSAGE(WM_Error, onError)
+	ON_MESSAGE(WM_Log, onLog)
 	ON_MESSAGE(WM_QueryUserStatusResult, onQueryUserStatusResult)
 	ON_MESSAGE(WM_MessageSendSuccess, onMessageSendSuccess)
 	ON_MESSAGE(WM_MessageSendError, onMessageSendError)
 	ON_MESSAGE(WM_MessageInstantReceive, onMessageInstantReceive)
 	ON_BN_CLICKED(IDC_BUTTON_RESET, &CDlgAnswer::OnBnClickedButtonReset)
 	ON_MESSAGE(WM_UpdateInputParam, onInputParam)
-	ON_MESSAGE(WM_SetDataTimeBonus,onSetDataTimeBonus)
+	ON_MESSAGE(WM_SetDataTimeBonus, onSetDataTimeBonus)
+	ON_MESSAGE(WM_URL_MSG(URL_PUBLISH), onHttpPublish)
+	ON_MESSAGE(WM_URL_MSG(URL_REQUEST_CHANNEL), onRequestChannel)
+	ON_MESSAGE(WM_URL_MSG(URL_RESET), onHttpReset)
+	ON_MESSAGE(WM_URL_MSG(URL_STOP_ANS), onHttpStopAns)
+	ON_MESSAGE(WM_URL_MSG(URL_INVITE), onHttpInvite)
+	ON_MESSAGE(WM_URL_MSG(URL_INVITE_STATUS), onHttpInviteStatus)
 END_MESSAGE_MAP()
 
 
@@ -76,6 +88,8 @@ BOOL CDlgAnswer::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 	
+	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(m_hWnd);
+
 	initCtrl();
 	initAgoraSignal();
 	
@@ -132,13 +146,34 @@ void CDlgAnswer::initAgoraSignal()
 
 void CDlgAnswer::uninitAgoraSignal()
 {
-	m_pSignalInstance->LeaveChannel();
-	m_pSignalInstance->LogOut();
-	m_pSignalInstance->getAgoraAPI()->callbackSet(nullptr);
-	delete m_pSignalInstance;
-	m_pSignalInstance = nullptr;
+	if (nullptr != m_pSignalInstance)
+	{
+		m_pSignalInstance->LeaveChannel();
+		m_pSignalInstance->LogOut();
+		m_pSignalInstance->getAgoraAPI()->callbackSet(nullptr);
+		if (nullptr != m_pSignalCallBack)
+		{
+			delete m_pSignalCallBack;
+			m_pSignalCallBack = nullptr;
+		}
+		delete m_pSignalInstance;
+		m_pSignalInstance = nullptr;
+	}
 }
 
+
+void CDlgAnswer::OnTimer(UINT_PTR nIDEvent)
+{
+	if (invite_status_timer_event_id == nIDEvent)
+	{
+		std::string gid = gHQConfig.getChannelName();
+		AfxGetUrlService()->invite_status(gid);
+		if (++invite_status_count <= invite_status_max)
+			SetTimer(invite_status_timer_event_id, invite_status_interval, NULL);
+		else
+			KillTimer(invite_status_timer_event_id);
+	}
+}
 void CDlgAnswer::OnBnClickedCheckA()
 {
 	// TODO:  在此添加控件通知处理程序代码
@@ -190,6 +225,7 @@ void CDlgAnswer::OnBnClickedCheckD()
 	}
 }
 
+//publish_method
 void CDlgAnswer::OnBnClickedButtonGetquestion()
 {
 	// TODO:  在此添加控件通知处理程序代码
@@ -199,7 +235,9 @@ void CDlgAnswer::OnBnClickedButtonGetquestion()
 	sprintf_s(cJsonStr, "{\"type\": \"publish\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
-	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	//m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	std::string gid = gHQConfig.getChannelName();
+	AfxGetUrlService()->publish(gid);
 
 	m_ckAnswerA.SetCheck(FALSE);
 	m_ckAnswerB.SetCheck(FALSE);
@@ -224,7 +262,7 @@ void CDlgAnswer::OnBnClickedButtonStartMark()
 	// TO DO 开始标记本地画面.
 }
 
-
+//stop_answer_method
 void CDlgAnswer::OnBnClickedButtonStopanswer()
 {
 	// TODO:  在此添加控件通知处理程序代码
@@ -234,9 +272,12 @@ void CDlgAnswer::OnBnClickedButtonStopanswer()
 	sprintf_s(cJsonStr, "{\"type\":\"stopAnswer\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
-	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	//m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	std::string gid = gHQConfig.getChannelName();
+	AfxGetUrlService()->stop_answer(gid);
 }
 
+//reset_method
 void CDlgAnswer::OnBnClickedButtonReset()
 {
 	// TODO:  在此添加控件通知处理程序代码
@@ -246,7 +287,10 @@ void CDlgAnswer::OnBnClickedButtonReset()
 	sprintf_s(cJsonStr, "{\"type\":\"reset\",\"msgid\":%u}",GetTickCount());
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
-	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	
+	//m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+	std::string gid = gHQConfig.getChannelName();
+	AfxGetUrlService()->reset(gid);
 }
 
 void CDlgAnswer::OnBnClickedButtonSetbonuses()
@@ -254,7 +298,7 @@ void CDlgAnswer::OnBnClickedButtonSetbonuses()
 	// TODO:  在此添加控件通知处理程序代码
 }
 
-
+//
 HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_LOGINSUCCESS lpData = (PAG_SIGNAL_LOGINSUCCESS)wParam;
@@ -268,7 +312,8 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(__FUNCTION__);
 	OutputDebugStringA("\r\n");
 
-	std::string curLanguage = gHQConfig.getLanguage();
+// use http instead of agora signal
+/*	std::string curLanguage = gHQConfig.getLanguage();
 	if ("" == curLanguage){
 		curLanguage = "0";
 		gHQConfig.setLanguage(curLanguage);
@@ -288,9 +333,15 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(cJsonStr);
 	OutputDebugStringA("\r\n");
 
-	gFileApp.write(cJsonStr);
+//	gFileApp.write(cJsonStr);
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
-
+*/
+	GetChannelRequest request;
+	request.encrypt = (gHQConfig.getEnableEncrypt() != "" && gHQConfig.getEnableEncrypt() != "0");
+	request.gid = gHQConfig.getChannelName();
+	request.lang = gHQConfig.getLanguage();
+	AfxGetUrlService()->request_channel(request);
+	
 	return TRUE;
 }
 
@@ -554,10 +605,17 @@ HRESULT CDlgAnswer::onChannelLeaved(WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
+// void CDlgAnswer::OnDestroy()
+// {
+// 	
+// }
+
 void CDlgAnswer::OnClose()
 {
-	uninitAgoraSignal();
-	uninitCtrl();
+// 	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(NULL);
+// 	uninitAgoraSignal();
+// 	uninitCtrl();
+	
 }
 
 void CDlgAnswer::switchNewQuestion(const tagQuestionAnswer &newQuestion)
@@ -637,7 +695,7 @@ void CDlgAnswer::updateStatusToPublish()
 	m_btnStopAnswer.ShowWindow(SW_SHOW);
 	//m_btnResetQuestion.ShowWindow(SW_SHOW);
 }
-
+//invite_request_method http
 LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
 {
 	PAG_INPUTPARAM lpData = (PAG_INPUTPARAM)wParam;
@@ -648,11 +706,15 @@ LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
 		sprintf_s(cJsonStr, "{\"type\":\"inviteRequest\",\"data\":{\"uid\":\"%s\"},\"msgid\":%u}", lpData->strParam.data(),GetTickCount());
 		OutputDebugStringA(cJsonStr);
 		OutputDebugStringA("\r\n");
-		if (m_pSignalInstance){
 
-			gFileApp.write(cJsonStr);
-			m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
-		}
+		std::string gid = gHQConfig.getChannelName();
+		AfxGetUrlService()->invite_request(gid, lpData->strParam.data());
+// 		if (m_pSignalInstance){
+// 
+// 			gFileApp.write(cJsonStr);
+// 			m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
+// 		}
+
 
 		delete lpData; lpData = nullptr;
 	}
@@ -675,6 +737,257 @@ LRESULT CDlgAnswer::onSetDataTimeBonus(WPARAM wParam, LPARAM lParam)
 
 		delete lpData; lpData = nullptr;
 	}
+
+	return true;
+}
+
+bool error_info(WPARAM wParam, LPARAM lParam)
+{
+	bool bSuccess = static_cast<bool>(wParam);
+	if (!bSuccess) //错误
+	{
+		char* szError = (char*)lParam;
+		if (szError)
+		{
+			AfxMessageBox(s2cs(szError));
+			delete[] szError;
+			szError = NULL;
+		}
+		return false;
+	}
+	return true;
+}
+
+ bool ParseResponseJson(rapidjson::Document& document, LPARAM lParam, CString function_name)
+{
+	char* js = (char*)lParam;
+	std::string res = js;
+
+	if (js)
+	{
+		delete[] js;
+		js = NULL;
+	}
+
+	if (document.Parse<0>(res.data()).HasParseError())
+	{
+		CString strError;
+		strError.Format(_T("%s reponse error: %s"), function_name.GetBuffer(), s2cs(res));
+		AfxMessageBox(strError);
+		return false;
+	}
+
+	if (!document["err"].IsNull())
+	{
+
+		std::string err = document["err"].GetString();
+		if (err.length() > 0)
+		{
+			AfxMessageBox(s2cs(err));
+			return false;
+		}
+	}
+	return true;
+}
+
+LRESULT CDlgAnswer::onRequestChannel(WPARAM wParam, LPARAM lParam)
+{
+	if (!error_info(wParam, lParam))
+		return false;
+
+	rapidjson::Document document;
+	if (!ParseResponseJson(document, lParam, _T("requestChannel")))
+		return false;
+
+	std::string msgType((document["type"].GetString()));
+	if ("channel" == msgType){
+		std::string channelName = document["data"].GetString();
+
+		LPAG_SIGNAL_NEWCHANNELNAME lpData = new  AG_SIGNAL_NEWCHANNELNAME;
+		lpData->account = m_account;
+		lpData->channelname = channelName;
+		::PostMessage(theApp.GetMainWnd()->m_hWnd, (WM_NewChannelName), (WPARAM)lpData, NULL);
+		m_trlQuestion.SetWindowTextW(_T("Click the Join Channel button on the left to send the video to the Audience!"));
+	}
+
+
+	return true;
+}
+
+LRESULT CDlgAnswer::onHttpPublish(WPARAM wParam, LPARAM lParam)
+{
+	if (!error_info(wParam, lParam))
+		return false;
+
+	rapidjson::Document doc;
+	if (!ParseResponseJson(doc, lParam, _T("Send Question")))
+		return false;
+	
+	std::string jsData = doc["data"].GetString();
+	rapidjson::Document document;
+	document.Parse<0>(jsData.data());
+	std::string msgType = document["type"].GetString();
+	if ("quiz" == msgType){
+		tagQuestionAnswer answerTemp;
+		int questionId(document["data"]["id"].GetInt());
+		std::string strQuestion(document["data"]["question"].GetString());
+		std::vector<std::string > vecQuestionChoose;
+		rapidjson::Document::ValueIterator it = document["data"]["options"].Begin();
+		for (; document["data"]["options"].End() != it; it++){
+			vecQuestionChoose.push_back((*it).GetString());
+		}
+		answerTemp.questionId = questionId;
+		answerTemp.strQuestion = strQuestion;
+		answerTemp.vecQuestionAnswers = vecQuestionChoose;
+
+		switchNewQuestion(answerTemp);
+	}
+
+	return true;
+}
+
+LRESULT CDlgAnswer::onHttpStopAns(WPARAM wParam, LPARAM lParam)
+{
+	if (!error_info(wParam, lParam))
+		return false;
+
+	rapidjson::Document document;
+	
+	if (!ParseResponseJson(document, lParam, _T("Stop Answer")))
+		return false;
+
+	std::string msgType((document["type"].GetString()));
+	if ("result" == msgType){
+
+		tagQuestionStatics questionStaticsTemp;
+		int nCorrectNum = document["data"]["correct"].GetInt();
+		int nTotalNuum = document["data"]["total"].GetInt();
+		int sid = document["data"]["sid"].GetInt();
+		int nresult = document["data"]["result"].GetInt();
+
+		std::map<std::string, int> mapSpreadTemp;
+		std::string strAnswer; int nAnswerNum;
+		strAnswer = "A";
+		nAnswerNum = document["data"]["spread"]["0"].GetInt();
+		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		strAnswer = "B";
+		nAnswerNum = document["data"]["spread"]["1"].GetInt();
+		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		strAnswer = "C";
+		nAnswerNum = document["data"]["spread"]["2"].GetInt();
+		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		strAnswer = "D";
+		nAnswerNum = document["data"]["spread"]["3"].GetInt();
+		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+
+		questionStaticsTemp.ncorrectNum = nCorrectNum;
+		questionStaticsTemp.nTotal = nTotalNuum;
+		questionStaticsTemp.nsid = sid;
+		questionStaticsTemp.nresult = nresult;
+		questionStaticsTemp.mapSpread = mapSpreadTemp;
+
+		notifyQuestionAnswerStatics(questionStaticsTemp);
+
+		if (document["data"]["winners"].IsArray())
+		{
+			rapidjson::Value& winners = document["data"]["winners"];
+			std::vector<tagListOfWinners> vecWinnersTemp;
+			int nIndex = 0;
+
+			for (rapidjson::SizeType i = 0; i < winners.Size(); ++i)
+			{
+				tagListOfWinners winnerTemp;
+				winnerTemp.nPlayerId = nIndex++;
+				winnerTemp.fPlayerBonus = 0.0f;				
+				rapidjson::Value& players = winners[i];
+				if (players.IsString())
+				{
+					winnerTemp.strPlayerName = players.GetString();
+				}
+				vecWinnersTemp.push_back(winnerTemp);
+			}
+			notifyRoundListOfWinners(vecWinnersTemp);
+		}
+		
+	}
+	return true;
+}
+LRESULT CDlgAnswer::onHttpReset(WPARAM wParam, LPARAM lParam)
+{
+	if (!error_info(wParam, lParam))
+		return false;
+
+	rapidjson::Document doc;
+	if (!ParseResponseJson(doc, lParam, _T("Reset")))
+		return false;
+	
+	return true;
+}
+
+LRESULT CDlgAnswer::onHttpInvite(WPARAM wParam, LPARAM lParam)
+{
+	if (!error_info(wParam, lParam))
+		return false;
+
+	rapidjson::Document doc;
+	if (!ParseResponseJson(doc, lParam, _T("Reset")))
+		return false;
+
+	//invite request success
+	invite_status_count = 0;
+	
+	std::string gid = gHQConfig.getChannelName();
+	AfxGetUrlService()->invite_status(gid);
+	invite_status_count++;
+	SetTimer(invite_status_timer_event_id, invite_status_interval, NULL);
+	return true;
+}
+//{"data":{"responded":false,"uid":"12321312"}}
+LRESULT CDlgAnswer::onHttpInviteStatus(WPARAM wParam, LPARAM lParam)
+{
+	if (!error_info(wParam, lParam))
+		return false;
+
+	char* js = (char*)lParam;
+	std::string res = js;
+
+	if (js)
+	{
+		delete[] js;
+		js = NULL;
+	}
+
+	rapidjson::Document doc;
+	if (doc.Parse<0>(res.data()).HasParseError())
+	{
+		return false;
+	}
+
+	if (!doc["err"].IsNull())
+	{
+
+		std::string err = doc["err"].GetString();
+		if (err.length() > 0)
+		{
+			AfxMessageBox(s2cs(err));
+			return false;
+		}
+	}
+	//如果请求成功
+	if (doc["data"]["responded"].GetBool())
+	{
+		KillTimer(invite_status_timer_event_id);
+		if (m_pAgoraHQDlg)
+		{
+			LPAG_INVITE_CALLBACKACCEPT invite_accept = new AG_INVITE_CALLBACKACCEPT;
+			invite_accept->isAccept = doc["data"]["accept"].GetBool();
+			invite_accept->remoteMediaUid = doc["data"]["mediaUid"].GetString();
+			invite_accept->remoteSigAccount = doc["data"]["uid"].GetString();
+			
+			::SendMessage(m_pAgoraHQDlg->m_hWnd, WM_URL_MSG(URL_INVITE_STATS_SUCCESS), (WPARAM)invite_accept, 0);
+		}
+	}
+	
 
 	return true;
 }

@@ -6,7 +6,8 @@
 #include "AgoraHQ.h"
 #include "AgoraHQDlg.h"
 #include "commonFun.h"
-
+#include "UrlService/CurlService.h"
+#include "UrlServiceCallback.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -53,7 +54,8 @@ BOOL CAgoraHQApp::InitInstance()
 	InitCommonControlsEx(&InitCtrls);
 
 	CWinApp::InitInstance();
-
+	url_service_callback = new CUrlServiceCallback;
+	AfxGetUrlService()->init_curl_service(url_service_callback);
 
 	AfxEnableControlContainer();
 
@@ -72,7 +74,9 @@ BOOL CAgoraHQApp::InitInstance()
 	// TODO:  应适当修改该字符串，
 	// 例如修改为公司或组织名
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
-
+#ifdef DEBUG
+	_CrtSetBreakAlloc(2084);
+#endif
 	gFileApp.openLog(getHQLogPath());
 	CAgoraHQDlg dlg;
 	m_pMainWnd = &dlg;
@@ -103,5 +107,21 @@ BOOL CAgoraHQApp::InitInstance()
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。
 	return FALSE;
+}
+
+int CAgoraHQApp::ExitInstance()
+{
+	AfxGetUrlService()->clear_callback();
+	if (nullptr != url_service_callback)
+	{
+		delete url_service_callback;
+		url_service_callback = nullptr;
+	}
+
+	AfxGetUrlService()->ReleaseInstance();
+#ifdef DEBUG
+	_CrtDumpMemoryLeaks();
+#endif
+	return 0;
 }
 

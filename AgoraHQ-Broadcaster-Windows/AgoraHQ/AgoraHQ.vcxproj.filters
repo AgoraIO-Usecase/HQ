@@ -22,6 +22,9 @@
     <Filter Include="AgoraObject">
       <UniqueIdentifier>{29bb0b2e-539f-440f-bfd0-de896007f9b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UrlService">
+      <UniqueIdentifier>{53f573ed-f951-431a-80a0-753ff0bda189}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -99,6 +102,24 @@
     <ClInclude Include="DlgSetTimeBonus.h">
       <Filter>Dlg</Filter>
     </ClInclude>
+    <ClInclude Include="UrlService\CurlService.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlService\IServiceCallback.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlService\URLData.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlService\UrlServiceDll.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlServiceCallback.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomMsg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AgoraHQ.cpp">
@@ -151,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="DlgSetTimeBonus.cpp">
       <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="UrlService\CurlService.cpp">
+      <Filter>UrlService</Filter>
+    </ClCompile>
+    <ClCompile Include="UrlServiceCallback.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
