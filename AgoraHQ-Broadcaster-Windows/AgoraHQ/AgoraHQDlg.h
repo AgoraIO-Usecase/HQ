@@ -61,7 +61,7 @@ public:
 	LRESULT onNewChannelName(WPARAM wParam, LPARAM lParam);
 	LRESULT onInviteRemoteAudience(WPARAM wParam,LPARAM lParam);
 	LRESULT onInviteCallBackAccept(WPARAM wParam, LPARAM lParam);
-
+	LRESULT onHttpInviteStatusSuccess(WPARAM wParam, LPARAM lParam);
 protected:
 	void initCtrl();
 	void uninitCtrl();

@@ -11,6 +11,8 @@
 #include "DlgConfig.h"
 #include "DlgInput.h"
 #include "DlgSetTimeBonus.h"
+#include "UrlService/CurlService.h"
+#include "CustomMsg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -109,6 +111,7 @@ BEGIN_MESSAGE_MAP(CAgoraHQDlg, CDialogEx)
 	ON_MESSAGE(WM_InviteCallBackAccpet, onInviteCallBackAccept)
 	ON_BN_CLICKED(IDC_BUTTON_INVITEMEDIA, &CAgoraHQDlg::OnBnClickedButtonInvitemedia)
 	ON_BN_CLICKED(IDC_BUTTON_SetTimeBonus, &CAgoraHQDlg::OnBnClickedButtonSettimebonus)
+	ON_MESSAGE(WM_URL_MSG(URL_INVITE_STATS_SUCCESS), onHttpInviteStatusSuccess)
 END_MESSAGE_MAP()
 
 
@@ -146,10 +149,12 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化代码
 	SetBackgroundColor(RGB(0xff,0xff,0xff),TRUE);
 
+	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(m_hWnd);
 	if ("" == gHQConfig.getAppId()){
 
-		gHQConfig.setAppId("319294c67d174c878cc7922551e6e773");
+		gHQConfig.setAppId("5463902dc7254fdf8779989252e5e35f");//319294c67d174c878cc7922551e6e773 5463902dc7254fdf8779989252e5e35f
 	}
+
 	getChannelName();
 	m_strAppId = gHQConfig.getAppId();
 	if ("" == m_strAppId){
@@ -211,6 +216,7 @@ void CAgoraHQDlg::OnPaint()
 
 void CAgoraHQDlg::OnClose()
 {
+	//CAgoraSignalInstance::getSignalInstance()->ReleaseInstance();
 	if (m_lpAgoraObject){
 
 		m_lpAgoraObject->LeaveCahnnel();
@@ -357,6 +363,7 @@ void CAgoraHQDlg::initCtrl()
 
 	if (nullptr == m_pDlgAnswer){
 		m_pDlgAnswer = new CDlgAnswer(&m_ctlAnswerArea);
+		m_pDlgAnswer->m_pAgoraHQDlg = this;
 		m_pDlgAnswer->Create(CDlgAnswer::IDD, &m_ctlAnswerArea);
 		m_pDlgAnswer->ShowWindow(SW_SHOW);
 	}
@@ -443,8 +450,13 @@ LRESULT CAgoraHQDlg::onJoinChannelSuccess(WPARAM wParam, LPARAM lParam)
 	SetWindowText(newTitle);
 	Invalidate();
 
-	delete lpData;
-
+	if (lpData)
+	{
+		delete[] lpData->channel;
+		lpData->channel = NULL;
+		delete lpData;
+		lpData = NULL;
+	}
 	m_btnInviteRemote.EnableWindow(TRUE);
 	CString lpStrSdkVersion = m_lpAgoraObject->GetSDKVersionEx();
 	m_ctlSdkVersion.SetWindowTextW(lpStrSdkVersion);
@@ -784,10 +796,10 @@ LRESULT CAgoraHQDlg::onInviteRemoteAudience(WPARAM wParam, LPARAM lParam)
 			m_agInviteRemoteAudience.isAccpet = false;
 			m_agInviteRemoteAudience.remoteAccount = lpData->remoteAccount;
 			m_agInviteRemoteAudience.isValid = true;
-
+			
 			KillTimer(EVENT_TIMER_INVITEREMOTE);
 			SetTimer(EVENT_TIMER_INVITEREMOTE, m_agInviteRemoteAudience.nTimeOut, NULL);
-
+				
 			delete lpData; lpData = nullptr;
 		}
 	}
@@ -852,6 +864,12 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
+	if (lpData)
+	{
+		delete lpData;
+		lpData = nullptr;
+	}
+
 	m_agInviteRemoteAudience.isValid = false;
 	m_agInviteRemoteAudience.isAccpet = false;
 	m_agInviteRemoteAudience.remoteAccount = "";
@@ -885,4 +903,12 @@ void CAgoraHQDlg::OnBnClickedButtonSettimebonus()
 
 	m_pDlgSetTimeBonus->CenterWindow();
 	m_pDlgSetTimeBonus->ShowWindow(SW_SHOW);
+}
+
+
+LRESULT CAgoraHQDlg::onHttpInviteStatusSuccess(WPARAM wParam, LPARAM lParam)
+{
+	KillTimer(EVENT_TIMER_INVITEREMOTE);
+	onInviteCallBackAccept(wParam, lParam);
+	return true;
 }
