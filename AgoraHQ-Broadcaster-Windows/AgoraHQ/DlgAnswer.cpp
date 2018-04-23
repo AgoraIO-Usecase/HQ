@@ -508,18 +508,30 @@ HRESULT CDlgAnswer::onMessageInstantReceive(WPARAM wParam, LPARAM lParam)
 
 		std::map<std::string, int> mapSpreadTemp;
 		std::string strAnswer; int nAnswerNum;
-		strAnswer = "A";
-		nAnswerNum = document["data"]["spread"]["0"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
-		strAnswer = "B";
-		nAnswerNum = document["data"]["spread"]["1"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
-		strAnswer = "C";
-		nAnswerNum = document["data"]["spread"]["2"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
-		strAnswer = "D";
-		nAnswerNum = document["data"]["spread"]["3"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		if (!document["data"]["spread"]["0"].IsNull()){
+
+			strAnswer = "A";
+			nAnswerNum = document["data"]["spread"]["0"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
+		if (!document["data"]["spread"]["1"].IsNull()){
+
+			strAnswer = "B";
+			nAnswerNum = document["data"]["spread"]["1"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
+		if (!document["data"]["spread"]["2"].IsNull()){
+
+			strAnswer = "C";
+			nAnswerNum = document["data"]["spread"]["2"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
+		if (!document["data"]["spread"]["3"].IsNull()){
+
+			strAnswer = "D";
+			nAnswerNum = document["data"]["spread"]["3"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
 
 		questionStaticsTemp.ncorrectNum = nCorrectNum;
 		questionStaticsTemp.nTotal = nTotalNuum;
@@ -657,15 +669,28 @@ void CDlgAnswer::switchNewQuestion(const tagQuestionAnswer &newQuestion)
 	char chQuestionTitle[2048] = { '\0' };
 	sprintf_s(chQuestionTitle, "%d: %s", m_nQuestionId + 1, newQuestion.strQuestion.data());
 	m_trlQuestion.SetWindowTextW(s2cs(chQuestionTitle));
-	int nAnswer = newQuestion.vecQuestionAnswers.size();
-	if (1 <= nAnswer)
-	m_ckAnswerA.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[0]));
-	if (2 <= nAnswer)
-	m_ckAnswerB.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[1])); 
-	if (3 <= nAnswer)
-	m_ckAnswerC.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[2]));
-	if (4 <= nAnswer)
-	m_ckAnswerD.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[3]));
+	{
+		m_ckAnswerA.ShowWindow(SW_HIDE);
+		m_ckAnswerB.ShowWindow(SW_HIDE);
+		m_ckAnswerC.ShowWindow(SW_HIDE);
+		m_ckAnswerD.ShowWindow(SW_HIDE);
+	}
+	if (1 <= newQuestion.vecQuestionAnswers.size()){
+		m_ckAnswerA.ShowWindow(SW_SHOW);
+		m_ckAnswerA.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[0]));
+	}
+	if (2 <= newQuestion.vecQuestionAnswers.size()){
+		m_ckAnswerB.ShowWindow(SW_SHOW);
+		m_ckAnswerB.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[1]));
+	}
+	if (3 <= newQuestion.vecQuestionAnswers.size()){
+		m_ckAnswerC.ShowWindow(SW_SHOW);
+		m_ckAnswerC.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[2]));
+	}
+	if (4 == newQuestion.vecQuestionAnswers.size()){
+		m_ckAnswerD.ShowWindow(SW_SHOW);
+		m_ckAnswerD.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[3]));
+	}
 }
 
 void CDlgAnswer::notifyQuestionAnswerStatics(const tagQuestionStatics &QuestionStatics)
@@ -681,18 +706,70 @@ void CDlgAnswer::notifyQuestionAnswerStatics(const tagQuestionStatics &QuestionS
 	rect.left = rect.left - 100;
 	rect.bottom = rect.bottom - 50;
 	//rect.right = rect.right + 100;
-	switch (QuestionStatics.nresult)
-	{
-	case 0:m_ckAnswerA.SetCheck(TRUE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(FALSE);
-		break;
-	case 1:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(TRUE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(FALSE);
-		break;
-	case 2:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(TRUE); m_ckAnswerD.SetCheck(FALSE);
-		break;;
-	case 3:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(TRUE);
-		break;
-	default:
-		break;
+	
+	if (1 == QuestionStatics.mapSpread.size()){
+
+		switch (QuestionStatics.nresult)
+		{
+		case 0:m_ckAnswerA.SetCheck(TRUE); 
+			break;
+		case 1:m_ckAnswerA.SetCheck(FALSE);
+			break;
+		case 2:m_ckAnswerA.SetCheck(FALSE);
+			break;
+		case 3:m_ckAnswerA.SetCheck(FALSE);
+			break;
+		default:
+			break;
+		}
+	}
+	if (2 == QuestionStatics.mapSpread.size()){
+
+		switch (QuestionStatics.nresult)
+		{
+		case 0:m_ckAnswerA.SetCheck(TRUE); m_ckAnswerB.SetCheck(FALSE); 
+			break;
+		case 1:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(TRUE); 
+			break;
+		case 2:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE);
+			break;;
+		case 3:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE);
+			break;
+		default:
+			break;
+		}
+	}
+	if (3 == QuestionStatics.mapSpread.size()){
+
+		switch (QuestionStatics.nresult)
+		{
+		case 0:m_ckAnswerA.SetCheck(TRUE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE); 
+			break;
+		case 1:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(TRUE); m_ckAnswerC.SetCheck(FALSE); 
+			break;
+		case 2:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(TRUE); 
+			break;;
+		case 3:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE);
+			break;
+		default:
+			break;
+		}
+	}
+	if (4 == QuestionStatics.mapSpread.size()){
+
+		switch (QuestionStatics.nresult)
+		{
+		case 0:m_ckAnswerA.SetCheck(TRUE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(FALSE);
+			break;
+		case 1:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(TRUE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(FALSE);
+			break;
+		case 2:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(TRUE); m_ckAnswerD.SetCheck(FALSE);
+			break;;
+		case 3:m_ckAnswerA.SetCheck(FALSE); m_ckAnswerB.SetCheck(FALSE); m_ckAnswerC.SetCheck(FALSE); m_ckAnswerD.SetCheck(TRUE);
+			break;
+		default:
+			break;
+		}
 	}
 
 	m_DlgResult.ShowWindow(SW_SHOW);

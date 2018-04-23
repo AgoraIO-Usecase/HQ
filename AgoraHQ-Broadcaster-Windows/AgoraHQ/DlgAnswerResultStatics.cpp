@@ -98,21 +98,35 @@ void CDlgAnswerResultStatics::setContext(const tagQuestionStatics &questionStati
 	CString strCorrectPercent;
 	strCorrectPercent.Format(_T("%.2f"), dCorrertPercent);
 	ASSERT(5 > questionStatics.nresult);
-	CString strResutl; CString strAnswerA; CString strAnswerB; CString strAnswerC; CString strAnswerD;
+	CString strResutl;
 	if (0 == questionStatics.nresult){
 		strResutl = _T("A");
+	}
+	if (1 == questionStatics.nresult){
+		strResutl = _T("B");
+	}
+	if (2 == questionStatics.nresult){
+		strResutl = _T("C");
+	}
+	if (3 == questionStatics.nresult){
+		strResutl = _T("D");
+	}
+	
+	CString strAnswerA; CString strAnswerB; CString strAnswerC; CString strAnswerD;
+	if (1 <= questionStatics.mapSpread.size()){
+
 		strAnswerA = s2cs(int2str(questionStatics.mapSpread.at("A")));
 	}
-	else if (1 == questionStatics.nresult){
-		strResutl = _T("B");
+	if (2 <= questionStatics.mapSpread.size()){
+
 		strAnswerB = s2cs(int2str(questionStatics.mapSpread.at("B")));
 	}
-	else if (2 == questionStatics.nresult){
-		strResutl = _T("C");
+	if (3 <= questionStatics.mapSpread.size()){
+
 		strAnswerC = s2cs(int2str(questionStatics.mapSpread.at("C")));
 	}
-	else if (3 == questionStatics.nresult){
-		strResutl = _T("D");
+	if (4 <= questionStatics.mapSpread.size()){
+
 		strAnswerD = s2cs(int2str(questionStatics.mapSpread.at("D")));
 	}
 	
