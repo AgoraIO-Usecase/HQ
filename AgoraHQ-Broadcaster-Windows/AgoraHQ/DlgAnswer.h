@@ -6,6 +6,7 @@ class CAgoraSignalInstance;
 class CSingleCallBack;
 class CAgoraHQDlg;
 #include "AGButton.h"
+#include "commonFun.h"
 #include <map>
 
 #include "DlgAnswerResultStatics.h"
@@ -17,6 +18,9 @@ public:
 	CDlgAnswer(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CDlgAnswer();
 	void updateStatusToPublish();
+
+	void leaveChannel();
+	void joinchannel();
 
 // 对话框数据
 	enum { IDD = IDD_DIALOG_ANSWER };
@@ -78,6 +82,9 @@ protected:
 	void notifyQuestionAnswerStatics(const tagQuestionStatics &QuestionStatics);
 	void notifyRoundListOfWinners(const std::vector<tagListOfWinners> &vecListOfWinner);
 
+	bool error_info(WPARAM wParam, LPARAM lParam);
+	bool ParseResponseJson(rapidjson::Document& document, LPARAM lParam, CString function_name);
+
 private:
 	CString m_sQuestion;
 
@@ -100,7 +107,7 @@ private:
 	CAGButton m_btnUpdateQuestion;
 	CAGButton m_btnStartAnswer;
 	CAGButton m_btnStopAnswer;
-	CButton m_btnResetQuestion;
+	CAGButton m_btnResetQuestion;
 	CStatic m_ctlNoticeInfo;
 	
 	CDlgAnswerResultStatics m_DlgResult;

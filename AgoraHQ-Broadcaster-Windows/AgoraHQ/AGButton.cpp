@@ -23,6 +23,7 @@ CAGButton::CAGButton()
 	//m_crBackDisable = RGB(0, 160, 239);
 	m_crBackDisable = RGB(213, 220, 232);
 
+	m_crTextScalar = RGB(0xFF, 0x00, 0x00);
 	m_crTextNormal = RGB(0x00, 0x00, 0x00);
 	m_crTextHover = RGB(0xFF, 0xC8, 0x64);
 	m_crTextPush = RGB(0xFF, 0xC8, 0x64);
@@ -105,12 +106,23 @@ void CAGButton::SetBorderColor(COLORREF crNormal, COLORREF crHover, COLORREF crP
     Invalidate(FALSE);
 }
 
+void CAGButton::EnableScalar(BOOL bEnable /*= TRUE*/)
+{
+	if (bEnable)
+		m_crTextNormal = RGB(0xFF, 0x00, 0x00);
+	else
+		m_crTextNormal = RGB(0x00, 0x00, 0x00);
+
+	EnableWindow(bEnable);
+
+	Invalidate(TRUE);
+}
+
 void CAGButton::EnableFrameEffect(BOOL bEnable)
 {
 	m_bFrameEffect = bEnable;
 	Invalidate(FALSE);
 }
-
 
 void CAGButton::PreSubclassWindow()
 {

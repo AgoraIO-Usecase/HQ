@@ -332,9 +332,12 @@ void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 		}
 
 		SetWindowText(s2cs(m_strChannelName));
+
+		m_pDlgAnswer->joinchannel();
 	}
 	else if (_T("LeaveChannel") == strParam){
 		
+		m_pDlgAnswer->leaveChannel();
 		m_lpAgoraObject->LeaveCahnnel();
 		m_lpRtcEngine->stopPreview();
 	}

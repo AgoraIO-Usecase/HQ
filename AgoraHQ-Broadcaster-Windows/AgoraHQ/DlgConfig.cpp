@@ -220,7 +220,9 @@ void CDlgConfig::initCtrl()
 	bool res = str2int(gHQConfig.getAppCertEnable());
 	m_btnAppcertificateEnable.SetCheck(res);
 	std::string strMediaUid = gHQConfig.getLoginUid();
+	strMediaUid = "1";
 	m_edMediaUid.SetWindowTextW(s2cs(strMediaUid));
+	m_edMediaUid.EnableWindow(FALSE);
 	std::string strChannelName = gHQConfig.getChannelName();
 	m_edChannelName.SetWindowTextW(s2cs(strChannelName));
 	

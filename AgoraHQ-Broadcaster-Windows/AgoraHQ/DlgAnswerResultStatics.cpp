@@ -98,25 +98,24 @@ void CDlgAnswerResultStatics::setContext(const tagQuestionStatics &questionStati
 	CString strCorrectPercent;
 	strCorrectPercent.Format(_T("%.2f"), dCorrertPercent);
 	ASSERT(5 > questionStatics.nresult);
-	CString strResutl;
+	CString strResutl; CString strAnswerA; CString strAnswerB; CString strAnswerC; CString strAnswerD;
 	if (0 == questionStatics.nresult){
 		strResutl = _T("A");
+		strAnswerA = s2cs(int2str(questionStatics.mapSpread.at("A")));
 	}
 	else if (1 == questionStatics.nresult){
 		strResutl = _T("B");
+		strAnswerB = s2cs(int2str(questionStatics.mapSpread.at("B")));
 	}
 	else if (2 == questionStatics.nresult){
 		strResutl = _T("C");
+		strAnswerC = s2cs(int2str(questionStatics.mapSpread.at("C")));
 	}
 	else if (3 == questionStatics.nresult){
 		strResutl = _T("D");
+		strAnswerD = s2cs(int2str(questionStatics.mapSpread.at("D")));
 	}
 	
-	CString strAnswerA = s2cs(int2str(questionStatics.mapSpread.at("A")));
-	CString strAnswerB = s2cs(int2str(questionStatics.mapSpread.at("B")));
-	CString strAnswerC = s2cs(int2str(questionStatics.mapSpread.at("C")));
-	CString strAnswerD = s2cs(int2str(questionStatics.mapSpread.at("D")));
-
 	int nCount = m_ltrResult.GetItemCount();
 	m_ltrResult.InsertItem(nCount, _T(""));
 	m_ltrResult.SetItemText(nCount, 0, strQuestionId);

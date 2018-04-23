@@ -23,6 +23,7 @@ public:
 	void SetTextColor(COLORREF crNormal, COLORREF crHover, COLORREF crPush, COLORREF crDisable);
     void SetBorderColor(COLORREF crNormal, COLORREF crHover, COLORREF crPush, COLORREF crDisable);
 
+	void EnableScalar(BOOL bEnable = TRUE);
 	void EnableFrameEffect(BOOL bEnable = TRUE);
 	void SwitchButtonStatus(UINT nStatus = AGBTN_NORMAL) { m_nDefStatus = nStatus; };
 
@@ -50,6 +51,7 @@ private:
 	COLORREF	m_crBackPush;
 	COLORREF	m_crBackDisable;
 
+	COLORREF m_crTextScalar;
 	COLORREF	m_crTextNormal;
 	COLORREF	m_crTextHover;
 	COLORREF	m_crTextPush;

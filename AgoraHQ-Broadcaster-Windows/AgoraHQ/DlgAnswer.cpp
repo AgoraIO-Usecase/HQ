@@ -9,9 +9,10 @@
 #include "SingleWrap.h"
 #include "SignalInstance.h"
 #include "generatorSignalToken.h"
-#include "commonFun.h"
 #include "UrlService/CurlService.h"
 #include "CustomMsg.h"
+#include "UrlService/URLData.h"
+using namespace HQ_LANG;
 // CDlgAnswer 对话框
 
 IMPLEMENT_DYNAMIC(CDlgAnswer, CDialogEx)
@@ -109,7 +110,18 @@ void CDlgAnswer::initCtrl()
 	m_btnStartAnswer.EnableWindow(FALSE);
 	m_btnStopAnswer.EnableWindow(FALSE);
 
+	m_btnStartAnswer.ShowWindow(SW_HIDE);
+	m_btnUpdateQuestion.ShowWindow(SW_HIDE);
+	m_btnStopAnswer.ShowWindow(SW_HIDE);
+	m_btnResetQuestion.ShowWindow(SW_HIDE);
+
+	m_ckAnswerA.ShowWindow(SW_HIDE);
+	m_ckAnswerB.ShowWindow(SW_HIDE);
+	m_ckAnswerC.ShowWindow(SW_HIDE);
+	m_ckAnswerD.ShowWindow(SW_HIDE);
+	
 	m_pAgEngineEventHandle = CAgoraObject::getEngineEventHandle();
+	m_trlQuestion.SetWindowTextW(_T("Welcome To AgoraHQ . Join a Channel to Start !"));
 }
 
 void CDlgAnswer::uninitCtrl()
@@ -122,6 +134,7 @@ void CDlgAnswer::initAgoraSignal()
 	m_appId = gHQConfig.getAppId();
 	m_appCertificatId = gHQConfig.getAppCertificateId();
 
+#if 0
 	m_pSignalInstance = CAgoraSignalInstance::getSignalInstance(m_appId);
 	ASSERT(m_pSignalInstance);
 	m_pSignalInstance->setLoginWnd(m_hWnd);
@@ -142,6 +155,7 @@ void CDlgAnswer::initAgoraSignal()
 	channelKey = "_no_need_token";
 	m_pSignalInstance->setChannelKey(channelKey);
 	m_pSignalInstance->Login(m_account);
+#endif
 }
 
 void CDlgAnswer::uninitAgoraSignal()
@@ -229,6 +243,8 @@ void CDlgAnswer::OnBnClickedCheckD()
 void CDlgAnswer::OnBnClickedButtonGetquestion()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_btnUpdateQuestion.EnableScalar(FALSE);
+
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
 	char cJsonStr[512] = { '\0' };
@@ -248,6 +264,7 @@ void CDlgAnswer::OnBnClickedButtonGetquestion()
 void CDlgAnswer::OnBnClickedButtonStartMark()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_btnStartAnswer.EnableScalar(FALSE);
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
 	char cJsonStr[512] = { '\0' };
@@ -259,6 +276,8 @@ void CDlgAnswer::OnBnClickedButtonStartMark()
 		m_pAgEngineEventHandle->setSEI(cJsonStr);
 	}
 
+	m_btnStopAnswer.EnableScalar(TRUE);
+
 	// TO DO 开始标记本地画面.
 }
 
@@ -266,6 +285,8 @@ void CDlgAnswer::OnBnClickedButtonStartMark()
 void CDlgAnswer::OnBnClickedButtonStopanswer()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_btnStopAnswer.EnableScalar(FALSE);
+	m_btnUpdateQuestion.EnableScalar(TRUE);
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
 	char cJsonStr[512] = { '\0' };
@@ -303,7 +324,10 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 {
 	PAG_SIGNAL_LOGINSUCCESS lpData = (PAG_SIGNAL_LOGINSUCCESS)wParam;
 
-	delete lpData; lpData = nullptr;
+	if (lpData){
+
+		delete lpData; lpData = nullptr;
+	}
 
 	m_btnUpdateQuestion.EnableWindow(TRUE);
 	m_btnStartAnswer.EnableWindow(TRUE);
@@ -337,6 +361,7 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	m_pSignalInstance->sendInstantMsg(m_serverAccount, cJsonStr);
 */
 	GetChannelRequest request;
+	HQ_LANG::bLanguage = str2int(gHQConfig.getLanguage());
 	request.encrypt = (gHQConfig.getEnableEncrypt() != "" && gHQConfig.getEnableEncrypt() != "0");
 	request.gid = gHQConfig.getChannelName();
 	request.lang = gHQConfig.getLanguage();
@@ -632,9 +657,14 @@ void CDlgAnswer::switchNewQuestion(const tagQuestionAnswer &newQuestion)
 	char chQuestionTitle[2048] = { '\0' };
 	sprintf_s(chQuestionTitle, "%d: %s", m_nQuestionId + 1, newQuestion.strQuestion.data());
 	m_trlQuestion.SetWindowTextW(s2cs(chQuestionTitle));
+	int nAnswer = newQuestion.vecQuestionAnswers.size();
+	if (1 <= nAnswer)
 	m_ckAnswerA.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[0]));
+	if (2 <= nAnswer)
 	m_ckAnswerB.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[1])); 
+	if (3 <= nAnswer)
 	m_ckAnswerC.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[2]));
+	if (4 <= nAnswer)
 	m_ckAnswerD.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[3]));
 }
 
@@ -695,6 +725,16 @@ void CDlgAnswer::updateStatusToPublish()
 	m_btnStopAnswer.ShowWindow(SW_SHOW);
 	//m_btnResetQuestion.ShowWindow(SW_SHOW);
 }
+
+void CDlgAnswer::leaveChannel()
+{
+	initCtrl();
+}
+
+void CDlgAnswer::joinchannel(){
+	onLoginSuccess(NULL,NULL);
+}
+
 //invite_request_method http
 LRESULT CDlgAnswer::onInputParam(WPARAM wParam, LPARAM lParam)
 {
@@ -741,7 +781,7 @@ LRESULT CDlgAnswer::onSetDataTimeBonus(WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
-bool error_info(WPARAM wParam, LPARAM lParam)
+bool CDlgAnswer::error_info(WPARAM wParam, LPARAM lParam)
 {
 	bool bSuccess = static_cast<bool>(wParam);
 	if (!bSuccess) //错误
@@ -749,7 +789,9 @@ bool error_info(WPARAM wParam, LPARAM lParam)
 		char* szError = (char*)lParam;
 		if (szError)
 		{
-			AfxMessageBox(s2cs(szError));
+			//AfxMessageBox(s2cs(szError));
+			m_ctlNoticeInfo.SetWindowTextW(s2cs(szError));
+
 			delete[] szError;
 			szError = NULL;
 		}
@@ -758,7 +800,7 @@ bool error_info(WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
- bool ParseResponseJson(rapidjson::Document& document, LPARAM lParam, CString function_name)
+ bool CDlgAnswer::ParseResponseJson(rapidjson::Document& document, LPARAM lParam, CString function_name)
 {
 	char* js = (char*)lParam;
 	std::string res = js;
@@ -773,17 +815,40 @@ bool error_info(WPARAM wParam, LPARAM lParam)
 	{
 		CString strError;
 		strError.Format(_T("%s reponse error: %s"), function_name.GetBuffer(), s2cs(res));
-		AfxMessageBox(strError);
+		//AfxMessageBox(strError);
+		m_ctlNoticeInfo.SetWindowTextW(strError);
 		return false;
 	}
 
 	if (!document["err"].IsNull())
 	{
-
 		std::string err = document["err"].GetString();
 		if (err.length() > 0)
 		{
-			AfxMessageBox(s2cs(err));
+			CString errorinfo;
+			if ("room_not_found" == err){
+				CString strChannel = s2cs(gHQConfig.getChannelName());
+				errorinfo = CHQLANG::getError_Room_Not_Found(strChannel);
+
+			}
+			else if ("game_closed_already" == err){
+				errorinfo = CHQLANG::getError_Game_Closed_Already();
+
+				m_btnUpdateQuestion.EnableScalar(TRUE);
+			}
+			else if ("quiz_going_on" == err){
+				errorinfo = CHQLANG::getError_Quiz_Going_On();
+				
+				m_btnStopAnswer.EnableScalar(TRUE);
+			}
+			else if ("no_more_quiz" == err){
+				errorinfo = CHQLANG::getError_No_More_Quiz();
+
+				m_btnResetQuestion.EnableScalar(TRUE);
+			}
+
+			m_ctlNoticeInfo.SetWindowTextW(errorinfo);
+			//AfxMessageBox(s2cs(err));
 			return false;
 		}
 	}
@@ -810,12 +875,17 @@ LRESULT CDlgAnswer::onRequestChannel(WPARAM wParam, LPARAM lParam)
 		m_trlQuestion.SetWindowTextW(_T("Click the Join Channel button on the left to send the video to the Audience!"));
 	}
 
-
+	//stopbtn
+	m_btnStopAnswer.EnableWindow(FALSE);
+	m_btnUpdateQuestion.EnableScalar(TRUE);
+	
 	return true;
 }
 
 LRESULT CDlgAnswer::onHttpPublish(WPARAM wParam, LPARAM lParam)
 {
+	m_btnStartAnswer.EnableScalar(TRUE);
+
 	if (!error_info(wParam, lParam))
 		return false;
 
@@ -867,18 +937,30 @@ LRESULT CDlgAnswer::onHttpStopAns(WPARAM wParam, LPARAM lParam)
 
 		std::map<std::string, int> mapSpreadTemp;
 		std::string strAnswer; int nAnswerNum;
-		strAnswer = "A";
-		nAnswerNum = document["data"]["spread"]["0"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
-		strAnswer = "B";
-		nAnswerNum = document["data"]["spread"]["1"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
-		strAnswer = "C";
-		nAnswerNum = document["data"]["spread"]["2"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
-		strAnswer = "D";
-		nAnswerNum = document["data"]["spread"]["3"].GetInt();
-		mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		if (!document["data"]["spread"]["0"].IsNull()){
+
+			strAnswer = "A";
+			nAnswerNum = document["data"]["spread"]["0"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
+		if (!document["data"]["spread"]["1"].IsNull()){
+
+			strAnswer = "B";
+			nAnswerNum = document["data"]["spread"]["1"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
+		if (!document["data"]["spread"]["2"].IsNull()){
+
+			strAnswer = "C";
+			nAnswerNum = document["data"]["spread"]["2"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
+		if (!document["data"]["spread"]["3"].IsNull()){
+
+			strAnswer = "D";
+			nAnswerNum = document["data"]["spread"]["3"].GetInt();
+			mapSpreadTemp.insert(make_pair(strAnswer, nAnswerNum));
+		}
 
 		questionStaticsTemp.ncorrectNum = nCorrectNum;
 		questionStaticsTemp.nTotal = nTotalNuum;
@@ -912,6 +994,7 @@ LRESULT CDlgAnswer::onHttpStopAns(WPARAM wParam, LPARAM lParam)
 	}
 	return true;
 }
+
 LRESULT CDlgAnswer::onHttpReset(WPARAM wParam, LPARAM lParam)
 {
 	if (!error_info(wParam, lParam))
@@ -920,6 +1003,11 @@ LRESULT CDlgAnswer::onHttpReset(WPARAM wParam, LPARAM lParam)
 	rapidjson::Document doc;
 	if (!ParseResponseJson(doc, lParam, _T("Reset")))
 		return false;
+
+	//TO DO . reset Success
+	CString strInfo = CHQLANG::getInfo_ResetInfo();
+	AfxMessageBox(strInfo);
+	m_btnUpdateQuestion.EnableScalar(TRUE);
 	
 	return true;
 }
