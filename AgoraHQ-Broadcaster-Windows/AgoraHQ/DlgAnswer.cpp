@@ -302,6 +302,9 @@ void CDlgAnswer::OnBnClickedButtonStopanswer()
 void CDlgAnswer::OnBnClickedButtonReset()
 {
 	// TODO:  在此添加控件通知处理程序代码
+	m_btnUpdateQuestion.EnableScalar(FALSE);
+	m_btnStartAnswer.EnableScalar(FALSE);
+	m_btnStopAnswer.EnableScalar(FALSE);
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
 	char cJsonStr[512] = { '\0' };
