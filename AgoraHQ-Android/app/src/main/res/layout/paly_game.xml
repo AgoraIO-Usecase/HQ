@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/game_background">
 
-
     <FrameLayout
         android:id="@+id/live_view"
         android:layout_width="match_parent"
@@ -177,8 +176,7 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/question_layout"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -192,7 +190,7 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/red"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -204,13 +202,13 @@
                 android:src="@drawable/question_agora_title" />
 
             <ImageView
+                android:id="@+id/answer_face"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="13dp"
-                android:id="@+id/answer_face"
-                android:src="@drawable/answer_right"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginRight="50dp"/>
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/answer_right" />
 
 
         </FrameLayout>
@@ -255,17 +253,17 @@
 
 
     <FrameLayout
+        android:id="@+id/congratulation_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/congratulation_view"
         android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:scaleType="fitXY"
-            android:background="@drawable/congratulation1" />
+            android:background="@drawable/congratulation1"
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -277,16 +275,15 @@
             <io.agora.agoraandroidhq.module.CircleImageView
                 android:id="@+id/congratulation_headImage"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
-                />
+                android:layout_height="50dp" />
 
             <TextView
                 android:id="@+id/congratulation_name"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
                 android:gravity="center"
                 android:text="agora"
-                android:layout_marginBottom="25dp"
                 android:textColor="@drawable/white" />
 
         </LinearLayout>
@@ -295,19 +292,24 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
             android:layout_marginBottom="50dp"
+            android:layout_marginLeft="15dp"
             android:background="@drawable/congra_head" />
 
         <ImageView
+            android:id="@+id/congratulation_cancel"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:background="@drawable/cancel"
-            android:id="@+id/congratulation_cancel"
-            android:layout_marginTop="250dp"/>
+            android:layout_marginTop="250dp"
+            android:background="@drawable/cancel" />
 
     </FrameLayout>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/vos_or_cdn"/>
 </FrameLayout>

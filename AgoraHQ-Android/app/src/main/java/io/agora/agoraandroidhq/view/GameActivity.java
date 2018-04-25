@@ -128,6 +128,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private TextView wheath_canPlay_TextView;
     private TextView time_reduce;
     private ImageView answerFaceImage;
+    private TextView vosOrCdn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -174,9 +175,10 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         cancelCongratulation = findViewById(R.id.congratulation_cancel);
         cancelCongratulation.setClickable(true);
         answerFaceImage = findViewById(R.id.answer_face);
+        vosOrCdn = findViewById(R.id.vos_or_cdn);
     }
 
-    private void clearViewListener(){
+    private void clearViewListener() {
         imageViewBack.setOnClickListener(null);
         gameGangUpButton.setOnClickListener(null);
         disConnectBtn.setOnClickListener(null);
@@ -282,7 +284,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = input_editor.getText().toString();
+                String message = input_editor.getText().toString().trim();
                 input_editor.clearFocus();
                 input_editor.setText("");
                 String messageString = null;
@@ -364,14 +366,13 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
 
     private String getChannelName() {
         Intent intent = getIntent();
-        String channelName = intent.getStringExtra("ChannelName");
+        String channelName = intent.getStringExtra("ChannelName").trim();
         GameControl.logD(tag + "getChannelName  = " + channelName);
         return channelName;
     }
 
     private void loginAgoraSignal() {
         GameControl.logD(tag + " loginAgoraSignal  account  " + GameControl.currentUserName + "  channelName  " + getChannelName());
-        // agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, getAccount(), getChannelName());
         agoraSignal = AgoraSignal.newInstance(GameActivity.this, Constants.AGORA_APP_ID, GameControl.currentUser.getSignalAccount(), getChannelName());
         agoraSignal.addEventHandler(agoraHandler);
         agoraSignal.login();
@@ -637,13 +638,26 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         }
                     } else {
                         String errMessage = object.getString("err");
-                        toastHelper(errMessage);
+                        GameControl.logD("checkWheatherCanPlay = " + errMessage);
+                        toastHelper(changeMessage(errMessage));
                     }
                     GameControl.logD(tag + " GameControl.serverWheatherCanPlay " + wheatherCanPlay);
                     object = null;
                 }
             }
         });
+    }
+
+    private String changeMessage(String message) {
+        if (message.equals("Room_not_found")) {
+            return getResources().getString(R.string.room_not_found);
+        } else if (message.equals("Cannot_play")) {
+            return getResources().getString(R.string.can_not_play);
+        } else if(message.equals("not a player "+GameControl.signalAccount)){
+            return getResources().getString(R.string.not_a_player);
+        }else {
+            return message;
+        }
     }
 
     private Handler questionTimeHandler = new Handler() {
@@ -743,7 +757,8 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private boolean checkSelfPermissions() throws Exception {
         return checkSelfPermission(Manifest.permission.RECORD_AUDIO, 0) &&
                 checkSelfPermission(Manifest.permission.CAMERA, 1) &&
-                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2);
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2) &&
+                checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION, 3);
     }
 
     public boolean checkSelfPermission(String permission, int requestCode) throws Exception {
@@ -817,6 +832,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     public void disConnectVideo(View view) {
         mRtcEngine.muteLocalVideoStream(true);
         mRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}");
+
         isInVideoWithBroadcast = false;
         FrameLayout frameLayout = findViewById(R.id.small_video);
         frameLayout.setVisibility(View.GONE);
@@ -982,6 +998,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 public void onResponse(String data) {
                     // logD("sendAnswerToserver   = " + data);
                     GameControl.logD(tag + "sendAnswer OnResponse  =  " + data);
+
                 }
             });
         } catch (JSONException e) {
@@ -1246,7 +1263,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     private String getGangUpChannelName() {
-        String gangUpChannelName = gang_up_channel_name.getText().toString();
+        String gangUpChannelName = gang_up_channel_name.getText().toString().trim();
         return gangUpChannelName;
     }
 
@@ -1337,8 +1354,21 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     @Override
-    public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-        GameControl.logD(tag + "rtcEngine onJoinChannelSuccess  channel  =  " + channel + " uid =" + uid);
+    public void onJoinChannelSuccess(final String channel, final int uid, int elapsed) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String vos = mRtcEngine.getParameter("rtc.active_vos_list", null);
+                GameControl.logD(tag + "rtcEngine onJoinChannelSuccess  channel  =  " + channel + " uid =" + uid + "  vos = " + vos);
+                if (TextUtils.isEmpty(vos) | vos.equals("")) {
+                    GameControl.logD("onJoinChannelSuccess  vos null" + vos);
+                    vosOrCdn.setText("Cdn");
+                } else {
+                    GameControl.logD("onJoinChannelSuccess  vos" + vos);
+                    vosOrCdn.setText("vos : " + vos + "");
+                }
+            }
+        });
     }
 
     @Override

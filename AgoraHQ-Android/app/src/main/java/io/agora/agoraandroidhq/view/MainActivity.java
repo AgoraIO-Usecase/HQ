@@ -131,8 +131,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startClick(View view) {
-        String ChannelName = channelNameEditText.getText().toString();
-        String userName = labelName.getText().toString();
+        String ChannelName = channelNameEditText.getText().toString().trim();
+        String userName = labelName.getText().toString().trim();
         if (TextUtils.isEmpty(ChannelName)) {
             Toast.makeText(MainActivity.this, R.string.text_channel_name_can_not_be_null, Toast.LENGTH_SHORT).show();
         } else {
@@ -143,8 +143,8 @@ public class MainActivity extends BaseActivity {
             // logD("onConnectSuccess");
             sharedPreferenceHelper.saveName(userName);
             GameControl.currentUserHeadImage = labelImage.getDrawable();
-            GameControl.currentUserName = labelName.getText().toString();
-            GameControl.signalAccount = labelName.getText().toString();
+            GameControl.currentUserName = labelName.getText().toString().trim();
+            GameControl.signalAccount = labelName.getText().toString().trim();
             // GameControl.logD("saveName = " + userName);
         }
     }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 import io.agora.agoraandroidhq.module.MyEngineEventHandler;
 import io.agora.agoraandroidhq.tools.GameControl;
@@ -115,15 +116,15 @@ public class WorkerThread extends Thread {
         }
         ensureRtcEngineReadyLock();
         mRtcEngine.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER, null);
-        //rtcEngine.setClientRole(io.agora.rtc.Constants.CLIENT_ROLE_BROADCASTER, null);
         mRtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":false, \"bitrate\":0}}");
         mRtcEngine.enableAudioVolumeIndication(1000, 3);
-        // rtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
+        //mRtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
         GameControl.logD(tag + "channelName   account  = " + GameControl.currentUser.getChannelName() + "   " + GameControl.currentUser.getMediaUid());
         mRtcEngine.enableVideo();
         mRtcEngine.enableLocalVideo(false);
         mRtcEngine.setVideoProfile(io.agora.rtc.Constants.VIDEO_PROFILE_360P, true);
         mRtcEngine.joinChannel(null, GameControl.currentUser.getChannelName(), "Extra Optional Data", Integer.parseInt(GameControl.currentUser.getMediaUid())); // if you do not specify the uid, we will generate the uid for you
+        GameControl.logD("getSDKVersion:  "+RtcEngine.getSdkVersion());
     }
 
     public final void leaveChannel() {
@@ -140,7 +141,7 @@ public class WorkerThread extends Thread {
 
     private RtcEngine ensureRtcEngineReadyLock() {
         if (mRtcEngine == null) {
-            String appId = io.agora.agoraandroidhq.tools.Constants.AGORA_APP_ID;
+            String appId = io.agora.agoraandroidhq.tools.Constants.MEDIA_APPID;
             if (TextUtils.isEmpty(appId)) {
                 throw new RuntimeException("NEED TO use your App ID, get your own ID at https://dashboard.agora.io/");
             }
@@ -150,6 +151,7 @@ public class WorkerThread extends Thread {
                 throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
             }
             mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
+           // mRtcEngine.setParameters(String.format(Locale.US, "{\"rtc.log_filter\": 65535}"));
         }
         return mRtcEngine;
     }
@@ -158,7 +160,7 @@ public class WorkerThread extends Thread {
 
     private RtcEngine ensureGangUpRtcEngineReadyLock() {
         if (gangUpRtcEngine == null) {
-            String appId = io.agora.agoraandroidhq.tools.Constants.AGORA_APP_ID;
+            String appId = io.agora.agoraandroidhq.tools.Constants.MEDIA_APPID;
             if (TextUtils.isEmpty(appId)) {
                 throw new RuntimeException("NEED TO use your App ID, get your own ID at https://dashboard.agora.io/");
             }

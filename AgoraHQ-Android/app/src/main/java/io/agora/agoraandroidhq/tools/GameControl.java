@@ -53,6 +53,7 @@ public class GameControl {
         if (SHOW_LOG) {
             try {
                 if (context != null) {
+                    Log.d("agora_signal",message);
                     writeLogToFile(context, message);
                 }
             } catch (IOException e) {
@@ -68,7 +69,7 @@ public class GameControl {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ", Locale.CHINA);
         Date date = new Date();
 
-        Log.d("GameControl : ", "WritePermission  =  " + ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE));
+      //  Log.d("GameControl : ", "WritePermission  =  " + ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE));
         String log = dateFormat.format(date) + " " + msg + "\n";
         String filePath = getFilePath(context);
         File file = new File(filePath, logFileName);

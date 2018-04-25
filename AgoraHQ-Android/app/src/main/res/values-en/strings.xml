@@ -28,10 +28,10 @@
     <string name="game_title">Agora Trivia</string>
     <string name="ranking_list">Leaderboard</string>
     <string name="text_invite_friends">Invite Friends</string>
-    <string name="http_relive">http://76.231.168.66:9500/v1/relive</string>
-    <string name="http_send_answer_to_server">http://76.231.168.66:9500/v1/answer</string>
-    <string name="http_check_wheather_can_play">http://76.231.168.66:9500/v1/canplay?gid=</string>
-    <string name="http_reply_wheather_accept_video">http://76.231.168.66:9500/v1/inviteResponse</string>
+    <string name="http_relive">http://76.231.168.66:10000/v1/relive</string>
+    <string name="http_send_answer_to_server">http://76.231.168.66:10000/v1/answer</string>
+    <string name="http_check_wheather_can_play">http://76.231.168.66:10000/v1/canplay?gid=</string>
+    <string name="http_reply_wheather_accept_video">http://76.231.168.66:10000/v1/inviteResponse</string>
     <string name="string_money_300">$300</string>
 
     <string name="string_money_120">$120</string>
@@ -48,4 +48,8 @@
     <string name="can_not_team_mode">You can not team mode now</string>
     <string name="need_permission_toast">Need Permission !</string>
 
+    <string name="room_not_found">Channel does not exist</string>
+    <string name="can_not_play">Game has already started, you will not be able to play!</string>
+
+    <string name="not_a_player">not a player</string>
 </resources>

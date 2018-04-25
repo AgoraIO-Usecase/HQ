@@ -27,10 +27,10 @@
     <string name="game_title">Agora HQ</string>
     <string name="ranking_list">排行榜</string>
     <string name="text_invite_friends">邀请好友</string>
-    <string name="http_relive">http://123.155.153.87:9500/v1/relive</string>
-    <string name="http_send_answer_to_server">http://123.155.153.87:9500/v1/answer</string>
-    <string name="http_check_wheather_can_play">http://123.155.153.87:9500/v1/canplay?gid=</string>
-    <string name="http_reply_wheather_accept_video">http://123.155.153.87:9500/v1/inviteResponse</string>
+    <string name="http_relive">http://123.155.153.87:10000/v1/relive</string>
+    <string name="http_send_answer_to_server">http://123.155.153.87:10000/v1/answer</string>
+    <string name="http_check_wheather_can_play">http://123.155.153.87:10000/v1/canplay?gid=</string>
+    <string name="http_reply_wheather_accept_video">http://123.155.153.87:10000/v1/inviteResponse</string>
     <string name="string_money_300">¥300</string>
     <string name="string_money_120">¥120</string>
     <string name="string_get_more">获取更多</string>
@@ -45,6 +45,10 @@
     <string name="accept_video_invitation">接受</string>
     <string name="can_not_team_mode">不能开黑</string>
     <string name="need_permission_toast">Need Permission !</string>
+
+    <string name="room_not_found">游戏房间不存在</string>
+    <string name="can_not_play">游戏已开始，无法参与作答</string>
+    <string name="not_a_player">不是本局的玩家</string>
 
     <drawable name="button_press">#8888</drawable>
 </resources>
