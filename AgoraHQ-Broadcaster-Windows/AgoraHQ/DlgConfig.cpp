@@ -93,6 +93,7 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 	gHQConfig.setVideoSolutinIndex(int2str(nVideoIndexCurSel));
 	m_edChannelName.GetWindowTextW(strParam);
 	gHQConfig.setChannelName(cs2s(strParam));
+	gHQConfig.setSignalAccount(cs2s(strParam));
 	int nLanguage = m_comLanguage.GetCurSel();
 	gHQConfig.setLanguage(int2str(nLanguage));
 	m_comServerAccount.GetWindowTextW(strParam);
@@ -113,6 +114,12 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 		gHQConfig.setCameraDeviceID(cs2s(strDeviceId));
 		std::string strDeviceIdUtf8 = gbk2utf8(cs2s(strDeviceId));
 		CameraManager.SetCurDevice(s2cs(strDeviceIdUtf8));
+	}
+
+	if (IDOK == AfxMessageBox(_T("是否重启HQ导播程序（Y-是；N-否）"), MB_OKCANCEL)){
+
+		PostQuitMessage(0);
+		WinExec("restart.bat", SW_HIDE);
 	}
 
 //	CameraManager.TestCameraDevice(nullptr, FALSE);
@@ -225,6 +232,7 @@ void CDlgConfig::initCtrl()
 	m_edMediaUid.EnableWindow(FALSE);
 	std::string strChannelName = gHQConfig.getChannelName();
 	m_edChannelName.SetWindowTextW(s2cs(strChannelName));
+	std::string strSignalAccount = gHQConfig.getSignalAccount();
 	
 	m_comLanguage.AddString(_T("English"));
 	m_comLanguage.AddString(_T("Chinese"));

@@ -21,17 +21,26 @@ AgoraHQ视频SDK支持 iOS / NodeJs / Windows  等多个平台，你可以查看
 
 ```
 [LoginInfo]
+
 AppId=
+
 AppCertificateId=
+
 LoginUid=
+
 AppCertEnable=
+
 VideoSolutinIndex=
+
 CameraDeviceName=
+
 CameraDeviceID=
 
 ```
 
-最后使用 VC++2013 打开 AgoraHQ.sln，编译整个解决方案即可运行
+最后使用 VC++2013 打开 AgoraHQ.sln，编译整个解决方案即可运行，
+
+在程序主目录下有一个restart.bat脚本，需要将restart.bat copy到执行目录下.
 
 ## 运行环境
 * VC++ 2013(或更高版本)

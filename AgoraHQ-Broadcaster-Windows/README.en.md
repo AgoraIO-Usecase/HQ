@@ -21,16 +21,25 @@ First, create a developer account at [Agora.io](https://dashboard.agora.io/signi
 
 ```
 [LoginInfo]
+
 AppId=
+
 AppCertificateId=
+
 LoginUid=
+
 AppCertEnable=
+
 VideoSolutinIndex=
+
 CameraDeviceName=
+
 CameraDeviceID=
 ```
 
 Finally, Open AgoraHQ.sln with your VC++ 2013(or higher) and build all solution and run.
+
+There is a Restart.bat script in the home directory. You need to copy the script to the execution directory during the actual running.
 
 ## Developer Environment Requirements
 * VC++ 2013(or higher)
