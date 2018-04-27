@@ -75,7 +75,7 @@ public class JsonToString {
                 for (int i = 0; i < array.length(); i++) {
                     list.add(array.get(i));
                 }
-                returnObject = new Question(id, question, type, list, total_question, timeOut, encrypt);
+                returnObject = new Question(id, question, type, list, total_question, timeOut, encrypt, id);
                 //  returnObject = new Question(id, question, type, list);
                 break;
         }

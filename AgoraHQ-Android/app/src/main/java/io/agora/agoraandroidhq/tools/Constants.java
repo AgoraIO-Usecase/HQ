@@ -16,8 +16,8 @@ public class Constants {
     public static final int MESSAGE_SEND_ERROR = 1;
     public static final int MESSAGE_RECEIVE =2;
     public static final int MESSAGE_TOAST = 10;
-    public static final String MEDIA_APPID = #YOUR_MEDIA_APPID;
-    public static final String AGORA_APP_ID = #YOUR_SIGNAL_APPID;
+    public static final String MEDIA_APPID = #YOUR_APPID;
+    public static final String AGORA_APP_ID = #YOUR_APPID;
     public static final int LOGIN_AGORA_SIGNAL_SUCCESS = 100;
     public static final int LOGIN_AGORA_SIGNAL_FAIL = 101;
     public static final int AGORA_SIGNAL_RECEIVE = 102;

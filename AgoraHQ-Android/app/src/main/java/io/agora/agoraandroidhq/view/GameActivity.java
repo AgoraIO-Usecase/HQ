@@ -96,7 +96,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     private FrameLayout localSmallVideo;
     private Button disConnectBtn;
     private boolean isInVideoWithBroadcast = false;
-    private boolean isFirstTimeSEI = true;
     private boolean questionFlag = true;
     private EditText gang_up_channel_name;
     private Button createGangUpChannel;
@@ -617,11 +616,13 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 if (data != null) {
                     JSONObject object = null;
                     boolean wheatherCanPlay = false;
+                    boolean isDead = false;
                     try {
                         object = new JSONObject(data);
                         wheatherCanPlay = object.getBoolean("result");
-                    }catch (JSONException js){
+                    } catch (JSONException js) {
                         wheatherCanPlay = false;
+                        isDead = true;
                     }
                     if (wheatherCanPlay) {
                         GameControl.serverWheatherCanPlay = true;
@@ -642,6 +643,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                             }
                         }
                     } else {
+                        if (!isDead) {
+                            GameControl.serverWheatherCanPlay = false;
+                        }
                         String errMessage = object.getString("err");
                         GameControl.logD("checkWheatherCanPlay = " + errMessage);
                         toastLengthHelper(changeMessage(errMessage));
@@ -658,9 +662,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
             return getResources().getString(R.string.room_not_found);
         } else if (message.equals("Cannot_play")) {
             return getResources().getString(R.string.can_not_play);
-        } else if(message.equals("not a player "+GameControl.signalAccount)){
+        } else if (message.equals("not a player " + GameControl.signalAccount)) {
             return getResources().getString(R.string.not_a_player);
-        }else {
+        } else {
             return message;
         }
     }
@@ -701,7 +705,6 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                         time_reduce.setTextColor(Color.RED);
                         time_reduce.setText(GameControl.timeOut + " s");
                         questionFlag = true;
-                        isFirstTimeSEI = true;
                     }
                     break;
                 case 2:
@@ -1397,9 +1400,9 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
 
                     if (GameControl.currentQuestion != null) {
                         GameControl.logD(tag + "  current question = " + GameControl.currentQuestion.getId() + "  sid = " + sid);
-                        if (sid == GameControl.currentQuestion.getId() && isFirstTimeSEI) {
+                        if (sid == GameControl.currentQuestion.getSid()) {
                             showQuestion();
-                            isFirstTimeSEI = false;
+                            GameControl.currentQuestion.setSid(-1);
                         }
                     }
                 }

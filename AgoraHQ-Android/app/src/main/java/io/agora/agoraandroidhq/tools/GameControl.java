@@ -49,6 +49,7 @@ public class GameControl {
     }
     public static String logFileName = "HQ_Android_Log.txt";
 
+
     public static void logD(String message) {
         if (SHOW_LOG) {
             try {
