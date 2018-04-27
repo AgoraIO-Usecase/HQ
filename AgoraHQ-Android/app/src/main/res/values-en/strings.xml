@@ -21,7 +21,7 @@
     <string name="token_incorrect_text">Token Incorrect</string>
     <string name="login_agora_signal_fail">Login Fail</string>
     <string name="login_agora_signal_success">Login Success</string>
-    <string name="game_cannot_play">eliminated !</string>
+    <string name="game_cannot_play">Sorry,you were eliminated!</string>
     <string name="text_do_not_have_permission">You do not have permission!</string>
     <string name="app_title">Agora Trivia</string>
     <string name="text_channel_name_can_not_be_null">Channel Name can not be null</string>
@@ -51,5 +51,5 @@
     <string name="room_not_found">Channel does not exist</string>
     <string name="can_not_play">Game has already started, you will not be able to play!</string>
 
-    <string name="not_a_player">not a player</string>
+    <string name="not_a_player">Game has already started, you will not be able to play!</string>
 </resources>

@@ -20,7 +20,7 @@
     <string name="token_incorrect_text">Token Incorrect</string>
     <string name="login_agora_signal_fail">登陆失败</string>
     <string name="login_agora_signal_success">登陆成功</string>
-    <string name="game_cannot_play">已失去机会 ，不能玩!</string>
+    <string name="game_cannot_play">您已被淘汰，无法继续作答！</string>
     <string name="text_do_not_have_permission">你没有权限!</string>
     <string name="app_title">Agora HQ</string>
     <string name="text_channel_name_can_not_be_null">Channel Name不能为空</string>
@@ -48,7 +48,7 @@
 
     <string name="room_not_found">游戏房间不存在</string>
     <string name="can_not_play">游戏已开始，无法参与作答</string>
-    <string name="not_a_player">不是本局的玩家</string>
+    <string name="not_a_player">游戏已开始，无法参与作答</string>
 
     <drawable name="button_press">#8888</drawable>
 </resources>

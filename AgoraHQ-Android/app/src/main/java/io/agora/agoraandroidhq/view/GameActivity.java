@@ -419,7 +419,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     break;
                 case Constants.LOGIN_AGORA_SIGNAL_SUCCESS:
                     GameControl.logD(tag + "LOGIN_AGORA_SIGNAL_SUCCESS");
-                    toastHelper(getString(R.string.login_agora_signal_success));
+                    //toastHelper(getString(R.string.login_agora_signal_success));
                     break;
 
                 case Constants.AGORA_SIGNAL_RECEIVE:
@@ -615,10 +615,15 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                 }
                 // isFirst = false;
                 if (data != null) {
-                    JSONObject object = new JSONObject(data);
-                    boolean wheatherCanPlay = object.getBoolean("result");
+                    JSONObject object = null;
+                    boolean wheatherCanPlay = false;
+                    try {
+                        object = new JSONObject(data);
+                        wheatherCanPlay = object.getBoolean("result");
+                    }catch (JSONException js){
+                        wheatherCanPlay = false;
+                    }
                     if (wheatherCanPlay) {
-                        GameControl.logD(tag + " GameControl.checkWheatherCanPlay22 " + data);
                         GameControl.serverWheatherCanPlay = true;
                         GameControl.clientWheatherCanPlay = true;
                         GameControl.logD(tag + " GameControl.checkWheatherCanPlay33 " + GameControl.serverWheatherCanPlay + "  " + GameControl.clientWheatherCanPlay);
@@ -639,7 +644,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
                     } else {
                         String errMessage = object.getString("err");
                         GameControl.logD("checkWheatherCanPlay = " + errMessage);
-                        toastHelper(changeMessage(errMessage));
+                        toastLengthHelper(changeMessage(errMessage));
                     }
                     GameControl.logD(tag + " GameControl.serverWheatherCanPlay " + wheatherCanPlay);
                     object = null;
@@ -649,7 +654,7 @@ public class GameActivity extends BaseActivity implements AGEventHandler {
     }
 
     private String changeMessage(String message) {
-        if (message.equals("Room_not_found")) {
+        if (message.equals("room_not_found")) {
             return getResources().getString(R.string.room_not_found);
         } else if (message.equals("Cannot_play")) {
             return getResources().getString(R.string.can_not_play);
