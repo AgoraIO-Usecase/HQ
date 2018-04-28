@@ -792,6 +792,11 @@ void CDlgAnswer::notifyRoundListOfWinners(const std::vector<tagListOfWinners> &v
 	}
 	rect.right = rect.right + 10;
 	rect.bottom = rect.bottom - 50;
+	
+	m_btnUpdateQuestion.EnableScalar(FALSE);
+	m_btnStartAnswer.EnableScalar(FALSE);
+	m_btnStopAnswer.EnableScalar(FALSE);
+	m_btnResetQuestion.EnableWindow(TRUE);
 
 	m_DlgResult.ShowWindow(SW_SHOW);
 	m_DlgResult.MoveWindow(&rect, TRUE);
@@ -871,6 +876,11 @@ bool CDlgAnswer::error_info(WPARAM wParam, LPARAM lParam)
 		{
 			//AfxMessageBox(s2cs(szError));
 			m_ctlNoticeInfo.SetWindowTextW(s2cs(szError));
+			CString strErrorInfo;
+			if (!strcmp("http_error", szError)){
+				strErrorInfo = CHQLANG::getError_NetBad();
+			}
+			m_ctlNoticeInfo.SetWindowTextW(strErrorInfo);
 
 			delete[] szError;
 			szError = NULL;

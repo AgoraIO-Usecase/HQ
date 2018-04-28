@@ -26,6 +26,7 @@ namespace HQ_LANG{
 		const TCHAR* const KError_Quiz_going_on = _T("本轮次答题未结束，请先点击“停止答题”后，再开始下一轮次答题");
 		const TCHAR* const KError_No_more_quiz = _T("本局游戏所有题目均已下发作答");
 		const TCHAR* const KInfo_Reset = _T("重置题库成功,下一步选择SendQuestion");
+		const TCHAR* const KError_NetBad = _T("网络未连接,请检查网络设置");
 	}
 
 	namespace UK{
@@ -39,6 +40,7 @@ namespace HQ_LANG{
 		const TCHAR* const KError_Quiz_going_on = _T("The current round of question has not completed yet. Please click “Stop questions”to complete the current round, before send new questions");
 		const TCHAR* const KError_No_more_quiz = _T("All questions completed");
 		const TCHAR* const KInfo_Reset = _T("Reset Question Success.,the Next step is SendQuestion");
+		const TCHAR* const KError_NetBad = _T("The network does not work properly. Please check the network setting.");
 	}
 
 	struct CHQLANG
@@ -96,6 +98,17 @@ namespace HQ_LANG{
 				swprintf_s(tszBuffer, _T("%s "), ZH_CN::KInfo_Reset);
 			else
 				swprintf_s(tszBuffer, _T("%s "), UK::KInfo_Reset);
+
+			return tszBuffer;
+		}
+
+		static CString getError_NetBad(){
+
+			TCHAR tszBuffer[MAX_PATH] = { _T('\0') };
+			if (bLanguage)
+				swprintf_s(tszBuffer, _T("%s "), ZH_CN::KError_NetBad);
+			else
+				swprintf_s(tszBuffer, _T("%s "), UK::KError_NetBad);
 
 			return tszBuffer;
 		}
