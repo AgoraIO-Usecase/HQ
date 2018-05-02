@@ -162,7 +162,15 @@ extension QuestionView: ServerHelperDelagate {
             let jsonData:NSDictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! NSDictionary
             print(jsonData)
             if let err = jsonData["err"] {
-                AlertUtil.showAlert(message: err as! String)
+                switch err as! String {
+                case "incorrect_quiz_id":
+                    AlertUtil.showAlert(message: NSLocalizedString("The answer does not match the question", comment: "incorrect_quiz_id"))
+                case "game_closed":
+                    AlertUtil.showAlert(message: NSLocalizedString("Sorry, this question is closed", comment: "game_closed"))
+                default:
+                    AlertUtil.showAlert(message: err as! String)
+                }
+                
                 print("===================send answer failed with: \(err)=======================")
                 return
             }

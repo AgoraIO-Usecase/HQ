@@ -8,7 +8,7 @@
 "Please contact" = "请联系";
 
 /* title fot game going */
-"The game is going, cannot play" = "来晚了，下次早点吧";
+"Game has already started, you will not be able to play" = "游戏已开始，无法参与作答";
 
 /* wrong answer */
 "Wrong" = "答错了";
@@ -35,7 +35,7 @@
 "Save" = "保存";
 
 /* Server*/
-"http://76.231.168.66:9500" = "http://123.155.153.87:9500";
+"http://76.231.168.66:10000" = "http://123.155.153.87:10000";
 
 /* Leave Cheat */
 "Leave" = "离开";
@@ -60,3 +60,19 @@
 
 /* Reject */
 "Reject" = "拒绝";
+
+/* room_not_found */
+"Channel doesn’t exist" = "游戏房间不存在";
+
+/* already game over */
+"Sorry, you were eliminated" = "您已被淘汰，无法继续作答";
+
+/* incorrect_quiz_id */
+"The answer does not match the question" = "题目不一致，作答不成功";
+
+/* game_closed */
+"Sorry, this question is closed" = "答题已结束，作答不成功";
+
+/* login failed */
+"Login failed, please try again" = "登录失败";
+

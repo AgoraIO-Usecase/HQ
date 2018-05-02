@@ -80,7 +80,7 @@ class ServerHelper: NSObject {
                 list.add(tmpStr)
             }
 //            //用&拼接变成字符串的字典各项
-            let paramStr = list.componentsJoined(by: "&")
+            let paramStr = list.componentsJoined(by: "&").replacingOccurrences(of: " ", with: "")
             let url:URL! = URL(string: url + "?" + paramStr)
             request = URLRequest(url: url)
             print(url)

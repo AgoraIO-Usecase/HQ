@@ -208,7 +208,7 @@ extension MainViewController: AgoraHQSigDelegate{
     }
     
     func agoraHQSig(_ agoraHQSi: AgoraHQSigKit!, didOccurError error: Error!) {
-        AlertUtil.showAlert(message: "Agora Sig error: \(error!)")
+        AlertUtil.showAlert(message: NSLocalizedString("Login failed, please try again", comment: "login failed"))
     }
 }
 
@@ -220,6 +220,9 @@ extension MainViewController: UITextFieldDelegate {
             self.beginButton.isEnabled = true
         } else if textField.text!.count == 1 && string.isEmpty {
             self.beginButton.isEnabled = false
+        }
+        if string == " " {
+            return false
         }
         return true
     }

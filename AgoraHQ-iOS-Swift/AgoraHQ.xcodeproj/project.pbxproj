@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0F0F6ECD2011EE4500D91D08 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0F0F6ECF2011EE4500D91D08 /* Localizable.strings */; };
 		0F0F6ED22011EE4600D91D08 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0F0F6ED42011EE4600D91D08 /* InfoPlist.strings */; };
+		0F194B0A206C82280015DAC5 /* IJKMediaFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F194B09206C82280015DAC5 /* IJKMediaFramework.framework */; };
 		0F2C76122003212F00784575 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2C76112003212F00784575 /* AppDelegate.swift */; };
 		0F2C76172003212F00784575 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0F2C76152003212F00784575 /* Main.storyboard */; };
 		0F2C76192003212F00784575 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F2C76182003212F00784575 /* Assets.xcassets */; };
@@ -70,6 +71,7 @@
 		0F0F6ECA2011DCD400D91D08 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		0F0F6ECE2011EE4500D91D08 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		0F0F6ED32011EE4600D91D08 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		0F194B09206C82280015DAC5 /* IJKMediaFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IJKMediaFramework.framework; path = libs/IJKMediaFramework.framework; sourceTree = "<group>"; };
 		0F2C760E2003212F00784575 /* AgoraHQ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AgoraHQ.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F2C76112003212F00784575 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0F2C76162003212F00784575 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F194B0A206C82280015DAC5 /* IJKMediaFramework.framework in Frameworks */,
 				0F68FB8A2015C61D00E2437B /* libsqlite3.tbd in Frameworks */,
 				0F68FB882015C04200E2437B /* AgoraHQSigKit.framework in Frameworks */,
 				0FC0101D2007420F006DB1FA /* libcrypto.a in Frameworks */,
@@ -228,6 +231,7 @@
 		0F3138C620035F1100EA9374 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0F194B09206C82280015DAC5 /* IJKMediaFramework.framework */,
 				0F68FB892015C61D00E2437B /* libsqlite3.tbd */,
 				0F68FB872015C04200E2437B /* AgoraHQSigKit.framework */,
 				0FC0101C2007420F006DB1FA /* libcrypto.a */,
@@ -385,6 +389,7 @@
 				en,
 				Base,
 				"zh-Hans",
+				de,
 			);
 			mainGroup = 0F2C76052003212F00784575;
 			productRefGroup = 0F2C760F2003212F00784575 /* Products */;
@@ -676,7 +681,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 48TB6ZZL5S;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -695,8 +700,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraHQ;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "547dec9c-d14d-4fe1-8b6e-3ba6e1eb3de4";
+				PROVISIONING_PROFILE_SPECIFIER = AgoraIODev2017;
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraHQ/AgoraHQ-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

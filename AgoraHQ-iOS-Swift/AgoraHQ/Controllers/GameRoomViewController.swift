@@ -148,7 +148,6 @@ class GameRoomViewController: UIViewController {
     
     @IBAction func doBackPressed(_ sender: UIButton) {
         leaveChannel()
-        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func doChatButtonPressed(_ sender: UIButton) {
@@ -313,13 +312,13 @@ class GameRoomViewController: UIViewController {
     
     @objc func changeTime() {
         let status = timer.userInfo as! Bool
-        if pastTime > 0 {
+        if pastTime > 1 {
             if status {
-               questionView.answerTimeLabel.text = String(pastTime)
+               questionView.answerTimeLabel.text = String(pastTime - 1)
             }
             pastTime -= 1
         } else {
-            questionView.answerTimeLabel.text = String(pastTime)
+            questionView.answerTimeLabel.text = String(pastTime - 1)
             pastTime = answerTime
             questionView.isHidden = true
             isAnswering = false
@@ -383,6 +382,7 @@ extension GameRoomViewController {
     
     func joinMediaChannel() {
         rtcEngine = AgoraRtcEngineKit.createRtcEngine(withAppId: KeyCenter.AppId, delegate: self)
+//        rtcEngine.setParameters("{\"rtc.log_filter\": 65535}")
         rtcEngine.setChannelProfile(.channelProfile_LiveBroadcasting)
         rtcEngine.setClientRole(.clientRole_Broadcaster, withKey: nil)
         rtcEngine.setVideoProfile(._VideoProfile_360P, swapWidthAndHeight: true)
@@ -416,6 +416,7 @@ extension GameRoomViewController {
             rtcCheatEngine?.leaveChannel(nil)
         }
         agoraHQSigKit.logout()
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -428,6 +429,7 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
             cheatChannelUsers.append(uid)
             isInCheatChannel = true
         }
+
         print("=========================join agora media channel: \(channel) success===============")
     }
     
@@ -504,6 +506,7 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
                 print("==================delay \(date) - \(time) = \(date - time)======================")
                 if self.questionId == self.seiId {
                     self.addQusetionViewWith(qusetin: question, answers: answers)
+                    self.questionId = -2
                 }
             }
         } catch {
@@ -706,7 +709,7 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                     let paramDic = ["accept": false,
                                     "account": UserDefaults.standard.string(forKey: "name")!,
                                     "mediaUid": myUid!,
-                                    "gid": channelName] as [String : Any]
+                                    "gid": channelName!] as [String : Any]
                     self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
                     
                     AlertUtil.showAlert(message: NSLocalizedString("Host invite you to connect, But your are still in team mode!", comment: "can not connect"))
@@ -724,7 +727,7 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                     let paramDic = ["accept": true,
                                     "account": UserDefaults.standard.string(forKey: "name")!,
                                     "mediaUid": self.myUid!,
-                                    "gid": self.channelName] as [String : Any]
+                                    "gid": self.channelName!] as [String : Any]
                     self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
                     
                     self.rtcEngine.setParameters("{\"rtc.hq_mode\": {\"hq\": true, \"broadcaster\":true, \"bitrate\":400}}")
@@ -755,7 +758,7 @@ extension GameRoomViewController: AgoraHQSigDelegate{
                     let paramDic = ["accept": false,
                                     "account": UserDefaults.standard.string(forKey: "name")!,
                                     "mediaUid": self.myUid!,
-                                    "gid": self.channelName] as [String : Any]
+                                    "gid": self.channelName!] as [String : Any]
                     self.inviteResponsePoster?.postAction(to: inviteResponseUrl, with: paramDic)
                 })
                 
@@ -786,7 +789,15 @@ extension GameRoomViewController: ServerHelperDelagate {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! NSDictionary
             print(jsonData)
             if let err = jsonData["err"] {
-                AlertUtil.showAlert(message: err as! String)
+                switch err as! String {
+                case "room_not_found":
+                    AlertUtil.showAlert(message: NSLocalizedString("Channel doesn’t exist", comment: "room_not_found"))
+                case "\(UserDefaults.standard.string(forKey: "name")!) is already game over":
+                    AlertUtil.showAlert(message: NSLocalizedString("Sorry, you were eliminated", comment: "already game over"))
+                default:
+                    AlertUtil.showAlert(message: NSLocalizedString("Game has already started, you will not be able to play", comment: "title fot game going"))
+                }
+                
                 UserDefaults.standard.set(false, forKey: "status")
                 print("===================Check status failed with: \(err)=======================")
                 return
@@ -794,7 +805,7 @@ extension GameRoomViewController: ServerHelperDelagate {
             let status = jsonData["result"] as! Bool
             UserDefaults.standard.set(status, forKey: "status")
             if !status {
-                AlertUtil.showAlert(message: NSLocalizedString("The game is going, cannot play", comment: "title fot game going"))
+                AlertUtil.showAlert(message: NSLocalizedString("Game has already started, you will not be able to play", comment: "title fot game going"))
             } else {
                 AlertUtil.showAlert(message: NSLocalizedString("You can play now", comment: "title for relive"))
             }
