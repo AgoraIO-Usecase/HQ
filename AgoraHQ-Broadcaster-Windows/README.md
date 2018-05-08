@@ -3,6 +3,11 @@
 *Read this in other languages: [English](README.en.md)*
 
 这个开源示例项目演示了如何快速集成AgoraHQ。
+这个部分是HQ 3期部分的功能，changeLog below:
+- 更新了语言包
+- fix 当下发题目数目少于4个是crash
+- add Operational navigation
+- add update Config restart
 
 在这个示例项目中包含了以下功能：
 - 角色:主持人导播
