@@ -11,6 +11,7 @@ public:
 	~CCurlService();
 	static CCurlService* GetInstance();
 	static void ReleaseInstance();
+	void setServerUrl(const std::string &url);
 
 	IUrlServiceCallback* GetUrlCallback(){ return m_pServiceCallback; }
 
@@ -41,6 +42,7 @@ private:
 	const std::string http_get = "get";
 
 	IUrlServiceCallback* m_pServiceCallback = nullptr;
+	std::string resfapi_server_url;
 };
 
 #define AfxGetUrlService CCurlService::GetInstance

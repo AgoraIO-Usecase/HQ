@@ -368,6 +368,7 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	request.encrypt = (gHQConfig.getEnableEncrypt() != "" && gHQConfig.getEnableEncrypt() != "0");
 	request.gid = gHQConfig.getChannelName();
 	request.lang = gHQConfig.getLanguage();
+	AfxGetUrlService()->setServerUrl(CHQLANG::getResfAPIAddressIP());
 	AfxGetUrlService()->request_channel(request);
 	
 	return TRUE;

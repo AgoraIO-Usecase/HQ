@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 const std::string server_url = "http://123.155.153.87:10000";
+const std::string server_url_en = "http://76.231.168.66:10000";
 const std::string request_channel_method = "/v1/requestChannel";
 const std::string reset_method = "/v1/reset";
 const std::string publish_method = "/v1/publish";
@@ -111,6 +112,11 @@ namespace HQ_LANG{
 				swprintf_s(tszBuffer, _T("%s "), UK::KError_NetBad);
 
 			return tszBuffer;
+		}
+
+		static std::string getResfAPIAddressIP(){
+
+			return bLanguage == true ? server_url : server_url_en;
 		}
 	};
 }
