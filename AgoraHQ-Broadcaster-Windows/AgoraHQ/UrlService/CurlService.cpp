@@ -38,6 +38,11 @@ void CCurlService::ReleaseInstance()
 	curl_lock.UnLock();
 }
 
+void CCurlService::setServerUrl(const std::string &url)
+{
+	resfapi_server_url = url;
+}
+
 bool CCurlService::init_curl_service(IUrlServiceCallback* url_callback)
 {
 	m_pServiceCallback = url_callback;
@@ -162,7 +167,7 @@ bool CCurlService::request_channel(GetChannelRequest rquest_data)
 		OutputDebugStringA(js_request.c_str());
 	   std::string js_response = "";
 	   CURLcode code = CURLE_OK;
-	   if (!http_request(server_url + request_channel_method, js_request, http_post, "request_channel", js_response, code))
+	   if (!http_request(resfapi_server_url + request_channel_method, js_request, http_post, "request_channel", js_response, code))
 	   {
 		   std::string error = "";
 		   if (CURLE_OPERATION_TIMEDOUT == code)
@@ -198,7 +203,7 @@ bool CCurlService::reset(std::string gid)
 		OutputDebugStringA(js_request.c_str());
 		std::string js_response = "";
 		CURLcode code = CURLE_OK;
-		if (!http_request(server_url + reset_method, js_request, http_post, "reset", js_response, code))
+		if (!http_request(resfapi_server_url + reset_method, js_request, http_post, "reset", js_response, code))
 		{
 			std::string error = "";
 			if (CURLE_OPERATION_TIMEDOUT == code)
@@ -234,7 +239,7 @@ bool CCurlService::publish(std::string gid)
 		OutputDebugStringA(js_request.c_str());
 		std::string js_response = "";
 		CURLcode code = CURLE_OK;
-		if (!http_request(server_url + publish_method, js_request, http_post, "publish", js_response, code))
+		if (!http_request(resfapi_server_url + publish_method, js_request, http_post, "publish", js_response, code))
 		{
 			std::string error = "";
 			if (CURLE_OPERATION_TIMEDOUT == code)
@@ -277,7 +282,7 @@ bool CCurlService::stop_answer(std::string gid)
 			OutputDebugStringA(js_request.c_str());
 		OutputDebugStringA("\n");
 		CURLcode code = CURLE_OK;
-		if (!http_request(server_url + stop_answer_method, js_request, http_post, "stop_answer", js_response, code))
+		if (!http_request(resfapi_server_url + stop_answer_method, js_request, http_post, "stop_answer", js_response, code))
 		{
 			std::string error = "";
 			if (CURLE_OPERATION_TIMEDOUT == code)
@@ -309,7 +314,7 @@ bool CCurlService::invite_request(std::string gid, std::string uid)
 	{
 		std::string js_response = "";
 		CURLcode code = CURLE_OK;
-		if (!http_request(server_url + invite_request_method, js_request, http_post, "invite_request", js_response, code))
+		if (!http_request(resfapi_server_url + invite_request_method, js_request, http_post, "invite_request", js_response, code))
 		{
 			std::string error = "";
 			if (CURLE_OPERATION_TIMEDOUT == code)
@@ -343,7 +348,7 @@ bool CCurlService::invite_status(std::string gid)
 	{
 		std::string js_response = "";
 		CURLcode code = CURLE_OK;
-		if (!http_request(server_url + invite_status_method + "?gid=" + gid, js_request, http_get, "invite_request", js_response, code))
+		if (!http_request(resfapi_server_url + invite_status_method + "?gid=" + gid, js_request, http_get, "invite_request", js_response, code))
 		{
 			std::string error = "";
 			if (CURLE_OPERATION_TIMEDOUT == code)

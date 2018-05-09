@@ -37,8 +37,8 @@ void CDlgConfig::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_ChannelName, m_edChannelName);
 	DDX_Control(pDX, IDC_BUTTON_VIDEOTEST, m_btnSatrtPreview);
 	DDX_Control(pDX, IDC_STATIC_VIDEOTEST, m_trlTestVideo);
+	DDX_Control(pDX, IDC_COMBO_REGION, m_comRegion);
 	DDX_Control(pDX, IDC_COMBO_LANGUAGE, m_comLanguage);
-	DDX_Control(pDX, IDC_COMBO_ServerAccount, m_comServerAccount);
 	DDX_Control(pDX, IDC_CHECK_EnableEncrypt, m_btnEnableEncrypt);
 }
 
@@ -48,6 +48,7 @@ BEGIN_MESSAGE_MAP(CDlgConfig, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CONFIG_CANCLE, &CDlgConfig::OnBnClickedButtonConfigCancle)
 	ON_BN_CLICKED(IDC_BUTTON_VIDEOTEST, &CDlgConfig::OnBnClickedButtonVideotest)
 	ON_CBN_SELCHANGE(IDC_COMBO_CAMERA, &CDlgConfig::OnCbnSelchangeComboCamera)
+	ON_CBN_SELCHANGE(IDC_COMBO_REGION, &CDlgConfig::OnCbnSelchangeComboRegion)
 END_MESSAGE_MAP()
 
 
@@ -74,7 +75,7 @@ int CDlgConfig::getVideoIndex()
 
 void CDlgConfig::saveCameraID()
 {
-	OnBnClickedButtonConfigSave();
+	//OnBnClickedButtonConfigSave();
 }
 
 void CDlgConfig::OnBnClickedButtonConfigSave()
@@ -96,8 +97,8 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 	gHQConfig.setSignalAccount(cs2s(strParam));
 	int nLanguage = m_comLanguage.GetCurSel();
 	gHQConfig.setLanguage(int2str(nLanguage));
-	m_comServerAccount.GetWindowTextW(strParam);
-	gHQConfig.setServerAccount(cs2s(strParam));
+	int nRegion = m_comRegion.GetCurSel();
+	gHQConfig.setRegion(int2str(nRegion));
 	bool bEnableEncrypt = m_btnEnableEncrypt.GetCheck();
 	gHQConfig.setEnableEncrypt(int2str(bEnableEncrypt));
 	
@@ -242,7 +243,9 @@ void CDlgConfig::initCtrl()
 	}
 	gHQConfig.setLanguage(curLanguage);
 	m_comLanguage.SetCurSel(str2int(curLanguage));
+	m_comLanguage.EnableWindow(FALSE);
 
+#if 0
 	m_comServerAccount.AddString(_T("agora_hq_cc_server_en"));
 	m_comServerAccount.AddString(_T("agora_hq_cc_server"));
 	std::string curServerAccount = gHQConfig.getServerAccount();
@@ -251,6 +254,13 @@ void CDlgConfig::initCtrl()
 		nCurSel = m_comServerAccount.AddString(s2cs(curServerAccount));
 	}
 	m_comServerAccount.SetCurSel(nCurSel);
+#endif
+
+	int nRegion = str2int(gHQConfig.getRegion());
+	m_comRegion.AddString(_T("Overseas Edition"));
+	m_comRegion.AddString(_T("Chinese Edition"));
+	m_comRegion.SetCurSel(nRegion);
+	m_comLanguage.SetCurSel(nRegion);
 
 	std::string strVideoIndex = gHQConfig.getVideoSolutinIndex();
 	if ("" == strVideoIndex)
@@ -334,4 +344,12 @@ void CDlgConfig::OnCbnSelchangeComboCamera()
 			}
 		}
 	}
+}
+
+
+void CDlgConfig::OnCbnSelchangeComboRegion()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	int nCursel = m_comRegion.GetCurSel();
+	m_comLanguage.SetCurSel(nCursel);
 }

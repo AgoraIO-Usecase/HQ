@@ -332,6 +332,7 @@ __IMPLEMENT_INICONFIG_FUN(CConfigHQ, CameraDeviceID, INI_LoginInfo, INI_LoginInf
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, CameraDeviceName, INI_LoginInfo, INI_LoginInfo_CameraDeviceName)
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, SignalAccount, INI_LoginInfo, INI_LoginInfo_SignalAccount)
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, ServerAccount, INI_LoginInfo, INI_LoginInfo_ServerAccount)
+__IMPLEMENT_INICONFIG_FUN(CConfigHQ, Region, INI_LoginInfo, INI_LoginInfo_Region)
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, Language, INI_LoginInfo, INI_LoginInfo_Language)
 __IMPLEMENT_INICONFIG_FUN(CConfigHQ, EnableEncrypt, INI_LoginInfo, INI_LoginInfo_Encrypt)
 

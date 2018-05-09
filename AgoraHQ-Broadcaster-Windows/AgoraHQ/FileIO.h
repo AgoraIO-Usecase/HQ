@@ -95,6 +95,7 @@ protected:
 #define INI_LoginInfo_CameraDeviceName				"CameraDeviceName"
 #define INI_LoginInfo_SignalAccount								"SignalAccount"
 #define INI_LoginInfo_ServerAccount								"ServerAccount"
+#define INI_LoginInfo_Region											"Region"
 #define INI_LoginInfo_Language									"Language"
 #define INI_LoginInfo_Encrypt											"EnableEncrypt"
 
@@ -148,6 +149,7 @@ public:
 	__DECLARE_INICONFIG_FUN(CameraDeviceName)
 	__DECLARE_INICONFIG_FUN(SignalAccount)
 	__DECLARE_INICONFIG_FUN(ServerAccount)
+	__DECLARE_INICONFIG_FUN(Region)
 	__DECLARE_INICONFIG_FUN(Language)
 	__DECLARE_INICONFIG_FUN(EnableEncrypt)
 

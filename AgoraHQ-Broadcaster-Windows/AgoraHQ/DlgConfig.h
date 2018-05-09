@@ -38,7 +38,10 @@ private:
 	CEdit m_edChannelName;
 	CEdit m_edLanguage;
 	CComboBox m_comLanguage;
+#if 0
 	CComboBox m_comServerAccount;
+#endif
+	CComboBox m_comRegion;
 
 	CButton m_btnSatrtPreview;
 	CButton m_btnAppcertificateEnable;
@@ -53,4 +56,5 @@ private:
 public:
 	afx_msg void OnBnClickedButtonVideotest();
 	afx_msg void OnCbnSelchangeComboCamera();
+	afx_msg void OnCbnSelchangeComboRegion();
 };
