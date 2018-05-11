@@ -46,26 +46,28 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);..\SDK\Include;openssl\Include</IncludePath>
     <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\SDK\Lib\;openssl\Lib\</LibraryPath>
+    <OutDir>$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\32bit</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../sdk/include/;openssl\Include</IncludePath>
     <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\SDK\Lib\;openssl\Lib\</LibraryPath>
+    <OutDir>$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\32bit</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;DL_OPENGL="libobs-opengl.dll";DL_D3D11="libobs-d3d11.dll";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)AgoraHQ\curl\include;$(SolutionDir)AgoraHQ</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)AgoraHQ\curl\include;$(SolutionDir)AgoraHQ;$(SolutionDir)obs-studio\include;$(SolutionDir)AgoraHQ\obs-studio</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)AgoraHQ\curl\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)AgoraHQ\curl\lib;$(SolutionDir)/obs-studio/lib</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -87,14 +89,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)AgoraHQ\curl\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)AgoraHQ\curl\include;$(SolutionDir)obs-studio\include;$(SolutionDir)AgoraHQ\obs-studio;$(SolutionDir)AgoraHQ</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)AgoraHQ\curl\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)AgoraHQ\curl\lib;$(SolutionDir)/obs-studio/lib</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -123,14 +125,32 @@
     <ClInclude Include="CustomMsg.h" />
     <ClInclude Include="DlgAnswer.h" />
     <ClInclude Include="DlgAnswerResultStatics.h" />
+    <ClInclude Include="DlgColorKey.h" />
     <ClInclude Include="DlgConfig.h" />
     <ClInclude Include="DlgInput.h" />
     <ClInclude Include="DlgSetTimeBonus.h" />
+    <ClInclude Include="DShowCameraDlg.h" />
     <ClInclude Include="DynamicKey5.h" />
+    <ClInclude Include="ExtendObserver\AudioCapturePackageQueue.h" />
+    <ClInclude Include="ExtendObserver\AudioPlayPackageQueue.h" />
+    <ClInclude Include="ExtendObserver\BufferQueue.h" />
+    <ClInclude Include="ExtendObserver\ExtendAudioFrameObserver.h" />
+    <ClInclude Include="ExtendObserver\ExtendVideoFrameObserver.h" />
+    <ClInclude Include="ExtendObserver\VideoPackageQueue.h" />
+    <ClInclude Include="FFmpegSourceDlg.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="generatorSignalToken.h" />
+    <ClInclude Include="ImagePropertiesDlg.h" />
+    <ClInclude Include="obs-studio\audio-encoders.hpp" />
+    <ClInclude Include="obs-studio\BasicPreviewWnd.h" />
+    <ClInclude Include="obs-studio\BasicProperties.h" />
+    <ClInclude Include="obs-studio\DisplaySourceWnd.h" />
+    <ClInclude Include="obs-studio\window-agora-output.hpp" />
+    <ClInclude Include="obs-studio\window-basic-main-outputs.hpp" />
+    <ClInclude Include="OBSFiltersDlg.h" />
     <ClInclude Include="Packer.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SelectOBSSourceDlg.h" />
     <ClInclude Include="SignalInstance.h" />
     <ClInclude Include="SingleWrap.h" />
     <ClInclude Include="stdafx.h" />
@@ -153,10 +173,30 @@
     <ClCompile Include="commonFun.cpp" />
     <ClCompile Include="DlgAnswer.cpp" />
     <ClCompile Include="DlgAnswerResultStatics.cpp" />
+    <ClCompile Include="DlgColorKey.cpp" />
     <ClCompile Include="DlgConfig.cpp" />
     <ClCompile Include="DlgInput.cpp" />
     <ClCompile Include="DlgSetTimeBonus.cpp" />
+    <ClCompile Include="DShowCameraDlg.cpp" />
+    <ClCompile Include="ExtendObserver\AudioCapturePackageQueue.cpp" />
+    <ClCompile Include="ExtendObserver\AudioPlayPackageQueue.cpp" />
+    <ClCompile Include="ExtendObserver\BufferQueue.cpp" />
+    <ClCompile Include="ExtendObserver\ExtendAudioFrameObserver.cpp" />
+    <ClCompile Include="ExtendObserver\ExtendVideoFrameObserver.cpp" />
+    <ClCompile Include="ExtendObserver\VideoPackageQueue.cpp" />
+    <ClCompile Include="FFmpegSourceDlg.cpp" />
     <ClCompile Include="FileIO.cpp" />
+    <ClCompile Include="ImagePropertiesDlg.cpp" />
+    <ClCompile Include="obs-studio\audio-encoders.cpp" />
+    <ClCompile Include="obs-studio\BasicPreviewWnd.cpp" />
+    <ClCompile Include="obs-studio\BasicProperties.cpp" />
+    <ClCompile Include="obs-studio\DisplaySourceWnd.cpp" />
+    <ClCompile Include="obs-studio\window-agora-output.cpp" />
+    <ClCompile Include="obs-studio\window-basic-main-outputs.cpp" />
+    <ClCompile Include="obs-studio\window-basic-main-scene-collections.cpp" />
+    <ClCompile Include="obs-studio\window-basic-main-transitions.cpp" />
+    <ClCompile Include="OBSFiltersDlg.cpp" />
+    <ClCompile Include="SelectOBSSourceDlg.cpp" />
     <ClCompile Include="SignalInstance.cpp" />
     <ClCompile Include="SingleWrap.cpp" />
     <ClCompile Include="stdafx.cpp">

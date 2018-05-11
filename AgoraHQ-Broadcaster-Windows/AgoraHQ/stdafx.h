@@ -86,10 +86,47 @@ typedef struct tagListOfWinners
 
 #include <curl.h>
 #ifdef DEBUG
-    #pragma comment(lib, "libcurl-d_imp.lib")
+    #pragma comment(lib, "libcurl_imp.lib")
 #else
     #pragma comment(lib, "libcurl_imp.lib")
 #endif
+
+//OBS for ExtCapture
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <memory>
+#include <iomanip>
+#include <map>
+#include <mutex>
+#include <sstream>
+#include <functional>
+
+#include <util/bmem.h>
+#include <util/dstr.h>
+#include <util/platform.h>
+#include <util/profiler.hpp>
+#include <obs-config.h>
+#include <obs.hpp>
+#include <obs-data.h>
+#include <obs.h>
+#include <util/util.hpp>
+#include <util/windows/win-version.h>
+#include <util/threading.h>
+#pragma comment(lib, "obs.lib")
+
+#define WM_CREATE_PREVIEW     WM_USER + 1001
+#define WM_DISPLAY_PREVIEW    WM_USER + 1002
+#define WM_INVALIDATE_PREVIEW WM_USER + 1003
+#define WM_OBS_SOURCE_DELETE  WM_USER + 1004
+#define WM_OBS_SOURCE_MOVEUP  WM_USER + 1005
+#define WM_OBS_SOURCE_MOVEDOWN  WM_USER + 1006
+#define WM_OBS_SOURCE_MOVETOP  WM_USER + 1007
+#define WM_OBS_SOURCE_MOVEBOTTOM  WM_USER + 1008
+#define WM_OBS_SOURCE_FILTERS WM_USER + 1009
+#define IDC_BASEWND_VIDEO               20000
+//OBS end
+
 
 #ifdef _UNICODE
 #if defined _M_IX86
