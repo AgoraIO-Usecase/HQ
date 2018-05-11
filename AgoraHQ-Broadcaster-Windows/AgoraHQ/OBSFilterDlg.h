@@ -28,6 +28,7 @@ private:
 	CRect rcPreview;
 
 	CDlgColorKey* m_pDlgColorKey;
+	void AddNewFilter(const char *id);
 public:
 	virtual BOOL OnInitDialog();
 
