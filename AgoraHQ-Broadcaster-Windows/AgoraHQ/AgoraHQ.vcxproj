@@ -147,7 +147,7 @@
     <ClInclude Include="obs-studio\DisplaySourceWnd.h" />
     <ClInclude Include="obs-studio\window-agora-output.hpp" />
     <ClInclude Include="obs-studio\window-basic-main-outputs.hpp" />
-    <ClInclude Include="OBSFiltersDlg.h" />
+    <ClInclude Include="OBSFilterDlg.h" />
     <ClInclude Include="Packer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SelectOBSSourceDlg.h" />
@@ -195,7 +195,7 @@
     <ClCompile Include="obs-studio\window-basic-main-outputs.cpp" />
     <ClCompile Include="obs-studio\window-basic-main-scene-collections.cpp" />
     <ClCompile Include="obs-studio\window-basic-main-transitions.cpp" />
-    <ClCompile Include="OBSFiltersDlg.cpp" />
+    <ClCompile Include="OBSFilterDlg.cpp" />
     <ClCompile Include="SelectOBSSourceDlg.cpp" />
     <ClCompile Include="SignalInstance.cpp" />
     <ClCompile Include="SingleWrap.cpp" />

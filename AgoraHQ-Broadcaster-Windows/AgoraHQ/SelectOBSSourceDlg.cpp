@@ -108,8 +108,7 @@ CSelectOBSSourceDlg::CSelectOBSSourceDlg(const char* id, NAME_TYPE type, CString
 	, m_info(info)
 	, name_type(type)
 {
-	if (name_type == NAME_TYPE_SOURCE)
-	{
+	if (name_type == NAME_TYPE_SOURCE){
 		utf8_source_name = GetSourceDisplayName(id);//utf8
 		obs_source_t *source = nullptr;
 
@@ -129,6 +128,9 @@ CSelectOBSSourceDlg::CSelectOBSSourceDlg(const char* id, NAME_TYPE type, CString
 		utf8_source_name = text;
 		os_utf8_to_wcs_ptr(text.c_str(), text.length(), &wcs);
 		source_name = wcs;
+	}
+	else{
+
 	}
 }
 

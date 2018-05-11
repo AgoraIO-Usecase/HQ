@@ -177,10 +177,10 @@
     <ClInclude Include="ExtendObserver\VideoPackageQueue.h">
       <Filter>ExtendObserver</Filter>
     </ClInclude>
-    <ClInclude Include="OBSFiltersDlg.h">
+    <ClInclude Include="DlgColorKey.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="DlgColorKey.h">
+    <ClInclude Include="OBSFilterDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -296,10 +296,10 @@
     <ClCompile Include="ExtendObserver\VideoPackageQueue.cpp">
       <Filter>ExtendObserver</Filter>
     </ClCompile>
-    <ClCompile Include="OBSFiltersDlg.cpp">
+    <ClCompile Include="DlgColorKey.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="DlgColorKey.cpp">
+    <ClCompile Include="OBSFilterDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

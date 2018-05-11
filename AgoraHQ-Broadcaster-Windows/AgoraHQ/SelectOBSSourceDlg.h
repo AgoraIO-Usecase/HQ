@@ -31,7 +31,7 @@ public:
 private:
 	std::string source_id;
 	CString source_name = _T("");
-
+	CString filter_name = _T("");
 	NAME_TYPE name_type;
 public:
 	OBSSource newSource;

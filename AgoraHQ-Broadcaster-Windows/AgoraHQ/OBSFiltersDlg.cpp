@@ -30,7 +30,6 @@ void COBSFiltersDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TREE_FILTER_EFFECT, m_effectFilterTree);
 	DDX_Control(pDX, IDC_STATIC_SOURCE, m_staPreview);
-	DDX_Control(pDX, IDC_STATIC, m_staColorKey);
 }
 
 
@@ -61,14 +60,13 @@ BOOL COBSFiltersDlg::OnInitDialog()
 	preview->Create(NULL, NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, rcPreview, this, IDC_BASEWND_VIDEO + 101);
 	preview->ShowWindow(SW_SHOW);
 
-	if (nullptr == m_pDlgColorKey){
-		m_pDlgColorKey = new CDlgColorKey(&m_staColorKey);
-		//m_pDlgColorKey->m_pAgoraHQDlg = this;
-		//CRect rc = { 200, 340, 800, 600 };
-		m_pDlgColorKey->Create(CDlgColorKey::IDD, &m_staColorKey);
-		m_pDlgColorKey->ShowWindow(SW_SHOW);
-	}
-
+// 	if (nullptr == m_pDlgColorKey){
+// 		m_pDlgColorKey = new CDlgColorKey(this);
+// 		//m_pDlgColorKey->m_pAgoraHQDlg = this;
+// 		//CRect rc = { 200, 340, 800, 600 };
+// 		m_pDlgColorKey->Create(CDlgColorKey::IDD, this,);
+// 		m_pDlgColorKey->ShowWindow(SW_SHOW);
+// 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -86,7 +84,6 @@ void COBSFiltersDlg::OnBnClickedButtonDelFilter()
 {
 	
 }
-
 
 void COBSFiltersDlg::DrawPreview(void *data, uint32_t cx, uint32_t cy)
 {

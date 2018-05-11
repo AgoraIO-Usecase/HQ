@@ -23,7 +23,7 @@
 #include <sstream>
 #include <util/lexer.h>
 
-#include "OBSFiltersDlg.h"
+#include "OBSFilterDlg.h"
 #define SERVICE_PATH "service.json"
 //OBS end
 #ifdef _DEBUG
@@ -284,7 +284,7 @@ BOOL CAgoraHQDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* 
 		if (item)
 		{
 			OBSSource source = obs_sceneitem_get_source(item);
-			COBSFiltersDlg dlg(source, this);
+			COBSFilterDlg dlg(source, this);
 			dlg.DoModal();
 		}
 	
