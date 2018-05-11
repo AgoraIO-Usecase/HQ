@@ -222,7 +222,6 @@ BOOL CAgoraHQDlg::OnInitDialog()
 // OBS for ExtCapture
 void CAgoraHQDlg::InitOBSPreview()
 {
-	
 	RECT rcDesk;
 	GetDesktopWindow()->GetWindowRect(&rcDesk);
 	previewScale = (float)(m_rcWndLocal.bottom - m_rcWndLocal.top) / (rcDesk.bottom - rcDesk.top);
@@ -234,7 +233,6 @@ void CAgoraHQDlg::InitOBSPreview()
 	
 	obs_display_set_enabled(m_wndLocal.GetDisplay(), m_chkOBS.GetCheck());
 	EnableOBSCtrl(m_chkOBS.GetCheck());
-
 }
 
 void CAgoraHQDlg::EnableOBSCtrl(bool bEnable)
@@ -420,11 +418,8 @@ void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 	}
 }
 
-
-
 void CAgoraHQDlg::JoinChannel_Agora()
 {
-
 	if (NULL == m_pDlgConfig){
 		m_pDlgConfig = new CDlgConfig;
 		m_pDlgConfig->Create(CDlgConfig::IDD);
@@ -470,15 +465,17 @@ void CAgoraHQDlg::JoinChannel_Agora()
 	}
 
 	SetWindowText(s2cs(m_strChannelName));
+	m_pDlgAnswer->joinchannel();
 }
 
 void CAgoraHQDlg::LeaveChannel_Agora()
 {
+	m_pDlgAnswer->leaveChannel();
 	m_lpAgoraObject->LeaveCahnnel();
 	m_lpRtcEngine->stopPreview();
 }
 
-/*
+#if 0
 void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 {
 	// TODO:  在此添加控件通知处理程序代码
@@ -540,7 +537,8 @@ void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 		m_lpRtcEngine->stopPreview();
 	}
 }
-*/
+#endif
+
 void CAgoraHQDlg::initCtrl()
 {
 	std::string appcertEnable = gHQConfig.getAppCertEnable();
@@ -555,7 +553,7 @@ void CAgoraHQDlg::initCtrl()
 
 	m_nLastmileQuality = QUALITY_TYPE::QUALITY_DOWN;
 	CBitmap	bmpNetQuality;
-	bmpNetQuality.LoadBitmap(IDB_NETWORK_QUALITY);	
+	bmpNetQuality.LoadBitmap(IDB_NETWORK_QUALITY);
 	m_imgNetQuality.Create(32, 32, ILC_COLOR24 | ILC_MASK, 6, 1);
 	m_imgNetQuality.Add(&bmpNetQuality, RGB(0xFF, 0, 0xFF));	m_btnMediaParam.ShowWindow(SW_HIDE);
 
