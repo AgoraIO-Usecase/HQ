@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Dlg">
+      <UniqueIdentifier>{ec41b33a-fd2b-4f14-a70f-bf8814103ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{0850292c-dd97-4948-b0bd-3bf433c6a25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AgoraObject">
+      <UniqueIdentifier>{29bb0b2e-539f-440f-bfd0-de896007f9b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UrlService">
+      <UniqueIdentifier>{53f573ed-f951-431a-80a0-753ff0bda189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="obs-studio">
+      <UniqueIdentifier>{5d26f73a-6b54-4163-aaee-b417bda6669c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dlg\obs-studio-dlg">
+      <UniqueIdentifier>{e7cdc47d-5c2b-4cf0-b284-fb53a89338ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ExtendObserver">
+      <UniqueIdentifier>{506c1992-0996-4f95-8f99-d83fef2e5c18}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AgoraHQ.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgAnswer.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicKey5.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Packer.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="AgoraObject.h">
+      <Filter>AgoraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="FileIO.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="AGEngineEventHandler.h">
+      <Filter>AgoraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="commonFun.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="AGEventDef.h">
+      <Filter>AgoraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AgoraHQDlg.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="AGResourceVisitor.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="AGButton.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgConfig.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="AgoraCameraManager.h">
+      <Filter>AgoraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SignalInstance.h">
+      <Filter>AgoraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleWrap.h">
+      <Filter>AgoraObject</Filter>
+    </ClInclude>
+    <ClInclude Include="generatorSignalToken.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgAnswerResultStatics.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgInput.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgSetTimeBonus.h">
+      <Filter>Dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlService\CurlService.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlService\IServiceCallback.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlService\URLData.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlService\UrlServiceDll.h">
+      <Filter>UrlService</Filter>
+    </ClInclude>
+    <ClInclude Include="UrlServiceCallback.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomMsg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="obs-studio\audio-encoders.hpp">
+      <Filter>obs-studio</Filter>
+    </ClInclude>
+    <ClInclude Include="obs-studio\BasicPreviewWnd.h">
+      <Filter>obs-studio</Filter>
+    </ClInclude>
+    <ClInclude Include="obs-studio\BasicProperties.h">
+      <Filter>obs-studio</Filter>
+    </ClInclude>
+    <ClInclude Include="obs-studio\DisplaySourceWnd.h">
+      <Filter>obs-studio</Filter>
+    </ClInclude>
+    <ClInclude Include="obs-studio\window-basic-main-outputs.hpp">
+      <Filter>obs-studio</Filter>
+    </ClInclude>
+    <ClInclude Include="DShowCameraDlg.h">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="FFmpegSourceDlg.h">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="ImagePropertiesDlg.h">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectOBSSourceDlg.h">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClInclude>
+    <ClInclude Include="obs-studio\window-agora-output.hpp">
+      <Filter>obs-studio</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendObserver\AudioCapturePackageQueue.h">
+      <Filter>ExtendObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendObserver\AudioPlayPackageQueue.h">
+      <Filter>ExtendObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendObserver\BufferQueue.h">
+      <Filter>ExtendObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendObserver\ExtendAudioFrameObserver.h">
+      <Filter>ExtendObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendObserver\ExtendVideoFrameObserver.h">
+      <Filter>ExtendObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendObserver\VideoPackageQueue.h">
+      <Filter>ExtendObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgColorKey.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="OBSFilterDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChromaFilterDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="obs-filter-def.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AgoraHQ.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgAnswer.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="AgoraObject.cpp">
+      <Filter>AgoraObject</Filter>
+    </ClCompile>
+    <ClCompile Include="FileIO.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="AGEngineEventHandler.cpp">
+      <Filter>AgoraObject</Filter>
+    </ClCompile>
+    <ClCompile Include="commonFun.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="AgoraHQDlg.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="AGResourceVisitor.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="AGButton.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgConfig.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="AgoraCameraManager.cpp">
+      <Filter>AgoraObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SignalInstance.cpp">
+      <Filter>AgoraObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleWrap.cpp">
+      <Filter>AgoraObject</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgAnswerResultStatics.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgInput.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgSetTimeBonus.cpp">
+      <Filter>Dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="UrlService\CurlService.cpp">
+      <Filter>UrlService</Filter>
+    </ClCompile>
+    <ClCompile Include="UrlServiceCallback.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\audio-encoders.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\BasicPreviewWnd.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\BasicProperties.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\DisplaySourceWnd.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\window-basic-main-outputs.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\window-basic-main-scene-collections.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\window-basic-main-transitions.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="DShowCameraDlg.cpp">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="FFmpegSourceDlg.cpp">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePropertiesDlg.cpp">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectOBSSourceDlg.cpp">
+      <Filter>Dlg\obs-studio-dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="obs-studio\window-agora-output.cpp">
+      <Filter>obs-studio</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendObserver\AudioCapturePackageQueue.cpp">
+      <Filter>ExtendObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendObserver\AudioPlayPackageQueue.cpp">
+      <Filter>ExtendObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendObserver\BufferQueue.cpp">
+      <Filter>ExtendObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendObserver\ExtendAudioFrameObserver.cpp">
+      <Filter>ExtendObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendObserver\ExtendVideoFrameObserver.cpp">
+      <Filter>ExtendObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendObserver\VideoPackageQueue.cpp">
+      <Filter>ExtendObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgColorKey.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="OBSFilterDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChromaFilterDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AgoraHQ.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\AgoraHQ.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\Debug\HQConfig.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\AgoraHQ.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\IDB_NETWORK_QUALITY.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\AgoraHQ1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
