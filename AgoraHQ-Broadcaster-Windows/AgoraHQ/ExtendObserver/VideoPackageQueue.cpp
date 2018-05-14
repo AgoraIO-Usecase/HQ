@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "VideoPackageQueue.h"
 
-
 CVideoPackageQueue	*CVideoPackageQueue::m_lpVideoPackageQueue = NULL;
 
 CVideoPackageQueue::CVideoPackageQueue()
@@ -54,11 +53,10 @@ BOOL CVideoPackageQueue::PushVideoPackage(LPCVOID lpVideoPackage, SIZE_T nPackag
 		m_bufQueue.FreeBusyHead(NULL, 0);
 
 	LPVOID lpBuffer = m_bufQueue.AllocBuffer(FALSE);
-	if (lpBuffer == NULL) 
+	if (lpBuffer == NULL)
 		return FALSE;
 
 	_ASSERT(m_bufQueue.GetBytesPreUnit() >= nPackageLen);
-
 	memcpy_s(lpBuffer, m_bufQueue.GetBytesPreUnit(), lpVideoPackage, nPackageLen);
 
 	return TRUE;
@@ -81,6 +79,5 @@ BOOL CVideoPackageQueue::PopVideoPackage(LPVOID lpVideoPackage, SIZE_T *nPackage
 
 	*nPackageSize = m_nPackageSize;
 	m_bufQueue.FreeBusyHead(lpVideoPackage, m_nPackageSize);
-
 	return TRUE;
 }

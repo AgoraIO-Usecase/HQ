@@ -89,6 +89,7 @@ CAgoraHQDlg::CAgoraHQDlg(CWnd* pParent /*=NULL*/)
 CAgoraHQDlg::~CAgoraHQDlg()
 {
 //	outputHandler.reset();// del for test
+
 	agoraService = nullptr;
 	agoraOutputHandler.reset();
 
@@ -199,7 +200,7 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(m_hWnd);
 	if ("" == gHQConfig.getAppId()){
 
-		gHQConfig.setAppId("aab8b8f5a8cd4469a63042fcfafe7063");//319294c67d174c878cc7922551e6e773 5463902dc7254fdf8779989252e5e35f
+		gHQConfig.setAppId("319294c67d174c878cc7922551e6e773");//319294c67d174c878cc7922551e6e773 5463902dc7254fdf8779989252e5e35f
 	}
 
 	getChannelName();
@@ -665,7 +666,7 @@ LRESULT CAgoraHQDlg::onJoinChannelSuccess(WPARAM wParam, LPARAM lParam)
 	if (nullptr != m_pDlgAnswer){
 		m_pDlgAnswer->updateStatusToPublish();
 	}
-	m_chkOBS.EnableWindow(FALSE);
+
 	return 0;
 }
 
@@ -700,7 +701,7 @@ LRESULT CAgoraHQDlg::onLeaveChannel(WPARAM wParam, LPARAM lParam)
 
 	delete lpData; lpData = nullptr;
 	m_btnJoinChannel.SetWindowTextW(_T("JoinChannel"));
-	m_chkOBS.EnableWindow(TRUE);
+
 	return TRUE;
 }
 
@@ -1152,6 +1153,8 @@ static const double scaled_vals[] =
 
 static inline int AttemptToResetVideo(struct obs_video_info *ovi)
 {
+	TCHAR sz[MAX_PATH] = { 0 };
+	GetCurrentDirectory(MAX_PATH, sz);
 	return obs_reset_video(ovi);
 }
 
@@ -1954,15 +1957,6 @@ bool CAgoraHQDlg::StartStreaming()
 	}
 
 	return true;
-	// 	bool recordWhenStreaming = config_get_bool(GetGlobalConfig(),
-	// 		"BasicWindow", "RecordWhenStreaming");
-	// 	if (recordWhenStreaming)
-	// 		StartRecording();
-	// 
-	// 	bool replayBufferWhileStreaming = config_get_bool(GetGlobalConfig(),
-	// 		"BasicWindow", "ReplayBufferWhileStreaming");
-	// 	if (replayBufferWhileStreaming)
-	// 		StartReplayBuffer();
 }
 
 void CAgoraHQDlg::StopStreaming()
@@ -2013,18 +2007,18 @@ void CAgoraHQDlg::OBSInit()
 
 	if (!ResetAudio())
 	{
-		AfxMessageBox(_T("fuck"));
+		//AfxMessageBox(_T("fuck"));
 		//throw "Failed to initialize audio";
 	}
 	ret = ResetVideo();
 
 	switch (ret) {
 	case OBS_VIDEO_MODULE_NOT_FOUND:
-		throw "Failed to initialize video:  Graphics module not found";
+		AfxMessageBox(_T( "Failed to initialize video:  Graphics module not found"));
 	case OBS_VIDEO_NOT_SUPPORTED:
 		throw UNSUPPORTED_ERROR;
 	case OBS_VIDEO_INVALID_PARAM:
-		throw "Failed to initialize video:  Invalid parameters";
+		throw AfxMessageBox(_T("Failed to initialize video:  Invalid parameters"));
 	default:
 		if (ret != OBS_VIDEO_SUCCESS)
 			throw UNKNOWN_ERROR;
@@ -2065,37 +2059,6 @@ void CAgoraHQDlg::OBSInit()
 	InitPrimitives();
 	ResetAgoraOutput();
 	InitAgoraService();
-
-	// 	sceneDuplicationMode = config_get_bool(App()->GlobalConfig(),
-	// 		"BasicWindow", "SceneDuplicationMode");
-	// 	swapScenesMode = config_get_bool(App()->GlobalConfig(),
-	// 		"BasicWindow", "SwapScenesMode");
-	// 	editPropertiesMode = config_get_bool(App()->GlobalConfig(),
-	// 		"BasicWindow", "EditPropertiesMode");
-	// 
-	// 	if (!opt_studio_mode) {
-	// 		SetPreviewProgramMode(config_get_bool(App()->GlobalConfig(),
-	// 			"BasicWindow", "PreviewProgramMode"));
-	// 	}
-	// 	else {
-	// 		SetPreviewProgramMode(true);
-	// 		opt_studio_mode = false;
-	// 	}
-
-	// #define SET_VISIBILITY(name, control) \
-		// 	do { \
-		// 		if (config_has_user_value(App()->GlobalConfig(), \
-		// 					"BasicWindow", name)) { \
-		// 			bool visible = config_get_bool(App()->GlobalConfig(), \
-		// 					"BasicWindow", name); \
-		// 			ui->control->setChecked(visible); \
-		// 						} \
-		// 			} while (false)
-	// 
-	// 	SET_VISIBILITY("ShowListboxToolbars", toggleListboxToolbars);
-	// 	SET_VISIBILITY("ShowStatusBar", toggleStatusBar);
-	// #undef SET_VISIBILITY
-
 	{
 		disableSaving--;
 		//Load(savePath);//没有加载的就创建默认的scene
@@ -2632,20 +2595,6 @@ void CAgoraHQDlg::SetTransition(OBSSource transition)
 //OBS for ExtCapture
 
 // //开始推流
-// void CAgoraHQDlg::OnBtnClickedStart()
-// {
-// 	CAgoraExternalCaptureDlg* dlgParent = static_cast<CAgoraExternalCaptureDlg*>(GetParent());
-// 	if (!dlgParent->IsStreaming() && dlgParent->StartStreaming())
-// 	{
-// 		m_btnOBSStartStreaming.SetWindowText(_T("Stop"));
-// 	}
-// 	else if (dlgParent->IsStreaming())
-// 	{
-// 		m_btnOBSStartStreaming.SetWindowText(_T("Start"));
-// 		dlgParent->StopStreaming();
-// 	}
-// }
-// 
 SIZE CAgoraHQDlg::GetPreviewRect()
 {
 	RECT rc;
@@ -2725,8 +2674,7 @@ void CAgoraHQDlg::RenderMain(void *data, uint32_t cx, uint32_t cy)
 
 	UNUSED_PARAMETER(cx);
 	UNUSED_PARAMETER(cy);
-}
-
+}
 //end
 
 void CAgoraHQDlg::OnBnClickedButtonObsImage()
@@ -2761,6 +2709,7 @@ void CAgoraHQDlg::OnClickedCheckObs()
 	ScreenToClient(rc);
 	m_wndLocal.MoveWindow(&m_rcWndLocal);
 	m_wndLocal.ShowWindow(bEnableOBS);
+
 	CAgoraObject::GetAgoraObject()->EnableExtendAudioCapture(bEnableOBS, &m_exCapAudioFrameObserver);
 	CAgoraObject::GetAgoraObject()->EnableExtendVideoCapture(bEnableOBS, &m_exCapVideoFrameObserver);
 }
@@ -2812,33 +2761,20 @@ void CAgoraHQDlg::RemoveSelectedSceneItem()
 	}
 }
 
+
 void CAgoraHQDlg::JoinChannel_OBS()
 {
-	if (NULL == m_pDlgConfig){
-		m_pDlgConfig = new CDlgConfig;
-		m_pDlgConfig->Create(CDlgConfig::IDD);
-	}
-	m_lpAgoraObject->EnableLastmileTest(FALSE);
-	m_lpAgoraObject->SetClientRole(CLIENT_ROLE_TYPE::CLIENT_ROLE_BROADCASTER);
-	m_lpAgoraObject->SetChannelProfile(TRUE);
-	m_uId = str2int(gHQConfig.getLoginUid());
-
 	m_strChannelName = gHQConfig.getChannelName();
 	std::string strAppCertificateEnable = gHQConfig.getAppCertEnable();
-	std::string strAppcertificatId = gHQConfig.getAppCertificateId();
-	m_lpAgoraObject->SetSelfUID(m_uId);
-	m_lpAgoraObject->SetAppCert(s2cs(strAppcertificatId));
 
-	CAgoraObject::GetAgoraObject()->SetAudioProfile(TRUE, 44100, 1024);
-	CAgoraObject::GetAgoraObject()->SetVideoProfileEx(obs_output_x, obs_output_y, obs_fps, obs_videoBitrate);
-	BITMAPINFOHEADER bmi = { 0 };
-	bmi.biHeight = obs_output_y;
-	bmi.biWidth = obs_output_x;
-	CVideoPackageQueue::GetInstance()->SetVideoFormat(&bmi);
+	//StartAgora();
+
+
 	SetWindowText(s2cs(m_strChannelName));
 
 	config_set_string(basicConfig, "Video", "ColorFormat", agoraColorFormat.c_str());
 	ResetVideo();
+	calldata_t params = { 0 };
 
 	agoraOutputHandler->SetEncoderCallback(CAgoraHQDlg::obsVideoCallback, CAgoraHQDlg::obsAudioCallback);
 	if (!agoraOutputHandler->StartAgora(agoraService)){
@@ -2854,7 +2790,6 @@ void CAgoraHQDlg::JoinChannel_OBS()
 		CStringA strMediaChannelKey = m_lpAgoraObject->getDynamicMediaChannelKey(s2cs(m_strChannelName));
 		m_lpAgoraObject->JoinChannel(s2cs(m_strChannelName), m_uId, strMediaChannelKey);
 	}
-	m_pDlgAnswer->joinchannel();
 }
 
 void CAgoraHQDlg::LeaveChannel_OBS()
@@ -2863,8 +2798,9 @@ void CAgoraHQDlg::LeaveChannel_OBS()
 		agoraOutputHandler->StopAgora();
 		ResetVideo();
 	}
-	m_pDlgAnswer->leaveChannel();
-	m_lpAgoraObject->LeaveCahnnel();
+// 	obs_add_raw_video_callback(NULL, NULL);
+// 	obs_add_raw_audio_callback(NULL, NULL);
+	//StopAgora();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //agora output and agora service                                              //
@@ -2930,6 +2866,31 @@ void CAgoraHQDlg::InitAgoraServiceSettings()
 	obs_service_update(agoraService, settings);
 }
 
+void CAgoraHQDlg::SetPreviewPK(bool bPK)
+{
+	if (bPK){
+		CreateAgoraRemoteVideo();
+		/*ui->previewLayout->addWidget(remoteVideo);*/
+	}
+	else{
+// 		if (nullptr != remoteVideo){
+// 			ui->previewLayout->removeWidget(remoteVideo);
+// 			delete remoteVideo;
+// 			remoteVideo = nullptr;
+// 		}
+	}
+}
+
+void CAgoraHQDlg::CreateAgoraRemoteVideo()
+{
+	if (remoteVideo == nullptr)
+	{
+// 		remoteVideo = new QWidget;
+// 		remoteVideo->setSizePolicy(QSizePolicy::Expanding,
+// 			QSizePolicy::Expanding);
+	}
+}
+
 void CAgoraHQDlg::obsVideoCallback(uint8_t* data, void* param)
 {
 	CAgoraHQDlg* pAgoraHQDlg = static_cast<CAgoraHQDlg*>(param);
@@ -2937,11 +2898,11 @@ void CAgoraHQDlg::obsVideoCallback(uint8_t* data, void* param)
 	
 	int out_x = pAgoraHQDlg->obs_output_x;
 	int out_y = pAgoraHQDlg->obs_output_y;
-
-	if (lpPackageQueue->GetBufferSize() <  static_cast<SIZE_T>(out_x*out_y))
+	
+	if (lpPackageQueue->GetBufferSize() < static_cast<SIZE_T>(out_x*out_y))
 		return;
 
-	lpPackageQueue->PushVideoPackage(data, out_y*out_x*3/2);
+	lpPackageQueue->PushVideoPackage(data, out_y*out_x);
 }
 
 void CAgoraHQDlg::obsAudioCallback(struct encoder_frame* data, int planes, void* param)

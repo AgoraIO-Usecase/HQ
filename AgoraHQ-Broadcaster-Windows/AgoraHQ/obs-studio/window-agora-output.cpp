@@ -195,6 +195,9 @@ void AgoraOutput::StopAgora(bool force)
 		obs_output_force_stop(agoraOutput);
 	else
 		obs_output_stop(agoraOutput);
+
+	obs_encoder_add_agora_audio_callback(pcmStreaming, NULL, NULL);
+	obs_encoder_add_agora_video_callback(yuvStreaming, NULL, NULL);
 }
 
 void AgoraOutput::LoadAgoraPreset_yuv(const char *encoderId)

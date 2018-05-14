@@ -74,7 +74,9 @@ void CFFmpegSourceDlg::OnBnClickedButtonMoviePath()
 							*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;|\
 							All Audio Files(*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;)|\
 							*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;||"); //All Files (*.*)|*.*
-	
+	TCHAR szOldCurrentDirector[MAX_PATH] = { 0 };
+	GetCurrentDirectory(MAX_PATH, szOldCurrentDirector);
+
 	CFileDialog fileDlg(TRUE, NULL, NULL,
 		OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilters);
 
@@ -86,6 +88,7 @@ void CFFmpegSourceDlg::OnBnClickedButtonMoviePath()
 		{
 			m_strMoviePath = pathName;
 			m_edtMovie.SetWindowText(m_strMoviePath);
+			SetCurrentDirectory(szOldCurrentDirector);
 		}
 	}
 }

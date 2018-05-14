@@ -36,3 +36,4 @@ bool CExtendAudioFrameObserver::onPlaybackAudioFrameBeforeMixing(unsigned int ui
 {
 	return true;
 }
+

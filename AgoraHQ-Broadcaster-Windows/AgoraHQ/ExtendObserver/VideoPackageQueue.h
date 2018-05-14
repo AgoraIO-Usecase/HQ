@@ -11,7 +11,6 @@ protected:
 public:
 	static CVideoPackageQueue *GetInstance();
 	static void CloseInstance();
-
 	void SetVideoFormat(const BITMAPINFOHEADER *lpInfoHeader);
 	void GetVideoFormat(BITMAPINFOHEADER *lpInfoHeader);
 

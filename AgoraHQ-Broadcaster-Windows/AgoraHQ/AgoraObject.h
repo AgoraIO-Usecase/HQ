@@ -106,7 +106,7 @@ public:
 
 	BOOL EnableExtendAudioCapture(BOOL bEnable, IAudioFrameObserver* lpAudioFrameObserver);
 	BOOL EnableExtendVideoCapture(BOOL bEnable, IVideoFrameObserver* lpVideoFrameObserver);
-
+	BOOL SetAudioProfile(int nSampleRate, int nChannels, int nSamplesPerCall);
 	BOOL EnableAudioRecording(BOOL bEnable, LPCTSTR lpFilePath);
 
 	BOOL EnableLastmileTest(BOOL bEnable);

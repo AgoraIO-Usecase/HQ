@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "DynamicKey5.h"
 #include "utils.h"
+#include <tchar.h>
 using namespace agora::tools;
 
 CAgoraObject *CAgoraObject::m_lpAgoraObject = NULL;
@@ -573,6 +574,12 @@ BOOL CAgoraObject::EnableExtendVideoCapture(BOOL bEnable, IVideoFrameObserver* l
 	return nRet == 0 ? TRUE : FALSE;
 }
 
+BOOL CAgoraObject::SetAudioProfile(int nSampleRate, int nChannels, int nSamplesPerCall)
+{
+	RtcEngineParameters rep(m_lpAgoraEngine);
+	int ret = rep.setRecordingAudioFrameParameters(nSampleRate, nChannels, RAW_AUDIO_FRAME_OP_MODE_READ_WRITE, nSamplesPerCall);
+	return ret == 0 ? true : false;
+}
 
 BOOL CAgoraObject::EnableAudioRecording(BOOL bEnable, LPCTSTR lpFilePath)
 {

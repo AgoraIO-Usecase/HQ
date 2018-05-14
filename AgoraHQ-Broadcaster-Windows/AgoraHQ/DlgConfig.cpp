@@ -37,6 +37,7 @@ void CDlgConfig::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_ChannelName, m_edChannelName);
 	DDX_Control(pDX, IDC_BUTTON_VIDEOTEST, m_btnSatrtPreview);
 	DDX_Control(pDX, IDC_STATIC_VIDEOTEST, m_trlTestVideo);
+	DDX_Control(pDX, IDC_COMBO_REGION, m_comRegion);
 	DDX_Control(pDX, IDC_COMBO_LANGUAGE, m_comLanguage);
 	DDX_Control(pDX, IDC_CHECK_EnableEncrypt, m_btnEnableEncrypt);
 }
@@ -47,6 +48,7 @@ BEGIN_MESSAGE_MAP(CDlgConfig, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_CONFIG_CANCLE, &CDlgConfig::OnBnClickedButtonConfigCancle)
 	ON_BN_CLICKED(IDC_BUTTON_VIDEOTEST, &CDlgConfig::OnBnClickedButtonVideotest)
 	ON_CBN_SELCHANGE(IDC_COMBO_CAMERA, &CDlgConfig::OnCbnSelchangeComboCamera)
+	ON_CBN_SELCHANGE(IDC_COMBO_REGION, &CDlgConfig::OnCbnSelchangeComboRegion)
 END_MESSAGE_MAP()
 
 

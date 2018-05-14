@@ -289,6 +289,7 @@ public:
 		void InitAgoraServiceSettings();
 		void SetAgoraService(obs_service_t* service);
 		void ResetAgoraOutput();
+		void CreateAgoraRemoteVideo();
 
 private:
 	OBSService agoraService;
@@ -298,6 +299,7 @@ private:
 	//std::string obsColorFormatReplacedByAgora = "NV12";
 	HWND remoteVideo = nullptr;
 	std::list<uint32_t> m_lstUids;
+	void SetPreviewPK(bool bPK);
 	uint32_t remote_uid = 0;
 	uint32_t loacal_uid = 0;
 private:

@@ -1,15 +1,18 @@
 #include "stdafx.h"
 #include "ExtendVideoFrameObserver.h"
 
+//FILE* fp = NULL;
 
 CExtendVideoFrameObserver::CExtendVideoFrameObserver()
 {
+//	fp = fopen("D:\\HQ_onCaptureVideoFrame_yuv.i420", "ab+");
 	m_lpImageBuffer = new BYTE[0x800000];
 }
 
 
 CExtendVideoFrameObserver::~CExtendVideoFrameObserver()
 {
+//	fclose(fp);
 	delete[] m_lpImageBuffer;
 }
 
@@ -37,6 +40,7 @@ bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 	videoFrame.type = FRAME_TYPE_YUV420;
 	videoFrame.rotation = 0;
 
+	/*fwrite(m_lpImageBuffer, 1, videoFrame.width*videoFrame.height*3/2, fp);*/
 	return true;
 }
 
