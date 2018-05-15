@@ -125,7 +125,7 @@ typedef struct tagListOfWinners
 #define WM_OBS_SOURCE_MOVEBOTTOM  WM_USER + 1008
 #define WM_OBS_SOURCE_FILTERS WM_USER + 1100
 #define WM_OBS_ADD_FILTER WM_USER + 1101
-
+#define WM_OBS_DEL_CHROM_FILTER WM_USER+1102
 #define IDC_BASEWND_VIDEO               20000
 //OBS end
 
