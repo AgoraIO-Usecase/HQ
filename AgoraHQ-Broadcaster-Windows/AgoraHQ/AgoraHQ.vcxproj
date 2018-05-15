@@ -79,6 +79,15 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)obs-sdk\bin\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\" /Y /D /E
+xcopy "$(SolutionDir)obs-sdk\data\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\data\" /Y /D /E
+xcopy "$(SolutionDir)obs-sdk\obs-plugins\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\obs-plugins\" /Y /D /E</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -108,6 +117,15 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)obs-sdk\bin\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\" /Y /D /E
+xcopy "$(SolutionDir)obs-sdk\data\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\data\" /Y /D /E
+xcopy "$(SolutionDir)obs-sdk\obs-plugins\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\obs-plugins\" /Y /D /E</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

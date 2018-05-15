@@ -81,6 +81,7 @@ CAgoraHQDlg::CAgoraHQDlg(CWnd* pParent /*=NULL*/)
 	m_agInviteRemoteAudience.remoteAccount = "";
 	m_agInviteRemoteAudience.isValid = false;
 	m_rcWndLocal = { 0, 0, 0, 0 };//OBS for ExtCapture
+	m_rcNetQuality = CRect( 16, 16, 48, 48 );
 }
 
 
@@ -321,10 +322,6 @@ void CAgoraHQDlg::OnPaint()
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
-		m_rcIcon.left = x;
-		m_rcIcon.top = y;
-		m_rcIcon.right = x + cxIcon;
-		m_rcIcon.bottom = y + cyIcon;
 		// »æÖÆÍ¼±ê
 		dc.DrawIcon(x, y, m_hIcon);
 	}
@@ -731,7 +728,7 @@ LRESULT CAgoraHQDlg::onLastMileQuality(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(szBuffer);
 
 	delete lpData; lpData = nullptr;
-	InvalidateRect(&m_rcIcon, TRUE);
+	InvalidateRect(m_rcNetQuality, TRUE);
 	//m_lpAgoraObject->EnableLastmileTest(FALSE);
 
 	switch (m_nLastmileQuality)
@@ -808,6 +805,9 @@ LRESULT CAgoraHQDlg::onFirstRmoteVideoFrame(WPARAM wParam, LPARAM lParam)
 			vcRemote.uid = lpData->uid;
 			vcRemote.view = m_ctlRemoteWnd;
 			m_mapRemoteView[lpData->uid] = m_ctlRemoteWnd;
+
+			m_ctlRemoteWnd.GetWindowRect(&m_rcRemote);
+			ScreenToClient(&m_rcRemote);
 
 			CRect  crLocal;
 			m_ctlShowPic.GetWindowRect(&crLocal);
@@ -886,7 +886,8 @@ LRESULT CAgoraHQDlg::onUserMuteVideo(WPARAM wParam, LPARAM lParam)
 				}
 
 				m_mapRemoteView.erase(it);
-				Invalidate();
+				
+				InvalidateRect(&m_rcRemote);
 			}
 		}
 		else{
