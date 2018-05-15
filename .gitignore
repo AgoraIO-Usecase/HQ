@@ -1,2 +1,10 @@
 node_modules
 log
+rundir/
+ipch/
+Debug/
+Release/
+*.sdf
+*.aps
+*.suo
+*.opensdf

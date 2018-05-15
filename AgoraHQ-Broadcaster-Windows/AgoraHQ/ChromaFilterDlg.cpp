@@ -82,6 +82,16 @@ BOOL CChromaFilterDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRES
 		ReloadProperties(filter);
 	 	settings = obs_source_get_settings(filter);
 	}
+	else if (WM_OBS_DEL_CHROM_FILTER == message){
+		if (_filter && IDOK ==
+			AfxMessageBox(_T("Are you sure you want to remove \"Chroma Key\""), MB_OKCANCEL))
+		{
+			obs_source_filter_remove(_source, _filter);
+			settings = obs_source_get_settings(_filter);
+			m_cmbKeyColorType.ResetContent();
+			m_btnAddFilter.EnableWindow(TRUE);
+		}
+	}
 	return CDialogEx::OnWndMsg(message, wParam, lParam, pResult);
 }
 
@@ -258,14 +268,15 @@ void CChromaFilterDlg::OnSelchangeComboKeyColorType()
 
 void CChromaFilterDlg::OnBnClickedButtonDelChromaFilter()
 {
-	if (_filter && IDOK ==
-		AfxMessageBox(_T("Are you sure you want to remove \"Chroma Key\""), MB_OKCANCEL))
+	obs_source_enum_filters(_source,
+		[](obs_source_t*, obs_source_t *filter, void *p)
 	{
-		obs_source_filter_remove(_source, _filter);
-		settings = obs_source_get_settings(_filter);
-		m_cmbKeyColorType.ResetContent();
-		m_btnAddFilter.EnableWindow(TRUE);
-	}
+		CChromaFilterDlg *window =
+			reinterpret_cast<CChromaFilterDlg*>(p);
+		::SendMessage(window->GetSafeHwnd(), WM_OBS_DEL_CHROM_FILTER, (WPARAM)filter, 0);
+	}, this);
+
+	
 }
 
 

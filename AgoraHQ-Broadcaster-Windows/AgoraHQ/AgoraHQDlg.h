@@ -134,7 +134,7 @@ private:
 
 	void JoinChannel_Agora();
 	void LeaveChannel_Agora();
-	CRect m_rcIcon;
+	CRect m_rcNetQuality;
 	//OBS for ExtCapture
 	void JoinChannel_OBS();
 	void LeaveChannel_OBS();
@@ -267,6 +267,7 @@ private:
 	//std::vector<std::string> m_vecOBSSources;
 	CBasicPreviewWnd m_wndLocal; //OBS for ExtCapture
 	RECT m_rcWndLocal;
+	CRect m_rcRemote;
 public:
 
 	int           previewX = 0, previewY = 0;
