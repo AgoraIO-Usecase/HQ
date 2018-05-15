@@ -117,7 +117,7 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 		CameraManager.SetCurDevice(s2cs(strDeviceIdUtf8));
 	}
 
-	if (IDOK == AfxMessageBox(_T("是否重启HQ导播程序（Y-是；N-否）"), MB_OKCANCEL)){
+	if (IDOK == AfxMessageBox(_T("Whether to reboot the HQ Broadcast program（Y-Yes；N-No）"), MB_OKCANCEL)){
 
 		PostQuitMessage(0);
 		WinExec("restart.bat", SW_HIDE);
