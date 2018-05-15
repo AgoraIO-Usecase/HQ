@@ -30,4 +30,5 @@ public:
 	CEdit m_edtImagePath;
 	CString m_strImagePath = _T("");
 	CButton m_btnImagePath;
+	CStatic m_staImage;
 };

@@ -34,7 +34,6 @@
 #define EVENT_TIMER_INVITEREMOTE 1
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
-
 class CAboutDlg : public CDialogEx
 {
 public:
@@ -81,8 +80,7 @@ CAgoraHQDlg::CAgoraHQDlg(CWnd* pParent /*=NULL*/)
 	m_agInviteRemoteAudience.isAccpet = false;
 	m_agInviteRemoteAudience.remoteAccount = "";
 	m_agInviteRemoteAudience.isValid = false;
-
-	m_rcWndLocal = { 38, 107, 916, 731 };//OBS for ExtCapture
+	m_rcWndLocal = { 0, 0, 0, 0 };//OBS for ExtCapture
 }
 
 
@@ -91,7 +89,6 @@ CAgoraHQDlg::~CAgoraHQDlg()
 //	outputHandler.reset();// del for test
 	agoraService = nullptr;
 	agoraOutputHandler.reset();
-
 	obs_display_remove_draw_callback(m_wndLocal.GetDisplay(),
 		CAgoraHQDlg::RenderMain, this);
 
@@ -199,7 +196,7 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(m_hWnd);
 	if ("" == gHQConfig.getAppId()){
 
-		gHQConfig.setAppId("aab8b8f5a8cd4469a63042fcfafe7063");//319294c67d174c878cc7922551e6e773 5463902dc7254fdf8779989252e5e35f
+		gHQConfig.setAppId("319294c67d174c878cc7922551e6e773");//319294c67d174c878cc7922551e6e773 5463902dc7254fdf8779989252e5e35f
 	}
 
 	getChannelName();
@@ -212,7 +209,7 @@ BOOL CAgoraHQDlg::OnInitDialog()
 		::PostQuitMessage(0);
 		return FALSE;
 	}
-
+	
 	initCtrl();
 	initAgoraMediaRtc();
 	InitOBSPreview();
@@ -224,6 +221,7 @@ void CAgoraHQDlg::InitOBSPreview()
 {
 	RECT rcDesk;
 	GetDesktopWindow()->GetWindowRect(&rcDesk);
+	m_ctlShowPic.GetWindowRect(&m_rcWndLocal);
 	previewScale = (float)(m_rcWndLocal.bottom - m_rcWndLocal.top) / (rcDesk.bottom - rcDesk.top);
 
 	m_wndLocal.SetReceiveWnd(m_hWnd);
@@ -323,7 +321,10 @@ void CAgoraHQDlg::OnPaint()
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
-
+		m_rcIcon.left = x;
+		m_rcIcon.top = y;
+		m_rcIcon.right = x + cxIcon;
+		m_rcIcon.bottom = y + cyIcon;
 		// 绘制图标
 		dc.DrawIcon(x, y, m_hIcon);
 	}
@@ -337,6 +338,11 @@ void CAgoraHQDlg::OnPaint()
 void CAgoraHQDlg::OnClose()
 {
 	//CAgoraSignalInstance::getSignalInstance()->ReleaseInstance();
+	if (agoraOutputHandler->AgoraActive()){
+		m_lpAgoraObject->EnableExtendVideoCapture(FALSE, NULL);
+		m_lpAgoraObject->EnableExtendAudioCapture(FALSE, NULL);
+		agoraOutputHandler->StopAgora();
+	}
 	if (m_lpAgoraObject){
 
 		m_lpAgoraObject->LeaveCahnnel();
@@ -648,7 +654,7 @@ LRESULT CAgoraHQDlg::onJoinChannelSuccess(WPARAM wParam, LPARAM lParam)
 	CString newTitle;
 	newTitle.Format(_T("[%s] [uid: %ld] %s"), _T("HQ_Windows"), lpData->uid, titleVideo);
 	SetWindowText(newTitle);
-	Invalidate();
+	//Invalidate();
 
 	if (lpData)
 	{
@@ -725,7 +731,7 @@ LRESULT CAgoraHQDlg::onLastMileQuality(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(szBuffer);
 
 	delete lpData; lpData = nullptr;
-	Invalidate(TRUE);
+	InvalidateRect(&m_rcIcon, TRUE);
 	//m_lpAgoraObject->EnableLastmileTest(FALSE);
 
 	switch (m_nLastmileQuality)
@@ -2759,7 +2765,7 @@ void CAgoraHQDlg::OnClickedCheckObs()
 	CRect rc;
 	m_ctlShowPic.GetWindowRect(&rc);
 	ScreenToClient(rc);
-	m_wndLocal.MoveWindow(&m_rcWndLocal);
+	m_wndLocal.MoveWindow(&rc);
 	m_wndLocal.ShowWindow(bEnableOBS);
 	CAgoraObject::GetAgoraObject()->EnableExtendAudioCapture(bEnableOBS, &m_exCapAudioFrameObserver);
 	CAgoraObject::GetAgoraObject()->EnableExtendVideoCapture(bEnableOBS, &m_exCapVideoFrameObserver);
@@ -2829,12 +2835,13 @@ void CAgoraHQDlg::JoinChannel_OBS()
 	m_lpAgoraObject->SetSelfUID(m_uId);
 	m_lpAgoraObject->SetAppCert(s2cs(strAppcertificatId));
 
-	CAgoraObject::GetAgoraObject()->SetAudioProfile(TRUE, 44100, 1024);
+	CAgoraObject::GetAgoraObject()->SetAudioProfile(44100, 2, 2*1024);
 	CAgoraObject::GetAgoraObject()->SetVideoProfileEx(obs_output_x, obs_output_y, obs_fps, obs_videoBitrate);
 	BITMAPINFOHEADER bmi = { 0 };
 	bmi.biHeight = obs_output_y;
 	bmi.biWidth = obs_output_x;
 	CVideoPackageQueue::GetInstance()->SetVideoFormat(&bmi);
+
 	SetWindowText(s2cs(m_strChannelName));
 
 	config_set_string(basicConfig, "Video", "ColorFormat", agoraColorFormat.c_str());
@@ -2946,13 +2953,8 @@ void CAgoraHQDlg::obsVideoCallback(uint8_t* data, void* param)
 
 void CAgoraHQDlg::obsAudioCallback(struct encoder_frame* data, int planes, void* param)
 {
-	CAudioCapturePackageQueue *lpPackageQueue = CAudioCapturePackageQueue::GetInstance();
-
-	if (lpPackageQueue->GetAudioPackageSize() < data->frames*planes)
-	 	return;
-
+	CAgoraHQDlg* pAgoraHQDlg = static_cast<CAgoraHQDlg*>(param);
 	DWORD dwBytesToWrite = data->frames*planes;
- 	DWORD dwBytesWritten = 0;
-
-	lpPackageQueue->PushAudioPackage(data->data[0], data->frames*planes);
+	DWORD dwBytesWritten = 0;
+	pAgoraHQDlg->m_exCapAudioFrameObserver.pCircleBuffer->writeBuffer(data->data[0], dwBytesToWrite);
 }

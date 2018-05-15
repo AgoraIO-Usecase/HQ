@@ -25,6 +25,7 @@ void CDShowCameraDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO_CAMERA, m_cmbCameraDevice);
+	DDX_Control(pDX, IDC_STATIC_VIDEO_CAPTURE, m_statVideoCapture);
 }
 
 
@@ -40,7 +41,11 @@ END_MESSAGE_MAP()
 BOOL CDShowCameraDlg::OnInitDialog()
 {
 	CBasicProperties::OnInitDialog();
-	
+	CRect rc;
+	m_statVideoCapture.GetWindowRect(&rc);
+	ScreenToClient(rc);
+	preview->MoveWindow(&rc);
+
 	obs_property_t* prop = m_mapProperties[propery_name];
 	size_t          count = obs_property_list_item_count(prop);
 

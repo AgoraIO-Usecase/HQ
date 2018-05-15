@@ -6,7 +6,6 @@
 #include "ChromaFilterDlg.h"
 #include "afxdialogex.h"
 #include "obs-filter-def.h"
-
 // CChromaFilterDlg dialog
 
 IMPLEMENT_DYNAMIC(CChromaFilterDlg, CDialogEx)
@@ -56,6 +55,7 @@ END_MESSAGE_MAP()
 
 void CChromaFilterDlg::OnBnClickedButton2()
 {
+	settings = obs_source_get_settings(_filter);
 	obs_data_set_int(settings, SETTING_OPACITY, 100);
 	obs_data_set_double(settings, SETTING_CONTRAST, 0.0);
 	obs_data_set_double(settings, SETTING_BRIGHTNESS, 0.0);
@@ -65,7 +65,7 @@ void CChromaFilterDlg::OnBnClickedButton2()
 	obs_data_set_int(settings, SETTING_SIMILARITY, 400);
 	obs_data_set_int(settings, SETTING_SMOOTHNESS, 80);
 	obs_data_set_int(settings, SETTING_SPILL, 100);
-
+	obs_source_update(_filter, settings);
 	m_cmbKeyColorType.SetCurSel(m_mapChromaColorType["green"]);
 }
 
@@ -80,6 +80,7 @@ BOOL CChromaFilterDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRES
 		obs_source_properties(filter);
 
 		ReloadProperties(filter);
+	 	settings = obs_source_get_settings(filter);
 	}
 	return CDialogEx::OnWndMsg(message, wParam, lParam, pResult);
 }
@@ -115,6 +116,9 @@ void CChromaFilterDlg::_setChromaVal(obs_property_t *property)
 				os_mbs_to_wcs(name, strlen(name), wcs, 20);
 				m_cmbKeyColorType.AddString(wcs);
 				m_mapChromaColorType[name] = m_mapChromaColorType.size();
+				std::string key_color_type = name;
+				std::transform(key_color_type.begin(), key_color_type.end(), key_color_type.begin(), ::tolower);
+				m_vecChromColorType.emplace_back(key_color_type.c_str());
 			}
 		}
 		if (count > 0) m_cmbKeyColorType.SetCurSel(0);
@@ -231,6 +235,7 @@ BOOL CChromaFilterDlg::OnInitDialog()
 			reinterpret_cast<CChromaFilterDlg*>(p);
 
 		window->AddFilter(filter);
+		::SendMessage(window->GetSafeHwnd(), WM_OBS_ADD_FILTER, (WPARAM)filter, 0);
 	}, this);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -245,13 +250,11 @@ void CChromaFilterDlg::OnBnClickedButton1()
 
 void CChromaFilterDlg::OnSelchangeComboKeyColorType()
 {
-	CString keyColorType;
-	m_cmbKeyColorType.GetWindowText(keyColorType);
-	char* utf8 = nullptr;
-	os_wcs_to_utf8_ptr(keyColorType.GetBuffer(0), keyColorType.GetLength(), &utf8);
-	obs_data_set_string(settings, SETTING_KEY_COLOR, utf8);
+	int sel = m_cmbKeyColorType.GetCurSel();
+	if (sel >=0 && sel < m_cmbKeyColorType.GetCount()){
+		_UpdateFilter(SETTING_COLOR_TYPE, m_vecChromColorType[sel]);
+	}
 }
-
 
 void CChromaFilterDlg::OnBnClickedButtonDelChromaFilter()
 {
@@ -259,6 +262,8 @@ void CChromaFilterDlg::OnBnClickedButtonDelChromaFilter()
 		AfxMessageBox(_T("Are you sure you want to remove \"Chroma Key\""), MB_OKCANCEL))
 	{
 		obs_source_filter_remove(_source, _filter);
+		settings = obs_source_get_settings(_filter);
+		m_cmbKeyColorType.ResetContent();
 		m_btnAddFilter.EnableWindow(TRUE);
 	}
 }
@@ -268,4 +273,12 @@ void CChromaFilterDlg::OnBnClickedButtonAddChromaFilter()
 {
 	// TODO: Add your control notification handler code here
 	AddNewFilter("chroma_key_filter");
+}
+
+void CChromaFilterDlg::_UpdateFilter(std::string chromsetting, std::string val)
+{
+	obs_data_set_string(settings, chromsetting.c_str(), val.c_str());
+	callback(_filter, settings);
+	obs_property_t *property = obs_properties_get(properties.get(), chromsetting.c_str());
+	obs_property_modified(property, settings);
 }

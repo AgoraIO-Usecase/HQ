@@ -159,9 +159,6 @@
     <ClInclude Include="obs-studio\window-agora-output.hpp">
       <Filter>obs-studio</Filter>
     </ClInclude>
-    <ClInclude Include="ExtendObserver\AudioCapturePackageQueue.h">
-      <Filter>ExtendObserver</Filter>
-    </ClInclude>
     <ClInclude Include="ExtendObserver\AudioPlayPackageQueue.h">
       <Filter>ExtendObserver</Filter>
     </ClInclude>
@@ -188,6 +185,9 @@
     </ClInclude>
     <ClInclude Include="obs-filter-def.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtendObserver\CicleBuffer.hpp">
+      <Filter>ExtendObserver</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,9 +284,6 @@
     <ClCompile Include="obs-studio\window-agora-output.cpp">
       <Filter>obs-studio</Filter>
     </ClCompile>
-    <ClCompile Include="ExtendObserver\AudioCapturePackageQueue.cpp">
-      <Filter>ExtendObserver</Filter>
-    </ClCompile>
     <ClCompile Include="ExtendObserver\AudioPlayPackageQueue.cpp">
       <Filter>ExtendObserver</Filter>
     </ClCompile>
@@ -310,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="ChromaFilterDlg.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendObserver\CicleBuffer.cpp">
+      <Filter>ExtendObserver</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

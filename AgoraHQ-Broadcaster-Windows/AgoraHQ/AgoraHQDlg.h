@@ -134,7 +134,7 @@ private:
 
 	void JoinChannel_Agora();
 	void LeaveChannel_Agora();
-
+	CRect m_rcIcon;
 	//OBS for ExtCapture
 	void JoinChannel_OBS();
 	void LeaveChannel_OBS();

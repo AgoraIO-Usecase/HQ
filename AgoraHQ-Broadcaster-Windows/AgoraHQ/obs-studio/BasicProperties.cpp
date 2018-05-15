@@ -42,30 +42,6 @@ CBasicProperties::CBasicProperties(UINT nIDTemplate, OBSSource _source, CWnd* pP
 	reloadCallback = (PropertiesReloadCallback)obs_source_properties;
 	callback = (PropertiesUpdateCallback)obs_source_update;
 	obj = source;
-// 	updatePropertiesSignal.Connect(obs_source_get_signal_handler(source),
-// 		"update_properties",
-// 		OBSBasicProperties::UpdateProperties,
-// 		this);
-// 
-// 	auto addDrawCallback = [this]()
-// 	{
-// 		obs_display_add_draw_callback(preview->GetDisplay(),
-// 			OBSBasicProperties::DrawPreview, this);
-// 	};
-// 
-// 	enum obs_source_type type = obs_source_get_type(source);
-// 	uint32_t caps = obs_source_get_output_flags(source);
-// 	bool drawable_type = type == OBS_SOURCE_TYPE_INPUT ||
-// 		type == OBS_SOURCE_TYPE_SCENE;
-// 
-// 	if (drawable_type && (caps & OBS_SOURCE_VIDEO) != 0)
-// 	{
-// 
-// 	}
-// 		connect(preview.data(), &OBSQTDisplay::DisplayCreated,
-// 		addDrawCallback
-	//
-	//setWindowTitle(QTStr("Basic.PropertiesWindow").arg(QT_UTF8(name)));
 }
 
 CBasicProperties::~CBasicProperties()

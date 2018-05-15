@@ -3,17 +3,19 @@
 
 
 CAudioCapturePackageQueue	*CAudioCapturePackageQueue::m_lpAudioPackageQueue = NULL;
-
+FILE* fPcmCAudioCapturePackageQueue;
 // 
 CAudioCapturePackageQueue::CAudioCapturePackageQueue()
 {
 	m_bufQueue.Create(32, 8192);
 	m_nPackageSize = 8192;
+	fPcmCAudioCapturePackageQueue = fopen("D:\\AudioCapturePackageQueue.pcm", "ab+");
 }
 
 
 CAudioCapturePackageQueue::~CAudioCapturePackageQueue()
 {
+	fclose(fPcmCAudioCapturePackageQueue);
 	m_bufQueue.FreeAllBusyBlock();
 	m_bufQueue.Close();
 }
@@ -70,7 +72,6 @@ BOOL CAudioCapturePackageQueue::PushAudioPackage(LPCVOID lpAudioPackage, SIZE_T 
 	_ASSERT(m_bufQueue.GetBytesPreUnit() >= nPackageSize);
 
 	memcpy(lpBuffer, lpAudioPackage, nPackageSize);
-
 	return TRUE;
 }
 
@@ -88,9 +89,8 @@ BOOL CAudioCapturePackageQueue::PopAudioPackage(LPVOID lpAudioPackage, SIZE_T *n
 		*nPackageSize = m_nPackageSize;
 		return FALSE;
 	}
-
 	m_bufQueue.FreeBusyHead(lpAudioPackage, m_nPackageSize);
-
+	fwrite(lpAudioPackage, 1, *nPackageSize, fPcmCAudioCapturePackageQueue);
 	*nPackageSize = m_nPackageSize;
 	
 	return TRUE;

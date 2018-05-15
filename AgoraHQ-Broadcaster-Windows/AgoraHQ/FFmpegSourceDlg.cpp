@@ -68,12 +68,9 @@ void CFFmpegSourceDlg::OnBnClickedOk()
 
 void CFFmpegSourceDlg::OnBnClickedButtonMoviePath()
 {
-	TCHAR szFilters[] = _T("All Media Files (*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;)|\
-						    *.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;|\
-						    All Video Files(*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;)|\
-							*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;|\
-							All Audio Files(*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;)|\
-							*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;||"); //All Files (*.*)|*.*
+	TCHAR szFilters[] = _T("All Media Files (*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;)|*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;|\
+						All Video Files(*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;)|*.mp4;*.ts;*.mov;*.flv;*.mkv;*avi;|\
+						All Audio Files(*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;)|*.mp3;*.ogg;*.aac;*.wav;*.gif;*.webm;||"); //All Files (*.*)|*.*
 	TCHAR szOldCurrentDirector[MAX_PATH] = { 0 };
 	GetCurrentDirectory(MAX_PATH, szOldCurrentDirector);
 

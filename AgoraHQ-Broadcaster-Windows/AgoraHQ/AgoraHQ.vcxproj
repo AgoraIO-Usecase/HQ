@@ -87,7 +87,7 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;DL_OPENGL="libobs-opengl.dll";DL_D3D11="libobs-d3d11.dll";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)AgoraHQ\curl\include;$(SolutionDir)obs-studio\include;$(SolutionDir)AgoraHQ\obs-studio;$(SolutionDir)AgoraHQ</AdditionalIncludeDirectories>
     </ClCompile>
@@ -132,9 +132,9 @@
     <ClInclude Include="DlgSetTimeBonus.h" />
     <ClInclude Include="DShowCameraDlg.h" />
     <ClInclude Include="DynamicKey5.h" />
-    <ClInclude Include="ExtendObserver\AudioCapturePackageQueue.h" />
     <ClInclude Include="ExtendObserver\AudioPlayPackageQueue.h" />
     <ClInclude Include="ExtendObserver\BufferQueue.h" />
+    <ClInclude Include="ExtendObserver\CicleBuffer.hpp" />
     <ClInclude Include="ExtendObserver\ExtendAudioFrameObserver.h" />
     <ClInclude Include="ExtendObserver\ExtendVideoFrameObserver.h" />
     <ClInclude Include="ExtendObserver\VideoPackageQueue.h" />
@@ -181,9 +181,9 @@
     <ClCompile Include="DlgInput.cpp" />
     <ClCompile Include="DlgSetTimeBonus.cpp" />
     <ClCompile Include="DShowCameraDlg.cpp" />
-    <ClCompile Include="ExtendObserver\AudioCapturePackageQueue.cpp" />
     <ClCompile Include="ExtendObserver\AudioPlayPackageQueue.cpp" />
     <ClCompile Include="ExtendObserver\BufferQueue.cpp" />
+    <ClCompile Include="ExtendObserver\CicleBuffer.cpp" />
     <ClCompile Include="ExtendObserver\ExtendAudioFrameObserver.cpp" />
     <ClCompile Include="ExtendObserver\ExtendVideoFrameObserver.cpp" />
     <ClCompile Include="ExtendObserver\VideoPackageQueue.cpp" />

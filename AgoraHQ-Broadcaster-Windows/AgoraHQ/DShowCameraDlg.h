@@ -30,4 +30,5 @@ public:
 	void SetVideoDialog(CAgoraHQDlg* pDlg);
 	afx_msg void OnSelchangeCombo1();
 	CComboBox m_cmbCameraDevice;
+	CStatic m_statVideoCapture;
 };

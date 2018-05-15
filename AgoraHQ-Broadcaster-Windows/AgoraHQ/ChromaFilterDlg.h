@@ -52,7 +52,7 @@ public:
 	afx_msg void OnSelchangeComboKeyColorType();
 
 	std::map<std::string, int> m_mapChromaColorType;
-
+	std::vector<std::string>  m_vecChromColorType;
 	int default_opacity = 100;
 	double default_contrast = 0.0f;
 	double default_brightness = 0.0f;
@@ -65,6 +65,7 @@ public:
 	int default_spill = 100;
 	afx_msg void OnBnClickedButtonDelChromaFilter();
 	afx_msg void OnBnClickedButtonAddChromaFilter();
+	void _UpdateFilter(std::string chromsetting, std::string val);
 	CButton m_btnAddFilter;
 	CButton m_btnDelFilter;
 };

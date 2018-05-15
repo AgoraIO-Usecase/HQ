@@ -30,6 +30,7 @@ void CImagePropertiesDlg::DoDataExchange(CDataExchange* pDX)
 	CBasicProperties::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT_IMAGE_PATH, m_edtImagePath);
 	DDX_Control(pDX, IDC_BUTTON_IMAGE_PATH, m_btnImagePath);
+	DDX_Control(pDX, IDC_STATIC_IMAGE, m_staImage);
 }
 
 void CImagePropertiesDlg::SetVideoDialog(CAgoraHQDlg* pDlg)
@@ -95,7 +96,10 @@ void CImagePropertiesDlg::OnBnClickedButtonImagePath()
 BOOL CImagePropertiesDlg::OnInitDialog()
 {
 	CBasicProperties::OnInitDialog();
-
+	CRect rc;
+	m_staImage.GetWindowRect(&rc);
+	ScreenToClient(rc);
+	preview->MoveWindow(&rc);
 	return TRUE;  // return TRUE unless you set the focus to a control
 }
 
