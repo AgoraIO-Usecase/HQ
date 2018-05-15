@@ -873,10 +873,15 @@ bool CDlgAnswer::error_info(WPARAM wParam, LPARAM lParam)
 		{
 			//AfxMessageBox(s2cs(szError));
 			m_ctlNoticeInfo.SetWindowTextW(s2cs(szError));
-			CString strErrorInfo;
+			CString strErrorInfo = s2cs(szError);
 			if (!strcmp("http_error", szError)){
 				strErrorInfo = CHQLANG::getError_NetBad();
 			}
+
+			if (!strcmp("curle_operation_timeout", szError)){
+				strErrorInfo = CHQLANG::getError_NetBad();
+			}
+
 			m_ctlNoticeInfo.SetWindowTextW(strErrorInfo);
 
 			delete[] szError;

@@ -23,7 +23,9 @@ void PostCustomMessage(const HWND& hWnd, const UINT& uMsg, std::string js_res, s
 	{
 		bSuccess = false;
 		str = error;
+		gFileApp.write("error: " + error);
 	}
+	gFileApp.write(str);
 	char* szJson = new char[str.length() + 1];
 	szJson[str.length() + 1];
 	memset(szJson, 0, str.length() + 1);

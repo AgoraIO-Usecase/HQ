@@ -68,6 +68,7 @@ size_t CCurlService::http_callback(void *str, size_t size, size_t count, void *o
 
 bool CCurlService::http_request(std::string url, std::string data, std::string method, std::string function_name, std::string& js_res, CURLcode& err_code)
 {
+	gFileApp.write(url);
 	if (init_error_code != CURLE_OK)
 		return false;
 
