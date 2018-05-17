@@ -6,6 +6,8 @@
 
 * windows上build HQ使用的obs-studio的要求
     * dependencies2013.zip
+    
+        下载路径：[dependencies2013.zip](https://obsproject.com/downloads/dependencies2013.zip)
    
     * Windows版本的CMake
    
@@ -20,7 +22,7 @@
 
                dedependencies2013.zip解压后Win32所在的路径
         
-        * 取消Enable_UI和ENABLE_SCRIPTING
+        * 取消Enable\_UI和ENABLE\_SCRIPTING
         * configure成功之后，Generate即可生成vs工程
             
               
