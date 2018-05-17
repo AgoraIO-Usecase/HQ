@@ -2,7 +2,7 @@
 
 *Read this in other languages: [English](README.en.md)*
 
-##build指导
+## build指导
 
 * windows上build HQ使用的obs-studio的要求
     * dependencies2013.zip
