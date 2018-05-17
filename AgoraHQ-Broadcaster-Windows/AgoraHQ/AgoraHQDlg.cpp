@@ -197,7 +197,7 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(m_hWnd);
 	if ("" == gHQConfig.getAppId()){
 
-		gHQConfig.setAppId("319294c67d174c878cc7922551e6e773");//319294c67d174c878cc7922551e6e773 5463902dc7254fdf8779989252e5e35f
+		gHQConfig.setAppId("324f0da1e2284832a44fee5fcbec44c1");//319294c67d174c878cc7922551e6e773 319294c67d174c878cc7922551e6e773 5463902dc7254fdf8779989252e5e35
 	}
 
 	getChannelName();
