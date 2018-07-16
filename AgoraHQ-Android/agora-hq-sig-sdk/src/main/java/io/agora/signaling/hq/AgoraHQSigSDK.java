@@ -321,9 +321,6 @@ public class AgoraHQSigSDK {
                 } catch (JSONException e) {
                     Log.w(LOG_TAG, Log.getStackTraceString(e));
                 }
-               // Log.d("zhangtao  agora  = ",msg);
-
-                //Log.d("zhangtao   agora m  = ",m);
 
                 checkAndReturnChannelMessage(channel, msgId, m);
 

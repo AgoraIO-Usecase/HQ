@@ -144,7 +144,7 @@
                 android:orientation="vertical">
 
 
-                <io.agora.agoraandroidhq.module.CircleImageView
+                <io.agora.livequiz.module.CircleImageView
                     android:id="@+id/user_image"
                     android:layout_width="60dp"
                     android:layout_height="60dp"

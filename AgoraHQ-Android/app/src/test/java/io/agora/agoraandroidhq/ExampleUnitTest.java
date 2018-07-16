@@ -1,4 +1,4 @@
-package io.agora.agoraandroidhq;
+package io.agora.livequiz;
 
 import org.junit.Test;
 
