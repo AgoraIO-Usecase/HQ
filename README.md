@@ -1,24 +1,22 @@
-# HQ
+
 # HQ/Trivia solutions from Agora
 
-*Read this in other languages: [English](README.en.md)*
+*Read this in other languages: [中文](README.zh.md)*
 
 
-### 因为业务需求的多样性，我们目前采用分支来区分各个场景的示例代码
-#### 每个场景均包含 H5 功能
+### For different scenarios we use different branches to keep the source code.
 
-- master 一般默认分支 目前留空
+- master Keep it as empty, do not use
 
-- Solution-With-AgoraHQSigKit 基础HQ场景
+- Solution-for-TeamUpMode-Http **HQ Team mode**
 
-- Solution-for-TeamUpMode 组队开黑场景
+- Solution-for-TeamUpMode-Http-obs-studio **HQ Team mode with OBS**
 
-### 根据不同的场景，以上示例代码都需要做不同的配置才可以运行
+### Developers should make some configurations before running app/service
 
-- **为了安全，建议大家在正式环境中启用 [动态密钥鉴权](https://document.agora.io/cn/1.14/instruction/key.html) 机制**
+- **For security reason, in production environment, please enable [Dynamic key/ or Access Token which is new version of Dynamic Key](https://document.agora.io/cn/1.14/instruction/key.html)**
 
-不同平台参看项目内的 README.md 文档
+Please checkout README.md files in different projects to know about the details
 
-点击 [官网](https://www.agora.io/cn/zhuawawa/) 查看更多信息
-
-# 如需进一步了解，请联系 400 632 6626。
+For more information, please checkout
+[Developer Center](https://docs.agora.io/en/2.1.3/product/Interactive%20Broadcast/Solutions/contest?platform=All%20Platforms)
