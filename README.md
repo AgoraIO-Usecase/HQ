@@ -6,7 +6,11 @@
 
 ### For different scenarios we use different branches to keep the source code.
 
-- master Keep it as empty, do not use
+- master Keep it empty, do not use
+
+- Solution-With-AgoraHQSigKit **DEPRECATED**
+
+- Solution-for-TeamUpMode **DEPRECATED**
 
 - Solution-for-TeamUpMode-Http **HQ Team mode**
 
