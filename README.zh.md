@@ -8,13 +8,13 @@
 
 - master 一般默认分支 目前留空
 
-- Solution-With-AgoraHQSigKit 基础 HQ 场景(废弃，不推荐)
+- Solution-With-AgoraHQSigKit 基础 HQ 场景，基于HQ一期SDK
 
-- Solution-for-TeamUpMode 组队开黑场景(废弃，不推荐)
+- Solution-for-TeamUpMode 组队开黑场景,基于HQ二期SDK
 
-- Solution-for-TeamUpMode-Http 组队开黑场景(优化版)
+- Solution-for-TeamUpMode-Http 组队开黑场景，基于HQ三期SDK
 
-- Solution-for-TeamUpMode-Http-obs-studio 组队开黑场景，跟 OBS 配合使用
+- Solution-for-TeamUpMode-Http-obs-studio 组队开黑场景，跟 OBS 配合使用，基于HQ三期SDK
 
 ### 根据不同的场景，以上示例代码都需要做不同的配置才可以运行
 
