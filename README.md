@@ -8,13 +8,13 @@
 
 - master Keep it empty, do not use
 
-- Solution-With-AgoraHQSigKit **DEPRECATED**
+- Solution-With-AgoraHQSigKit **based on HQ 1st stage SDK, with basic HQ functions**
 
-- Solution-for-TeamUpMode **DEPRECATED**
+- Solution-for-TeamUpMode **based on HQ 2nd stage SDK, adding Team mode and Host-in mode**
 
-- Solution-for-TeamUpMode-Http **HQ Team mode**
+- Solution-for-TeamUpMode-Http **use http as communication protocol between server and clients, on top of Solution-for-TeamUpMode**
 
-- Solution-for-TeamUpMode-Http-obs-studio **HQ Team mode with OBS**
+- Solution-for-TeamUpMode-Http-obs-studio **Adding OBS support, on top of Solution-for-TeamUpMode-Http**
 
 ### Developers should make some configurations before running app/service
 
