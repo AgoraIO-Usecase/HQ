@@ -16,6 +16,8 @@
 
 - Solution-for-TeamUpMode-Http-obs-studio **Adding OBS support, on top of Solution-for-TeamUpMode-Http**
 
+### Suggestion: Use HQ 2nd stage SDK and pick up the right branch for your development.
+
 ### Developers should make some configurations before running app/service
 
 - **For security reason, in production environment, please enable [Dynamic key/ or Access Token which is new version of Dynamic Key](https://document.agora.io/cn/1.14/instruction/key.html)**
