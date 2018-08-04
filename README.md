@@ -16,7 +16,7 @@
 
 - Solution-for-TeamUpMode-Http-obs-studio **Adding OBS support, on top of Solution-for-TeamUpMode-Http**
 
-### Suggestion: Use HQ 2nd stage SDK and pick up the right branch for your development.
+### Suggestion: Use HQ 2nd stage SDK and pick up the right branch for your development. You can get the SDK and the demo apk from [here](https://apprtcio-my.sharepoint.com/:f:/g/personal/zhangle_agora_io/EplYenyGEDRGmKsu-MadDScBkxXIqQWqNtkCyVYn7pqGSQ?e=Hxi6kA)
 
 ### Developers should make some configurations before running app/service
 
