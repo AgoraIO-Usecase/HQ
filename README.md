@@ -18,7 +18,7 @@
 
 ### Suggestion: Use HQ 2nd stage SDK and pick up the right branch for your development. You can get the HQ 2nd Stage SDK from [here](https://apprtcio-my.sharepoint.com/:f:/g/personal/zhangle_agora_io/EqI4y81PsbtIuxsPL_jZwL0Bl8H4TomX001-AthJVRbl3Q?e=5Z2CPb) and the Android demo apk from [here](https://apprtcio-my.sharepoint.com/:u:/g/personal/zhangle_agora_io/EawQ_WjkBY1GiuQJihzchJYBHK6ywHwYiPEzdSXJ52z0xg?e=24tCkI), and the Windows demo app with OBS support from [here](https://apprtcio-my.sharepoint.com/:u:/g/personal/zhangle_agora_io/EVL8MQLUAPJLtlk025PN7yIBS_xSh1M7S2R19vPuYd5zEA?e=G9mqg3)
 
-### Please read the guidance [here] (https://apprtcio-my.sharepoint.com/:w:/g/personal/zhangle_agora_io/Edt6dcv-RwpPrrIfKVKvldkBucoFmfe7zOMqUcwQtB8C2w?e=NqR48v)
+### Please read the guidance [here](https://apprtcio-my.sharepoint.com/:w:/g/personal/zhangle_agora_io/Edt6dcv-RwpPrrIfKVKvldkBucoFmfe7zOMqUcwQtB8C2w?e=NqR48v)
 
 ### Developers should make some configurations before running app/service
 
