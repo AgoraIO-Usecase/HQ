@@ -8,8 +8,6 @@ The Agora Game Show template enables you to quickly get started with building a 
 - [Customize the UI](#customize-the-ui)
 - [How to Use the Template](#how-to-use-the-template)
 - [Game Play Instructions](#game-play-instructions)
-- [Give Feedback](#give-feedback)
-- [Contribute to the Template](#contribute-to-the-template)
 - [Resources](#resources)
 - [License](#license)
 
