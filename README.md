@@ -34,14 +34,14 @@ Players can participate in daily trivia games and win prize money. The game cons
 
 SDK|Description
 ---|---
-Agora Interactive Broadcast SDK|The host/broadcaster pushes voice and video streams to the participants/audience/clients in real time
-Agora Signaling  SDK|The host broadcasts questions for the audience members to answer using messaging. This SDK:<ul><li> Manages communication between the audience members and the host</li><li>Retrieves the number of current users in the channel</li><li>Pushes questions and answers back and forth</li><li>Acts as the synchronization mechanism (SEI)</li></ul>
+[Agora Interactive Broadcast SDK](https://docs.agora.io/en/2.3.1/download)|The host/broadcaster pushes voice and video streams to the participants/audience/clients in real time
+[Agora Signaling  SDK](https://docs.agora.io/en/2.3.1/download)|The host broadcasts questions for the audience members to answer using messaging. This SDK:<ul><li> Manages communication between the audience members and the host</li><li>Retrieves the number of current users in the channel</li><li>Pushes questions and answers back and forth</li><li>Acts as the synchronization mechanism (SEI)</li></ul>
 Special SDK|Native media  + signaling (chat) + SEI (V2_0_2)
 
 
 ### Agora Game Demo
 
-Agora provides a set of demo applications available for download. The demo applications use a preconfigured the test server and App ID, and can support up to 30,000 simultaneous audience members.
+Agora provides a set of demo applications available for download. The demo applications use a preconfigured test server and App ID, and can support up to 30,000 simultaneous audience members.
 
 The Agora HQ Trivia demo consists of the following parts:
 
@@ -93,7 +93,7 @@ Template Model|Communication Flow|Description
 ---|---|---
 Basic Live Broadcast Model|![contest_live_simple.png](images/contest_live_simple.png)|Allows the host to broadcast a live quiz for audience members to answer questions using messaging. Includes option to apply to add a co-host.
 Co-host Model|![contest_live_cele.png](images/contest_live_cele.png)|Allows audience members to see the host and co-host (for example, a celebrity). The co-host can also interact with the host and answer questions.
-Team Model|![contest_live_group.png](images/contest_live_group.png)|Allows the audience members to answer questions as a team.
+Team Model|![contest_live_group.png](images/contest_live_group.png)|Allows the audience members to answer questions as a team. (This template was used in the demo provided here.)
 
 ### API Services
 
@@ -260,8 +260,8 @@ Press the **Start** button and close dialog box.
 
 ![OBSPage.jpg](images/OBSPage.jpg)
 
-1. Add a filter to the source you want to output to the camera 
-2. Choose a sync camera target and press the **Start** button 
+1. Add a filter to the source you want to output to the camera .
+2. Choose a sync camera target and press the **Start** button .
 3. If this camera is not yet active, the **Start** button will switch to a **Stop** button 
 For more information about using OBS Studio, reference the official [OBS Video Guide](https://obsproject.com/forum/resources/full-video-guide-for-obs-studio-and-twitch.377/) or reference the [Agora Github Wiki](https://github.com/AgoraIO/HQ/wiki).
 
