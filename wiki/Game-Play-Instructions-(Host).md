@@ -1,4 +1,4 @@
-# Game Play Instructions - Host
+# Game Play Instructions (Host)
 
 ## Start the Game as a Host
 

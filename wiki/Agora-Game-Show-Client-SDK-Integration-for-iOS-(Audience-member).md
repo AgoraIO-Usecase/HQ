@@ -1,6 +1,6 @@
-# Agora Game Show Client SDK Integration for Android (Audience member)
+# Agora Game Show Client SDK Integration for iOS (Audience member)
 
-This page explains how to integrate the Agora Live Quiz SDK for Android (audience member).
+This page explains how to integrate the Agora Live Quiz SDK for iOS (audience member).
 
 There are three types of integration available. Each mode builds upon the previous integration:
 

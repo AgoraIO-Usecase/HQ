@@ -1,4 +1,4 @@
-# Game Play Instructions - Audience Member
+# Game Play Instructions (Audience Member)
 
 Start the application on your iOS or Android device. 
 
