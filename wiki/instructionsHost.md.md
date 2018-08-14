@@ -16,7 +16,7 @@ Run the AgoraHQ.exe file. Ensure the green bars are lit in the upper left corner
 
 **Note:** If the upper left corner is red instead of green, check your network connection before proceeding or the application will not run properly.
 
-![Page-1-Image-1.jpg](../images/Page-1-Image-1.jpg)
+![Page-1-Image-1.jpg](images/Page-1-Image-1.jpg)
 
 
 ### Enable OBS
@@ -46,31 +46,31 @@ If you don't have OBS Studio or the VirtualCam plugin, download the [software](h
 
 In OBS Studio, open the VirtualCam plugin by selecting **Tools** -> **VirtualCam**.
 
-![OBSPage-1-Image-1.jpg](../images/OBSPage-1-Image-1.jpg)
+![OBSPage-1-Image-1.jpg](images/OBSPage-1-Image-1.jpg)
 
 Press the **Start** button and close dialog box.
 
-![OBSPage-2-Image-2.jpg](../images/OBSPage-2-Image-2.jpg)
+![OBSPage-2-Image-2.jpg](images/OBSPage-2-Image-2.jpg)
 
 #### Enable OBS in the Demo Application
 	
 1. Check **OBS** checkbox 
 
-	![Page-2-Image-2.jpg](../images/Page-2-Image-2.jpg) 
+	![Page-2-Image-2.jpg](images/Page-2-Image-2.jpg) 
 
 2. Click on **OBS Camera**. This will open the properties window.
 
-	![Page-3-Image-3.jpg](../images/Page-3-Image-3.jpg)
+	![Page-3-Image-3.jpg](images/Page-3-Image-3.jpg)
 
 3. Choose a device from the **Camera Device** dropdown menu and press **OK**.
 
 	**Note:** The available camera device options will vary, based on your system and hardware connections.
 
-	![1.png](../images/1.png)
+	![1.png](images/1.png)
 
 #### Add VirtualCam Filter
 
-![OBSPage.jpg](../images/OBSPage.jpg)
+![OBSPage.jpg](images/OBSPage.jpg)
 
 1. Add a filter to the source you want to output to the camera 
 2. Choose a sync camera target and press the **Start** button 
@@ -98,14 +98,14 @@ For more information about using OBS Studio, reference the official [OBS Video G
 
 	- Select a camera from the **CAMERA** dropdown menu. If OBS is enabled, select **OBS-Camera**.
 
-	![Page-5-Image-5.jpg](../images/Page-5-Image-5.jpg)
+	![Page-5-Image-5.jpg](images/Page-5-Image-5.jpg)
 
 	**Note:** For security reasons, the production environment must enable a Dynamic key or Access Token (a new version of the Dynamic Key). Learn more about enabling it [here](https://docs.agora.io/en/2.3.1/product/Interactive%20Broadcast/Agora%20Platform/key_native?platform=Android).
 
 
 3. Click **OK** to reboot the application. The application will restart, applying the updated configuration settings.
 
-	![Page-6-Image-6.jpg](../images/Page-6-Image-6.jpg)
+	![Page-6-Image-6.jpg](images/Page-6-Image-6.jpg)
 
 ### Start the Game
 
@@ -119,11 +119,11 @@ The last **Send Question** indicates the host will need to repeat the **Send Que
 
 Click **JoinChannel** to start the game. 
 
-![2d.png](../images/2d.png)
+![2d.png](images/2d.png)
 
 This starts the game, and the you will see your local camera view on the device.
 
-![3d.png](../images/3d.png)
+![3d.png](images/3d.png)
 
 
 ### Game Play Buttons
@@ -143,20 +143,20 @@ Reset Question|Resets the game to the beginning. It restarts the answering proce
 
 **Note:** To ensure synchronization between the questions and the video, click **Start Question** after **Send Question** so all users in the channel will be able to see the questions at the simultaneously.
 
-![3dStart.png](../images/3dStart.png)
+![3dStart.png](images/3dStart.png)
 
 **Note:** The **Start Question**, and **Stop Answer** buttons are highlighted in blue to indicate the button can be pressed. Buttons are greyed out to indicate the button can not be pressed. Pressed buttons turn grey to prevent selection errors
 
 Press **Stop Answer** to stop audience members from answering the question.
 
-![4d.png](../images/4d.png)
+![4d.png](images/4d.png)
 
 Press **Reset Question** at any time, to restart the game.
 
-![4dReset.png](../images/4dReset.png)
+![4dReset.png](images/4dReset.png)
 
 ### End of Game
 
 At the end of the game, the results will display.
 
-![5d.png](../images/5d.png)
+![5d.png](images/5d.png)

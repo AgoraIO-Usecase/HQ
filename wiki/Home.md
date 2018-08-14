@@ -4,7 +4,7 @@
 	- [OBS Studio Installation](installObsStudio.md)
 	- [Virtual Plugin Installation](installVirtualCam.md)
 
-- [Agora account and App ID](#agoraAppId.md)
+- [Agora account and App ID](agoraAppId.md)
 
 - SDK Integration
 	

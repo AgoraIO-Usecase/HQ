@@ -4,7 +4,7 @@ Download OBS Studio [here](https://obsproject.com/download).
 
 Ensure the Windows icon is selected.
 
-![obsStudioDownloadSelect.jpg](images/obsStudioDownloadSelect.jpg)
+![obsStudioDownloadSelect.jpg](./images/obsStudioDownloadSelect.jpg)
 
 Click on **Download Installer** to download the installer EXE file.
 
