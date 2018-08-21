@@ -218,7 +218,7 @@ To fully run the project, you will need to set up your environment with a server
 
 #### Build for NodeJS
 
-1. In the `modules/config.js` file, replace `YOUR_APP_ID` with your Agora App ID.
+In the `modules/config.js` file, replace `YOUR_APP_ID` with your Agora App ID.
 
 	```
 module.exports = {
@@ -228,15 +228,15 @@ module.exports = {
 };
 ```
 
-2. Open the Terminal app and navigate to the project directory.
+Open the Terminal app and navigate to the project directory.
 
-3. Install the project using the command `npm install`
+Install the project using the command `npm install`
 
-4. Start the server using the command `node server.js`
+Start the server using the command `node server.js`
 
 #### Build for Windows
 
-1. In the `HQConfig.ini` file, copy the Agora App ID, append the following information:
+In the `HQConfig.ini` file, copy the Agora App ID, append the following information:
 
 	Property|Description|Value
 ---|---|---
@@ -256,42 +256,42 @@ CameraDeviceName=
 CameraDeviceID=
 ```
 
-2. Ensure the `Restart.bat` file is in the same location as the execution directory.
+Ensure the `Restart.bat` file is in the same location as the execution directory.
 
-3. Open the `AgoraHQ.sln` file in Visual Studio C++.
+Open the `AgoraHQ.sln` file in Visual Studio C++.
 
-4. Use **Build All Solution** to build and run the project.
+Use **Build All Solution** to build and run the project.
 
 
 #### Build for Android
 
-1. In the `src/main/java/io/agora/agoraandroidhq/tools/Constants.java` file, replace `#YOUR_APPID` with the App ID from the Agora dashboard.
+In the `src/main/java/io/agora/agoraandroidhq/tools/Constants.java` file, replace `#YOUR_APPID` with the App ID from the Agora dashboard.
 
 	`public static final String AGORA_APP_ID = #YOUR_APPID;`
 
-2. Open the sample project in Android Studio.
+Open the sample project in Android Studio.
 
-3. Connect your Android device and run the project. 
+Connect your Android device and run the project. 
 
-	**Note:** Ensure a valid developer signing certificate is applied or your project will not run.
+**Note:** Ensure a valid developer signing certificate is applied or your project will not run.
 
 #### Build for iOS
 
-1. Open the XCode project
+Open the XCode project
 
-2. In the `KeyCenter.swift` file:
+In the `KeyCenter.swift` file:
 
 	- Replace `<#Your App Id#>` with your Agora App ID.
 	- Replace `<#Your App Certificate#>` with your Agora App Certificate
 
-	```
-    static let AppId: String = <#Your App Id#>
-    static let AppcertificateID:  String = <#Your App Certificate#>
+```
+static let AppId: String = <#Your App Id#>
+static let AppcertificateID:  String = <#Your App Certificate#>
 ```
 
-3. Connect your iPhone／iPad device and run the project.
+Connect your iPhone／iPad device and run the project.
 
-	**Note:** Ensure you project has a valid provisioning profile or it will not run.
+**Note:** Ensure you project has a valid provisioning profile or it will not run.
 
 
 ## Customize the UI
