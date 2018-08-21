@@ -132,8 +132,8 @@ Service|Description
 ---|---
 Live Broadcast Service|The host(s) push realtime audio and video streams to the audience members using the Agora Interactive Broadcast SDK
 Signaling Service|Facilitates communication between the audience and the host using the The Agora Signaling SDK<ul><li>Retrieves the number of current users in the channel</li><li>Manages messaging between the host and the audience members</li><li>Pushes questions and answers synchronously, ensuring the video stream is synchronized with the questions</li></ul>
-`Customer service`|Manages non-Agora SDK communication between the host and audience members
-`RTMP Streaming`|Handles sharing to social media platforms
+Customer service|Manages non-Agora SDK communication between the host and audience members
+RTMP Streaming|Handles sharing to social media platforms
 
 **Note:** Audience members who join and become co-hosts will begin using the communication protocols and services as a host, rather than an audience member.
 
