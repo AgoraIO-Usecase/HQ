@@ -1,23 +1,22 @@
-# Agora Game Show Template
+# Agora HQ Trivia Template
 
-The Agora Game Show template enables you to quickly get started with building a game show application. This tutorial will explain how to create an Agora account, download the HQ SDK, and use an Agora template branch to use as a framework for your [Agora API](https://docs.agora.io/en/) application.
+The Agora HQ Trivia template enables you to quickly get started with building a trivia game application. This tutorial will explain how to create an Agora account, download the HQ SDK, and use an Agora template branch to use as a framework for your [Agora API](https://docs.agora.io/en/) application.
 
 - [General Overview](#general-overview)
 - [Architecture Overview](#architecture-overview)
 - [Hardware / Software Requirements](#hardware-software-requirements)
+- [How to Build the Environment](#how-to-build-the-environment)
 - [Customize the UI](#customize-the-ui)
-- [How to Use the Template](#how-to-use-the-template)
 - [Game Play Instructions](#game-play-instructions)
 - [Resources](#resources)
 - [License](#license)
 
 ## General Overview
 
-Agora HQ trivia is a live-streamed quiz show. 
+Agora HQ Trivia is a live-streamed quiz show. 
 
 - [Agora HQ Trivia Game Flow](#agora-hq-trivia-game-flow)
-- [Agora SDK Integrations](#agora-sdk-integrations)
-- [Agora Game Demo](#agora-game-demo)
+- [Agora SDKs and API Services](#agora-sdks-and-api-services)
 
 
 ### Agora HQ Trivia Game Flow
@@ -30,60 +29,82 @@ Players can participate in daily trivia games and win prize money. The game cons
 
 - At the end of the game, players that answer all the questions questions correctly, split the prize money.
 
-### Agora SDK Integrations
+### Agora SDKs and API Services
 
-SDK|Description
----|---
-[Agora Interactive Broadcast SDK](https://docs.agora.io/en/2.3.1/download)|The host/broadcaster pushes voice and video streams to the participants/audience/clients in real time
-[Agora Signaling  SDK](https://docs.agora.io/en/2.3.1/download)|The host broadcasts questions for the audience members to answer using messaging. This SDK:<ul><li> Manages communication between the audience members and the host</li><li>Retrieves the number of current users in the channel</li><li>Pushes questions and answers back and forth</li><li>Acts as the synchronization mechanism (SEI)</li></ul>
-Special SDK|Native media  + signaling (chat) + SEI (V2_0_2)
+The HQ Trivia template is a turnkey solution for live trivia game applications and uses the Agora Special SDK.
+
+The special SDK is pre-packaged with the broadcast SDK and signaling SDK.
+
+[Special SDK](https://apprtcio-my.sharepoint.com/personal/zhangle_agora_io/Documents/Forms/All.aspx?slrid=b12f859e-a0e4-6000-1b96-9bf4c3d9f0a8&RootFolder=%2Fpersonal%2Fzhangle_agora_io%2FDocuments%2FHQDemo) = Native media + signaling (chat) + SEI (V2_0_2)
 
 
-### Agora Game Demo
+**Note:** The Agora Special SDK is *required* to run the HQ Trivia game demo and templates.
 
-Agora provides a set of demo applications available for download. The demo applications use a preconfigured test server and App ID, and can support up to 30,000 simultaneous audience members.
+![contest_task.png](images/contest_task.jpeg)
+
+The figure above, show the template solution breakdown, along with the features each service would handle. The green blocks indicate services the Agora SDK currently provides.
+
+SDK|SDK Description|API Description
+---|---|---
+[Agora Signaling  SDK](https://docs.agora.io/en/2.3.1/download)  (Included in the Special SDK)|The host broadcasts questions for the audience members to answer using messaging. This SDK:<ul><li> Manages communication between the audience members and the host</li><li>Retrieves the number of current users in the channel</li><li>Pushes questions and answers back and forth</li><li>Acts as the synchronization mechanism (SEI)</li></ul>|Signaling service handles questions, answers, messaging, and comments
+[Agora Interactive Broadcast SDK](https://docs.agora.io/en/2.3.1/download) (Included in the Special SDK)|The host/broadcaster pushes voice and video streams to the participants/audience/clients in real time|Media service handles audio/video streaming
+
+## Architecture Overview
+
+The Agora HQ Trivia template provides a base architecture for a live quiz application network. The game members consist of at least one host and multiple audience members. The host quizzes the audience, and the audience member that answers all the questions correctly receives a prize.
+
+![image001.png](images/image001.jpg)
+
+The demo applications use a preconfigured test server and App ID, and can support up to 30,000 simultaneous audience members. 
 
 The Agora HQ Trivia demo consists of the following parts:
 
-![image001.png](images/image001.png)
-
-Application User|System Requirements|Description|Link
+Application User|Description|System Requirements|Link
 ---|---|---|---
-Host|Windows 7+<br><br>Permission to access camera<br>**Note:** A working camera is required for the Android/iOS client to see questions on their mobile devices.<br><br>OBS Studio with OBS virtual plugin (required if OBS is enabled)|Controls the quiz, and the host’s video stream|[Download](https://github.com/AgoraIO/HQ/blob/Solution-With-AgoraHQSigKit/AgoraHQ-Broadcaster-Windows/dist/AgoraHQ-Windows.zip)<br><br> **Note:** If you run the application and see the error “can’t start because mfc130u.dll is missing”, [download and this library](https://github.com/AgoraIO/HQ/blob/Solution-With-AgoraHQSigKit/AgoraHQ-Broadcaster-Windows/dist/vcredist_x86_vs2013.exe) to fix the issue.
-Audience member|iOS / Android|Receives / answers questions  + chat with other audience members|[Download Android](https://raw.githubusercontent.com/AgoraIO/HQ/Solution-With-AgoraHQSigKit/AgoraHQ-Android/dist/Android_HQ.apk) <br><br>Connect your mobile device with a USB cable, then install the Android client application on your mobile device.<br><br>[Download Xcode project for iOS](https://github.com/AgoraIO/HQ/blob/Solution-With-AgoraHQSigKit/AgoraHQ-iOS-Swift/dist/AgoraHQ-iOS-Swift.zip) <br><br>**Note:** There is no pre-compiled .ipa file for iOS available. For iOS, build the application in Xcode and run it on your physical device. Ensure the application uses valid provisioning profile.
-All users|NodeJS server with quiz pool|Handles data flow between all users|N/A
-
+Host<br><br>(with OBS certificate)|Controls the quiz, and the host’s video stream<br><br>**Note:** Using OBS will capture and include video of the host using the virtual camera.|Windows 7+<br><br>Permission to access camera<br><br>**Note:** A working camera is required for the game players to see the host (broadcaster) on their mobile devices.<br><br>OBS Studio with OBS virtual plugin (required if the host wants to use [Open Broadcaster Software](https://obsproject.com/download) to enhance the the game broadcast)|[Download Windows](https://apprtcio-my.sharepoint.com/personal/zhangle_agora_io/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fzhangle_agora_io%2FDocuments%2FHQDemo%2FHQ-win-for-obs-studio%2Ezip&parent=%2Fpersonal%2Fzhangle_agora_io%2FDocuments%2FHQDemo&slrid=0030859e-4014-6000-3b0a-e4ed46be8bcf)<br><br> **Note:** If you run the application and see the error “can’t start because mfc130u.dll is missing”, [download and this library](https://github.com/AgoraIO/HQ/blob/Solution-With-AgoraHQSigKit/AgoraHQ-Broadcaster-Windows/dist/vcredist_x86_vs2013.exe) to fix the issue.
+Audience member|Receives / answers questions  + chat with other audience members|iOS / Android|[Download Android](https://apprtcio-my.sharepoint.com/personal/zhangle_agora_io/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fzhangle_agora_io%2FDocuments%2FHQDemo%2Fandroid-2%2Eapk&parent=%2Fpersonal%2Fzhangle_agora_io%2FDocuments%2FHQDemo&slrid=1630859e-70a8-6000-3b0a-e178930cf0c2) <br><br>Connect your mobile device with a USB cable, then install the Android client application on your mobile device.<br><br>[Download Xcode project for iOS](https://github.com/AgoraIO/HQ/blob/Solution-With-AgoraHQSigKit/AgoraHQ-iOS-Swift/dist/AgoraHQ-iOS-Swift.zip) <br><br>**Note:** There is no pre-compiled .ipa file for iOS available. For iOS, build the application in Xcode and run it on your physical device. Ensure the application uses valid provisioning profile.
+All users|Handles data flow between all users|NodeJS server with quiz pool|[Download source for NodeJS](https://github.com/AgoraIO/HQ-Server-Nodejs)
 
 For instructions on how to run the demo see the [Game Play Instructions](#game-play-instructions).
 
 
-## Architecture Overview
-
-The Agora Game Show template provides a base architecture for a live quiz application network. The game members consist of at least one host and multiple audience members. The host quizzes the audience, and the audience member that answers all the questions correctly receives a prize.
-
 - [Template Application Types](#template-application-types)
 - [Template Branches](#template-branches)
-- [API Services](#api-services)
 - [Communication Breakdown](#communication-breakdown)
 - [Sample App Resources](#sample-app-resources)
-
 
 ### Template Application Types
 
 The template consists of two main application types:
 
-Application Type|Platform|Preview
----|---|---
-Host application|Windows only|![hq_demo.png](images/hq_demo.png)
-Audience member application|iOS and Android|![hq_answer.png](images/hq_answer.png)
+Application Type|Platform
+---|---
+Host application|Windows only
+Audience member application|iOS and Android
+
+**Note:** All game members (host and audience) must join with the same Agora App ID and channel name, or they will not be entered into the same game.
+
+#### Host Features
 
 The host controls the game configuration and settings for all audience members that join the game.
 
-Host Features|Audience Member Features
----|---
-<ul><li>Update the language pack for the application</li><li>Fix crashes when the number of choices is less than four</li><li>Add operational navigation</li><li>Update configuration settings for the game</li><li>Restart the game</li></ul>|<ul><li>Start a game</li><li>Join / leave a channel</li><li>Receive a question</li><li>Answer a question</li><li>Show game results</li></ul>
+- Pre-configuration settings
+- Start hosting a game
+- Join / leave a channel
+- Send a question
+- Publish question to audience members
+- Restart the game
 
-**Note:** All game members (host and audience) must join with the same Agora App ID and channel name, or they will not be entered into the same game.
+![hq_demo.png](images/hq_demo.png)
+
+#### Audience Member Features
+
+- Join / leave a channel
+- Receive a question
+- Answer a question
+- View game results
+
+![hq_answer.png](images/hq_answer.png)
 
 ### Template Branches
 
@@ -91,29 +112,13 @@ There are three main game show templates available. Each template has its own se
 
 Template Model|Communication Flow|Description
 ---|---|---
-Basic Live Broadcast Model|![contest_live_simple.png](images/contest_live_simple.png)|Allows the host to broadcast a live quiz for audience members to answer questions using messaging. Includes option to apply to add a co-host.
-Co-host Model|![contest_live_cele.png](images/contest_live_cele.png)|Allows audience members to see the host and co-host (for example, a celebrity). The co-host can also interact with the host and answer questions.
-Team Model|![contest_live_group.png](images/contest_live_group.png)|Allows the audience members to answer questions as a team. (This template was used in the demo provided here.)
-
-### API Services
-
-The game show template is a turnkey solution for live trivia game applications.
-
-The template is broken down into three API services:
-
-Service|Description
----|---
-Media service|Handles audio/video streaming
-Signaling service|Handles questions, answers, messaging, and comments
-Customer service|Handles registration/login, notifications, and payments
-
-![contest_task.png](images/contest_task.png)
-
-The figure above, show the template solution breakdown, along with the features each service would handle. The green blocks indicate services the Agora SDK currently provides.
+Basic Live Broadcast Model|![contest_live_simple.jpeg](images/contest_live_simple.jpeg)|Allows the host to broadcast a live quiz for audience members to answer questions using messaging. Includes option to apply to add a co-host.
+Co-host Model|![contest_live_cele.jpeg](images/contest_live_cele.jpeg)|Allows audience members to see the host and co-host (for example, a celebrity). The co-host can also interact with the host and answer questions.
+Team Model|![contest_live_group.jpeg](images/contest_live_group.jpeg)|Allows the audience members to answer questions as a team. (This template was used in the demo provided here.)
 
 ### Communication Breakdown
 
-The main communication for the live application network consists of the host(s), services, and audience members. The image below depicts the general communication flow the game show template uses:
+The main communication for the live application network consists of the host(s), services, and audience members. The image below depicts the general communication flow the HQ Trivia template uses:
 
 Location|Label|Description
 ---|---|---
@@ -121,7 +126,7 @@ Left grey box|`Room of the Host`|Represents the host(s) for the application
 Middle grey box|`SD-RTN`|Represents the Agora SDK services
 Right grey box|`User Group`|Represents the audience members
 
-![contest_solution.png](images/contest_solution.png)
+![contest_solution.jpeg](images/contest_solution.jpeg)
 
 Service|Description
 ---|---
@@ -133,32 +138,24 @@ Signaling Service|Facilitates communication between the audience and the host us
 **Note:** Audience members who join and become co-hosts will begin using the communication protocols and services as a host, rather than an audience member.
 
 
-
 ## Hardware / Software Requirements
 
 For mobile applications, use a physical device when publishing. Some simulators lack the functionality or the performance needed to run the Agora SDK functionality.
 
 Platform|Software|OS / Device
 ---|---|---
+**Server**|NodeJS|NodeJS enabled server
 **Windows**|Visual Studio 2013 or higher<br><br>OBS Studio (only required if running the game with OBS Studio enabled)|Windows 7 or higher
 **Android**|Android Studio 3.0 or above|Android device (e.g. Nexus 5X)
 **iOS**|Xcode 8.0+ (Ensure a valid provisioning profile is applied to your project, or it will not run)|Physical iOS device (iPhone or iPad)
 
 
-## Customize the UI
+## How to Build the Environment
 
-There are two versions of the audience member application. One for Android, and the other for the iOS.
-
-The audience member application consists of three main screens. The loading screen, the game screen, and the information screen. The screen layouts are customizable and use native UI components from Android Studio and Xcode.
-
-Screen|Android View|iOS View|Functionality
----|---|---|---
-Main screen|![androidMainScreen.jpg](images/androidMainScreen.jpg)|![iosMainScreen.jpg](images/iosMainScreen.jpg)|Displays when the next game will start<br><br>Allows the user to log into a game<br><br>Displays their prize winnings
-Game screen|![androidGameScreen.jpg](images/androidGameScreen.jpg)|![iosGameScreen.jpg](images/iosGameScreen.jpg)|Where the user answers questions for the game
-Information screen|![androidInfoScreen.jpg](images/androidInfoScreen.jpg)|![iosInfoScreen.jpg](images/iosInfoScreen.jpg)|Where the user can send the game to their friends or view contact information for the game owner
-
-
-## How to Use the Template
+- [Download the HQ SDK and Choose a Template Branch](#download-the-hq-sdk-and-choose-a-template-branch)
+- [Create an Account and Obtain an App ID](#create-an-account-and-obtain-an-app-id)
+- [Obtain an App Certificate ID](#obtain-an-app-certificate-id) (Needed for Windows and iOS environments)
+- [Build your Project](#build-your-project)
 
 ### Download the HQ SDK and Choose a Template Branch
 
@@ -176,11 +173,138 @@ Branch|Description
 
 
 ### Create an Account and Obtain an App ID
-In order to build and run the sample application you must obtain an App ID: 
 
-1. Create a developer account at [agora.io](https://dashboard.agora.io/signin/). Once you finish the signup process, you will be redirected to the Dashboard.
-2. Navigate in the Dashboard tree on the left to **Projects** > **Project List**.
-3. Copy the App ID that you obtained from the Dashboard into a text file. You will use this when you launch the app.
+To build and run the sample application, get an App ID: 
+
+1. Create a developer account at [agora.io](https://dashboard.agora.io/signin/).
+2. In the Dashboard that opens, click **Projects** > **Project List** in the left navigation.
+3. Copy the **App ID** from the Dashboard to a text file. You will use this when you launch the app.
+
+### Obtain an App Certificate ID
+
+1. In the Agora dashboard, ensure your project is in **Edit** mode and press **Enable** to enable the app certificate.
+
+	![appCert1.jpg](images/appCert1.jpg)
+	
+2. Click on the **Dynamic Key Server is ready, I'm going to enable app certificate** button to enable the app certificate.
+
+	![appCert2.jpg](images/appCert2.jpg)
+
+3. A notification box will appear indicating a confirmation message sent to your registered email address. When you receive the email, click on the **Go Confirm** button in the email.
+
+	![appCert3.jpg](images/appCert3.jpg)
+	
+	**Note:** The email confirmation is only valid for 30 minutes, so ensure you confirm within that time period.
+
+4. Click on the enable checkbox, then the **Enable** button to complete the process.
+	
+	![appCert4.jpg](images/appCert4.jpg)
+
+	**Note:** The **Enable** button can only be clicked after the checkbox is selected.
+
+5. Click on the eye icon to display the app certificate. Copy the **App Certificate** from the Dashboard to a text file. You will use this when you build the app for iOS.
+
+	![appCert5.jpg](images/appCert5.jpg)
+
+
+### Build your Project
+
+To fully run the project, you will need to set up your environment with a server app (NodeJS), host app (Windows), and at least one audience member app (Android or iOS).
+
+- [Build for NodeJS](#build-for-nodejs) (Server app)
+- [Build for Windows](#build-for-windows) (Host app)
+- [Build for Android](#build-for-android) (Audience member app)
+- [Build for iOS](#build-for-ios) (Audience member app)
+
+#### Build for NodeJS
+
+1. In the `modules/config.js` file, replace `YOUR_APP_ID` with your Agora App ID.
+
+	```
+module.exports = {
+    agora_appid: "YOUR_APP_ID",
+    cc_id: "agora_hq_cc_server_en",
+    sig_server: "SIG_SERVER"
+};
+```
+
+2. Open the Terminal app and navigate to the project directory.
+
+3. Install the project using the command `npm install`
+
+4. Start the server using the command `node server.js`
+
+#### Build for Windows
+
+1. In the `HQConfig.ini` file, copy the Agora App ID, append the following information:
+
+	Property|Description|Value
+---|---|---
+`AppId`|Agora App ID|Your App ID from the Agora Dashboard
+`AppCertEnable`|Defines if an app certificate will be used|`true` or `false`
+`AppCertificateId`|Agora App Certificate|App Certificate from the Agora Dashboard (required if `AppCertEnable` is `true`)
+
+	```
+[LoginInfo]
+AppId=
+AppCertEnable=
+AppCertificateId=
+ChannelName=HQ_Demo
+LoginUid=
+VideoSolutinIndex=
+CameraDeviceName=
+CameraDeviceID=
+```
+
+2. Ensure the `Restart.bat` file is in the same location as the execution directory.
+
+3. Open the `AgoraHQ.sln` file in Visual Studio C++.
+
+4. Use **Build All Solution** to build and run the project.
+
+
+#### Build for Android
+
+1. In the `src/main/java/io/agora/agoraandroidhq/tools/Constants.java` file, replace `#YOUR_APPID` with the App ID from the Agora dashboard.
+
+	`public static final String AGORA_APP_ID = #YOUR_APPID;`
+
+2. Open the sample project in Android Studio.
+
+3. Connect your Android device and run the project. 
+
+	**Note:** Ensure a valid developer signing certificate is applied or your project will not run.
+
+#### Build for iOS
+
+1. Open the XCode project
+
+2. In the `KeyCenter.swift` file:
+
+	- Replace `<#Your App Id#>` with your Agora App ID.
+	- Replace `<#Your App Certificate#>` with your Agora App Certificate
+
+	```
+    static let AppId: String = <#Your App Id#>
+    static let AppcertificateID:  String = <#Your App Certificate#>
+```
+
+3. Connect your iPhone／iPad device and run the project.
+
+	**Note:** Ensure you project has a valid provisioning profile or it will not run.
+
+
+## Customize the UI
+
+There are two versions of the audience member application. One for Android, and the other for the iOS.
+
+The audience member application consists of three main screens. The loading screen, the game screen, and the information screen. The screen layouts are customizable and use native UI components from Android Studio and Xcode.
+
+Screen|Android View|iOS View|Functionality
+---|---|---|---
+Main screen|![androidMainScreen.jpg](images/androidMainScreen.jpg)|![iosMainScreen.jpg](images/iosMainScreen.jpg)|Displays when the next game will start<br><br>Allows the user to log into a game<br><br>Displays their prize winnings
+Game screen|![androidGameScreen.jpg](images/androidGameScreen.jpg)|![iosGameScreen.jpg](images/iosGameScreen.jpg)|Where the user answers questions for the game
+Information screen|![androidInfoScreen.jpg](images/androidInfoScreen.jpg)|![iosInfoScreen.jpg](images/iosInfoScreen.jpg)|Where the user can send the game to their friends or view contact information for the game owner
 
 
 ## Game Play Instructions
