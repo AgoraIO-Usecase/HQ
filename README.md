@@ -4,7 +4,7 @@ The Agora HQ Trivia template enables you to quickly get started with building a 
 
 - [General Overview](#general-overview)
 - [Architecture Overview](#architecture-overview)
-- [Hardware / Software Requirements](#hardware-software-requirements)
+- [Hardware / Software Requirements](#hardware--software-requirements)
 - [How to Build the Environment](#how-to-build-the-environment)
 - [Customize the UI](#customize-the-ui)
 - [Game Play Instructions](#game-play-instructions)
