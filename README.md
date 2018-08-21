@@ -220,7 +220,7 @@ To fully run the project, you will need to set up your environment with a server
 
 In the `modules/config.js` file, replace `YOUR_APP_ID` with your Agora App ID.
 
-	```
+```
 module.exports = {
     agora_appid: "YOUR_APP_ID",
     cc_id: "agora_hq_cc_server_en",
@@ -244,7 +244,7 @@ In the `HQConfig.ini` file, copy the Agora App ID, append the following informat
 `AppCertEnable`|Defines if an app certificate will be used|`true` or `false`
 `AppCertificateId`|Agora App Certificate|App Certificate from the Agora Dashboard (required if `AppCertEnable` is `true`)
 
-	```
+```
 [LoginInfo]
 AppId=
 AppCertEnable=
@@ -267,7 +267,7 @@ Use **Build All Solution** to build and run the project.
 
 In the `src/main/java/io/agora/agoraandroidhq/tools/Constants.java` file, replace `#YOUR_APPID` with the App ID from the Agora dashboard.
 
-	`public static final String AGORA_APP_ID = #YOUR_APPID;`
+`public static final String AGORA_APP_ID = #YOUR_APPID;`
 
 Open the sample project in Android Studio.
 
