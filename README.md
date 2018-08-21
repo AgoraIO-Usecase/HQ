@@ -238,11 +238,12 @@ Start the server using the command `node server.js`
 
 In the `HQConfig.ini` file, copy the Agora App ID, append the following information:
 
-	Property|Description|Value
+Property|Description|Value
 ---|---|---
 `AppId`|Agora App ID|Your App ID from the Agora Dashboard
 `AppCertEnable`|Defines if an app certificate will be used|`true` or `false`
 `AppCertificateId`|Agora App Certificate|App Certificate from the Agora Dashboard (required if `AppCertEnable` is `true`)
+
 
 ```
 [LoginInfo]
