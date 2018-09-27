@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="white">#FFFFFF</color>
+    <color name="red">#ff44</color>
+    <color name="black">#000</color>
+    <color name="gray">#aab</color>
+    <color name="correct_back_blue">#65AAFF</color>
+
+    <!--view color groups-->
+    <color name="agora_btn_blue">#16B8FD</color>
+    <color name="agora_main_bg_blue">#0543BF</color>
+    <color name="agora_main_bottom_btn_blue">#D8E1F5</color>
+    <color name="agora_option_select_blue">#74B2FC</color>
+    <color name="agora_option_select_red">#ea1f4f</color>
+    <color name="agora_option_error">#F67878</color>
+    <color name="agora_option_default">#f2f7f7</color>
+</resources>

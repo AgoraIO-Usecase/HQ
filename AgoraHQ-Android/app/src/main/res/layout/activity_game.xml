@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/content_view_bg"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/iv_game_back"
+        android:layout_width="36dp"
+        android:layout_height="56dp"
+        android:layout_margin="9dp"
+        android:onClick="onBackClicked"
+        android:src="@drawable/back" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_chat_message_view"
+        android:layout_width="200dp"
+        android:layout_height="360dp"
+        android:layout_gravity="bottom|start"
+        android:padding="9dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_game_chat_message_content"
+            style="@style/agora_edit_style"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="24dp"
+            android:layout_weight="8"
+            android:background="@drawable/edit_text_bg"
+            android:visibility="invisible"
+            android:gravity="center" />
+
+        <ImageView
+            android:id="@+id/iv_game_chat_send"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="9dp"
+            android:layout_marginBottom="3dp"
+            android:layout_weight="1.2"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_show_send_message_view" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_game_congratulation_view"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/congratulation"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <agora.io.agorahq.ui.CircleImageView
+                android:id="@+id/iv_game_congratulation_headImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:id="@+id/tv_game_congratulation_name"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:gravity="center"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/congra_head" />
+
+        <ImageView
+            android:id="@+id/iv_game_congratulation_cancel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="250dp"
+            android:background="@drawable/cancel" />
+
+    </FrameLayout>
+
+</FrameLayout>

@@ -1,0 +1,78 @@
+/* right answer */
+"Correct !" = "答对了";
+
+/* title for cannot play */
+"Can not play" = "不能回答";
+
+/* title fot introduction */
+"Please contact" = "请联系";
+
+/* title fot game going */
+"Game has already started, you will not be able to play" = "游戏已开始，无法参与作答";
+
+/* wrong answer */
+"Oops, Wrong Answer !" = "答错了";
+
+/* title for relive */
+"You are still alive" = "你还活在呢";
+
+/* title for relive */
+"You can play now" = "可以开始玩啦~";
+
+/* Modify User Nam */
+"Modify User Name" = "修改昵称";
+
+/* Take Photo */
+"Take Photo" = "拍照";
+
+/* Choose from Album */
+"Choose from Album" = "从相册选择";
+
+/* Cancel */
+"Cancel" = "取消";
+
+/* Save */
+"Save" = "保存";
+
+/* Server*/
+"http://76.231.168.66:10000" = "http://123.155.153.87:10000";
+
+/* Leave Cheat */
+"Leave" = "离开";
+
+/* In Cheat */
+"Team mode" = "开黑";
+
+/* Creat Room */
+"Create Room" = "创建房间";
+
+/* Join Room */
+"Join Room" = "加入房间";
+
+/* can not connect */
+"Host invite you to connect, But your are still in team mode!" = "主持人邀请你连麦，但是你现在正在开黑！";
+
+/* invite request */
+"Host invite you to connect" = "主持人邀请你连麦";
+
+/* Accept */
+"Accept" = "接受";
+
+/* Reject */
+"Reject" = "拒绝";
+
+/* room_not_found */
+"Channel doesn’t exist" = "游戏房间不存在";
+
+/* already game over */
+"Sorry, you were eliminated" = "您已被淘汰，无法继续作答";
+
+/* incorrect_quiz_id */
+"The answer does not match the question" = "题目不一致，作答不成功";
+
+/* game_closed */
+"Sorry, this question is closed" = "答题已结束，作答不成功";
+
+/* login failed */
+"Login failed, please try again" = "登录失败";
+

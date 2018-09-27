@@ -1,0 +1,1 @@
+include ':app', ':agora-hq-sig-sdk'
