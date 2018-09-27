@@ -1,0 +1,141 @@
+[{
+    "question": "In the year 1900 in the U.S. what were the most popular first names given to boy and girl babies?",
+    "type": "multi",
+    "options": [
+        "William and Elizabeth",
+        "Joseph and Catherine",
+        "John and Mary",
+        "George and Anne"
+    ],
+    "answer": 2
+},{
+    "question": "When did the Liberty Bell get its name?",
+    "type": "multi",
+    "options": [
+        "when it was made, in 1701",
+        "when it rang on July 4, 1776",
+        "in the 19th century, when it became a symbol of the abolition of slavery",
+        "none of the above"
+    ],
+    "answer": 2
+},{
+    "question": "In the Roy Rogers -Dale Evans Museum, you will find Roy and Dales stuffed horses. Roy's horse was named Trigger, which was Dales horse?",
+    "type": "multi",
+    "options": [
+        "Buttermilk",
+        "Daisy",
+        "Scout",
+        "Tulip"
+    ],
+    "answer": 0
+},{
+    "question": "The Daniel Boon museum at the home where he died can best be described how?",
+    "type": "multi",
+    "options": [
+        "a log cabin in Kentucky",
+        "a two-story clapboard house in Tennessee",
+        "a four-story Georgian-style home in Missouri",
+        "a three story brick house in Arkansas"
+    ],
+    "answer": 2
+},{
+    "question": "Which of the following items was owned by the fewest U.S. homes in 1990?",
+    "type": "multi",
+    "options": [
+        "when it was made, in 1701",
+        "when it rang on July 4, 1776",
+        "in the 19th century, when it became a symbol of the abolition of slavery",
+        "none of the above"
+    ],
+    "answer": 1
+},{
+    "question": "Who holds the record for the most victories in a row on the professional golf tour?",
+    "type": "multi",
+    "options": [
+        "Jack Nicklaus",
+        "Arnold Palmer",
+        "Byron Nelson",
+        "Ben Hogan"
+    ],
+    "answer": 2
+},{
+    "question": "Who is third behind Hank Aaron and Babe Ruth in major league career home runs?",
+    "type": "multi",
+    "options": [
+        "Reggie Jackson",
+        "Harmon Killebrew",
+        "Willie Mays",
+        "Frank Robinson"
+    ],
+    "answer": 2
+},{
+    "question": "In 1990, in what percentage of U.S. married couples did the wife earn more money than the husband?",
+    "type": "multi",
+    "options": [
+        "8",
+        "18",
+        "38",
+        "58"
+    ],
+    "answer": 1
+},{
+    "question": "During the 1980s for six consecutive years what breed of dog was the most popular in the U.S.?",
+    "type": "multi",
+    "options": [
+        "cocker spaniel",
+        "German shepherd",
+        "Labrador retriever",
+        "poodle."
+    ],
+    "answer": 0
+},{
+    "question": "In 1985, five percent of U.S. households had telephone answering machines. By 1990 what percentage of homes had answering machines?",
+    "type": "multi",
+    "options": [
+        "10 percent",
+        "15 percent",
+        "31 percent",
+        "51 percent"
+    ],
+    "answer": 2
+},{
+    "question": "The first black American pictured on a U.S. postage stamp was who?",
+    "type": "multi",
+    "options": [
+        "Frederick Douglass",
+        "Booker T. Washington",
+        "Louis Armstrong",
+        "Joe Louis"
+    ],
+    "answer": 3
+},{
+    "question": "What did the \"D\" in \"D-Day\" stand for?",
+    "type": "multi",
+    "options": [
+        "doom",
+        "day",
+        "Dwight (Eisenhower)",
+        "Dunkirk"
+    ],
+    "answer": 1
+},{
+    "question": "The Brownie Box Camera introduced by Eastman Kodak in 1900 had a retail price of what?",
+    "type": "multi",
+    "options": [
+        "$1",
+        "$5",
+        "$10",
+        "$20"
+    ],
+    "answer": 0
+},{
+    "question": "Which of these characters turned 40 years old in 1990?",
+    "type": "multi",
+    "options": [
+        "Charlie Brown",
+        "Bugs Bunny",
+        "Mickey Mouse",
+        "Fred Flintstone"
+    ],
+    "answer": 0
+}]

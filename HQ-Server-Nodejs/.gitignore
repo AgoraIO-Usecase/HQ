@@ -1,0 +1,7 @@
+node_modules
+.DS_Store
+log
+config_cn.js
+config_en.js
+Encrypt.js
+test/
