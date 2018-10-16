@@ -35,7 +35,7 @@ The HQ Trivia template is a turnkey solution for live trivia game applications a
 
 The special SDK is pre-packaged with the broadcast SDK and signaling SDK.
 
-[Special SDK](https://apprtcio-my.sharepoint.com/personal/zhangle_agora_io/Documents/Forms/All.aspx?slrid=b12f859e-a0e4-6000-1b96-9bf4c3d9f0a8&RootFolder=%2Fpersonal%2Fzhangle_agora_io%2FDocuments%2FHQDemo) = Native media + signaling (chat) + SEI (V2_0_2)
+[Special SDK](https://github.com/AgoraIO/HQ/tree/master/SDKs) = Native media + signaling (chat) + SEI (V2_0_2)
 
 
 **Note:** The Agora Special SDK is *required* to run the HQ Trivia game demo and templates.
