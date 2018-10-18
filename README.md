@@ -31,12 +31,15 @@ Players can participate in daily trivia games and win prize money. The game cons
 
 ### Agora SDKs and API Services
 
-The HQ Trivia template is a turnkey solution for live trivia game applications and uses the Agora Special SDK.
+The HQ Trivia template is a turnkey solution for live trivia game applications and uses the Agora 
+SDK.
 
-The special SDK is pre-packaged with the broadcast SDK and signaling SDK.
+The special SDK is pre-packaged with the broadcast SDK and signaling SDK and IJK player framework.
 
-[Special SDK](https://github.com/AgoraIO/HQ/tree/master/SDKs) = Native media + signaling (chat) + SEI (V2_0_2)
+[Special SDK for IOS (Native media + signaling (chat) + SEI (V2_0_2)+IJK framework)](https://github.com/AgoraIO/HQ/blob/master/AgoraHQ-iOS-Swift/dist/AgoraHQ-iOS-Swift.zip) 
 
+[Special SDK for Android Signaling(chat)](https://github.com/AgoraIO/HQ/tree/master/AgoraHQ-Android/agora-hq-sig-sdk)
+[Special SDK for Android Native media + SEI (V2_0_2)+IJK framework](https://github.com/AgoraIO/HQ/tree/master/AgoraHQ-Android/app/libs)
 
 **Note:** The Agora Special SDK is *required* to run the HQ Trivia game demo and templates.
 
