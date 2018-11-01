@@ -82,7 +82,9 @@
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)obs-sdk\bin\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\" /Y /D /E
 xcopy "$(SolutionDir)obs-sdk\data\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\data\" /Y /D /E
-xcopy "$(SolutionDir)obs-sdk\obs-plugins\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\obs-plugins\" /Y /D /E</Command>
+xcopy "$(SolutionDir)obs-sdk\obs-plugins\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\obs-plugins\" /Y /D /E
+xcopy "$(SolutionDir)sdk\dll\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\32bit\" /Y /D /E
+</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -120,7 +122,8 @@ xcopy "$(SolutionDir)obs-sdk\obs-plugins\*.*" "$(SolutionDir)obs-studio\rundir\$
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)obs-sdk\bin\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\" /Y /D /E
 xcopy "$(SolutionDir)obs-sdk\data\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\data\" /Y /D /E
-xcopy "$(SolutionDir)obs-sdk\obs-plugins\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\obs-plugins\" /Y /D /E</Command>
+xcopy "$(SolutionDir)obs-sdk\obs-plugins\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\obs-plugins\" /Y /D /E
+xcopy "$(SolutionDir)sdk\dll\*.*" "$(SolutionDir)obs-studio\rundir\$(Configuration)\bin\32bit\" /Y /D /E</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>

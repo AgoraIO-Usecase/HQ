@@ -125,4 +125,5 @@ private:
 	//std::map<std::string, >
 public:
 	CAgoraHQDlg* m_pAgoraHQDlg;
+	afx_msg void OnBnClickedButtonStartmark();
 };

@@ -81,6 +81,7 @@ BEGIN_MESSAGE_MAP(CDlgAnswer, CDialogEx)
 	ON_MESSAGE(WM_URL_MSG(URL_STOP_ANS), onHttpStopAns)
 	ON_MESSAGE(WM_URL_MSG(URL_INVITE), onHttpInvite)
 	ON_MESSAGE(WM_URL_MSG(URL_INVITE_STATUS), onHttpInviteStatus)
+	ON_BN_CLICKED(IDC_BUTTON_STARTMARK, &CDlgAnswer::OnBnClickedButtonStartmark)
 END_MESSAGE_MAP()
 
 
@@ -335,7 +336,7 @@ HRESULT CDlgAnswer::onLoginSuccess(WPARAM wParam, LPARAM lParam)
 	OutputDebugStringA(__FUNCTION__);
 	OutputDebugStringA("\r\n");
 
-// use http instead of agora signal
+// use notifyQuestionAnswerStatics instead of agora signal
 /*	std::string curLanguage = gHQConfig.getLanguage();
 	if ("" == curLanguage){
 		curLanguage = "0";
@@ -1170,4 +1171,10 @@ LRESULT CDlgAnswer::onHttpInviteStatus(WPARAM wParam, LPARAM lParam)
 	
 
 	return true;
+}
+
+
+void CDlgAnswer::OnBnClickedButtonStartmark()
+{
+	// TODO: Add your control notification handler code here
 }
