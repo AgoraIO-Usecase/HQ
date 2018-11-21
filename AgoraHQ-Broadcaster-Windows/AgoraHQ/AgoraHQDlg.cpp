@@ -424,6 +424,7 @@ void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 
 void CAgoraHQDlg::JoinChannel_Agora()
 {
+	m_lpAgoraObject->EnableLoopBack(TRUE);
 	if (NULL == m_pDlgConfig){
 		m_pDlgConfig = new CDlgConfig;
 		m_pDlgConfig->Create(CDlgConfig::IDD);
@@ -611,7 +612,6 @@ void CAgoraHQDlg::initAgoraMediaRtc()
 	m_lpAgoraObject->SetLogFilePath(strSdkLogFilePath);
 	m_lpAgoraObject->EnableLastmileTest(TRUE);
 	m_lpAgoraObject->EnableLocalMirrorImage(FALSE);
-	m_lpAgoraObject->EnableLoopBack(TRUE);
 
 	m_lpAgoraObject->EnableVideo(TRUE);
 }
