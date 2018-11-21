@@ -1932,7 +1932,7 @@ void CAgoraHQDlg::CreateDefaultScene(bool firstStart)
 	//创建scene 唯一一个
 	/*obs_scene_t*/
 	obs_scene_t* scene = obs_scene_create(Str("Basic.Scene"));
-
+	const char* test = Str("Basic.Scene");
 	if (firstStart)
 		CreateFirstRunSources();
 
