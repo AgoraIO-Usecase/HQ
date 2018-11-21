@@ -613,6 +613,7 @@ void CAgoraHQDlg::initAgoraMediaRtc()
 	m_lpAgoraObject->EnableLastmileTest(TRUE);
 	m_lpAgoraObject->EnableLocalMirrorImage(FALSE);
 
+	m_lpAgoraObject->EnableAudio(TRUE);
 	m_lpAgoraObject->EnableVideo(TRUE);
 }
 
@@ -1706,11 +1707,7 @@ void CAgoraHQDlg::AddScene(OBSSource source)
 {
 	const char *name = obs_source_get_name(source);
 	obs_scene_t *scene = obs_scene_from_source(source);
-
 	default_scene = OBSScene(scene);
-	// 	QListWidgetItem *item = new QListWidgetItem(QT_UTF8(name));
-	// 	SetOBSRef(item, OBSScene(scene));
-	// 	ui->scenes->addItem(item);
 
 	obs_hotkey_register_source(source, "OBSBasic.SelectScene",
 		Str("Basic.Hotkeys.SelectScene"),
@@ -1744,9 +1741,6 @@ void CAgoraHQDlg::AddScene(OBSSource source)
 		CAgoraHQDlg::SceneReordered, this),
 	});
 
-	// 	item->setData(static_cast<int>(QtDataRole::OBSSignals),
-	// 		QVariant::fromValue(container));
-
 	/* if the scene already has items (a duplicated scene) add them */
 	auto addSceneItem = [this](obs_sceneitem_t *item)
 	{
@@ -1765,20 +1759,6 @@ void CAgoraHQDlg::AddScene(OBSSource source)
 		obs_sceneitem_select(item, true);
 		return true;
 	}, &addSceneItem);
-
-
-	//SaveProject();
-
-	// 	if (!disableSaving) {
-	// 		obs_source_t *source = obs_scene_get_source(scene);
-	// 		blog(LOG_INFO, "User added scene '%s'",
-	// 			obs_source_get_name(source));
-	// 
-	// 		OBSProjector::UpdateMultiviewProjectors();
-	// 	}
-	// 
-	// 	if (api)
-	// 		api->on_event(OBS_FRONTEND_EVENT_SCENE_LIST_CHANGED);
 }
 
 OBSScene CAgoraHQDlg::GetCurrentScene()
@@ -1961,15 +1941,6 @@ bool CAgoraHQDlg::StartStreaming()
 	}
 
 	return true;
-	// 	bool recordWhenStreaming = config_get_bool(GetGlobalConfig(),
-	// 		"BasicWindow", "RecordWhenStreaming");
-	// 	if (recordWhenStreaming)
-	// 		StartRecording();
-	// 
-	// 	bool replayBufferWhileStreaming = config_get_bool(GetGlobalConfig(),
-	// 		"BasicWindow", "ReplayBufferWhileStreaming");
-	// 	if (replayBufferWhileStreaming)
-	// 		StartReplayBuffer();
 }
 
 void CAgoraHQDlg::StopStreaming()
@@ -2020,7 +1991,6 @@ void CAgoraHQDlg::OBSInit()
 
 	if (!ResetAudio())
 	{
-		AfxMessageBox(_T("fuck"));
 		//throw "Failed to initialize audio";
 	}
 	ret = ResetVideo();
@@ -2072,44 +2042,9 @@ void CAgoraHQDlg::OBSInit()
 	InitPrimitives();
 	ResetAgoraOutput();
 	InitAgoraService();
-
-	// 	sceneDuplicationMode = config_get_bool(App()->GlobalConfig(),
-	// 		"BasicWindow", "SceneDuplicationMode");
-	// 	swapScenesMode = config_get_bool(App()->GlobalConfig(),
-	// 		"BasicWindow", "SwapScenesMode");
-	// 	editPropertiesMode = config_get_bool(App()->GlobalConfig(),
-	// 		"BasicWindow", "EditPropertiesMode");
-	// 
-	// 	if (!opt_studio_mode) {
-	// 		SetPreviewProgramMode(config_get_bool(App()->GlobalConfig(),
-	// 			"BasicWindow", "PreviewProgramMode"));
-	// 	}
-	// 	else {
-	// 		SetPreviewProgramMode(true);
-	// 		opt_studio_mode = false;
-	// 	}
-
-	// #define SET_VISIBILITY(name, control) \
-		// 	do { \
-		// 		if (config_has_user_value(App()->GlobalConfig(), \
-		// 					"BasicWindow", name)) { \
-		// 			bool visible = config_get_bool(App()->GlobalConfig(), \
-		// 					"BasicWindow", name); \
-		// 			ui->control->setChecked(visible); \
-		// 						} \
-		// 			} while (false)
-	// 
-	// 	SET_VISIBILITY("ShowListboxToolbars", toggleListboxToolbars);
-	// 	SET_VISIBILITY("ShowStatusBar", toggleStatusBar);
-	// #undef SET_VISIBILITY
-
-	{
-		disableSaving--;
-		//Load(savePath);//没有加载的就创建默认的scene
-
-		CreateDefaultScene(true);
-		disableSaving++;
-	}
+	disableSaving--;
+	CreateDefaultScene(true);
+	disableSaving++;
 
 	loaded = true;
 #ifdef _WIN32
@@ -2122,11 +2057,6 @@ void CAgoraHQDlg::OBSInit()
 		}
 	}
 #endif
-
-	//RefreshSceneCollections();
-	//RefreshProfiles();
-
-
 }
 
 void CAgoraHQDlg::DrawBackdrop(float cx, float cy)
@@ -2638,21 +2568,6 @@ void CAgoraHQDlg::SetTransition(OBSSource transition)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //OBS for ExtCapture
 
-// //开始推流
-// void CAgoraHQDlg::OnBtnClickedStart()
-// {
-// 	CAgoraExternalCaptureDlg* dlgParent = static_cast<CAgoraExternalCaptureDlg*>(GetParent());
-// 	if (!dlgParent->IsStreaming() && dlgParent->StartStreaming())
-// 	{
-// 		m_btnOBSStartStreaming.SetWindowText(_T("Stop"));
-// 	}
-// 	else if (dlgParent->IsStreaming())
-// 	{
-// 		m_btnOBSStartStreaming.SetWindowText(_T("Start"));
-// 		dlgParent->StopStreaming();
-// 	}
-// }
-// 
 SIZE CAgoraHQDlg::GetPreviewRect()
 {
 	RECT rc;
@@ -2666,14 +2581,6 @@ SIZE CAgoraHQDlg::GetPreviewRect()
 	return sz;
 }
 
-// 
-// void CAgoraHQDlg::OnDestroy()
-// {
-// 	obs_display_remove_draw_callback(m_wndLocal.GetDisplay(), RenderMain, this);
-// 	CDialogEx::OnDestroy();
-// 	// TODO: Add your message handler code here
-// }
-// 
 void CAgoraHQDlg::RenderMain(void *data, uint32_t cx, uint32_t cy)
 {
 	CAgoraHQDlg* window = static_cast<CAgoraHQDlg*>(data);

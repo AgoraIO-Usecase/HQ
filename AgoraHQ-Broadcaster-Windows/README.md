@@ -49,6 +49,10 @@ There is a Restart.bat script in the home directory. You need to copy the script
 * VC++ 2013(or higher)
 * win7(or higher)
 
+## PC Environment Requirements
+
+If you check obs, PC must have a microphone. Or the callback 'onRecordAudioFrame' will not be called, and the audio obs capture can not pass to agora sdk.
+
 ## Connect Us
 
 - You can find full API document at [Document Center](https://docs.agora.io/en/)

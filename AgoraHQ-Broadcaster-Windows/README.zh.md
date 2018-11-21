@@ -51,6 +51,10 @@ CameraDeviceID=
 * VC++ 2013(或更高版本)
 * Windows7(或更高版本)
 
+## obs 使用条件
+
+如果使用obs的情况下，想要听到导播的声音，电脑必须有一个麦克风，否则声网的声音回调函数无法被调用。不能够将obs采集的音频传给agora sdk。
+
 ## 联系我们
 
 - 完整的 API 文档见 [文档中心](https://docs.agora.io/cn/)
