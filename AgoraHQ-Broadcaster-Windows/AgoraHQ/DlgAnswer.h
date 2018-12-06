@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 
 
-// CDlgAnswer ¶Ô»°¿ò
+// CDlgAnswer å¯¹è¯æ¡†
 class CAgoraSignalInstance;
 class CSingleCallBack;
 class CAgoraHQDlg;
@@ -15,14 +15,14 @@ class CDlgAnswer : public CDialogEx
 	DECLARE_DYNAMIC(CDlgAnswer)
 
 public:
-	CDlgAnswer(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CDlgAnswer(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CDlgAnswer();
 	void updateStatusToPublish();
 
 	void leaveChannel();
 	void joinchannel();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_DIALOG_ANSWER };
 
 protected:

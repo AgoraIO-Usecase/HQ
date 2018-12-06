@@ -1,4 +1,4 @@
-// DlgInput.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// DlgInput.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -9,7 +9,7 @@
 #include "SignalInstance.h"
 
 
-// CDlgInput ¶Ô»°¿ò
+// CDlgInput å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CDlgInput, CDialogEx)
 
@@ -44,7 +44,7 @@ BEGIN_MESSAGE_MAP(CDlgInput, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CDlgInput ÏûÏ¢´¦Àí³ÌĞò
+// CDlgInput æ¶ˆæ¯å¤„ç†ç¨‹åº
 BOOL CDlgInput::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -66,7 +66,7 @@ BOOL CDlgInput::PreTranslateMessage(MSG* pMsg)
 		m_edInviteAccount.GetWindowTextW(InputParam);
 		if (_T("") == InputParam){
 
-			AfxMessageBox(_T("ÊäÈëÎª¿Õ"));
+			AfxMessageBox(_T("è¾“å…¥ä¸ºç©º"));
 		}
 		else{
 

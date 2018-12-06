@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 
 
-// CDlgAnswerResultStatics ¶Ô»°¿ò
+// CDlgAnswerResultStatics å¯¹è¯æ¡†
 
 
 class CDlgAnswerResultStatics : public CDialogEx
@@ -9,17 +9,17 @@ class CDlgAnswerResultStatics : public CDialogEx
 	DECLARE_DYNAMIC(CDlgAnswerResultStatics)
 
 public:
-	CDlgAnswerResultStatics(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CDlgAnswerResultStatics(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CDlgAnswerResultStatics();
 	virtual BOOL OnInitDialog();
 	void setContext(const tagQuestionStatics &questionStatics);
 	void setContext(const std::vector<tagListOfWinners> &vecListOfWinners);
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_DIALOG_ANSWER_RESULT };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 	afx_msg void OnBnClickedButtonSave();
 	afx_msg void OnBnClickedButtonCancle();
 

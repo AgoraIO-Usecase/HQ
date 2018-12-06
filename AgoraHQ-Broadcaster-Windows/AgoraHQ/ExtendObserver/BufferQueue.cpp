@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BufferQueue.h"
 
 
@@ -21,7 +21,7 @@ BOOL CBufferQueue::Create(int nUnitCount, SIZE_T nBytesPreUnit)
 	if (nUnitCount < 0 || nBytesPreUnit == 0)
 		return FALSE;
 
-	// ÒÑ¾­·ÖÅä¹ıÁË
+	// å·²ç»åˆ†é…è¿‡äº†
 	if (!m_listFreeUnit.IsEmpty())
 		return TRUE;
 
@@ -29,7 +29,7 @@ BOOL CBufferQueue::Create(int nUnitCount, SIZE_T nBytesPreUnit)
 
 	::EnterCriticalSection(&m_csListLock);
 
-	// ³õÊ¼»¯ÄÚ´æ³Ø
+	// åˆå§‹åŒ–å†…å­˜æ± 
 	for (int nIndex = 0; nIndex < nUnitCount; nIndex++){
 		lpBuffer = new BYTE[nBytesPreUnit];
 		m_listFreeUnit.AddTail(lpBuffer);
@@ -53,7 +53,7 @@ BOOL CBufferQueue::Close()
 
 	::EnterCriticalSection(&m_csListLock);
 
-	if (m_listBusyUnit.GetCount() != 0){			// »¹ÓĞÃ¦¿é£¬½ûÖ¹ÊÍ·Å
+	if (m_listBusyUnit.GetCount() != 0){			// è¿˜æœ‰å¿™å—ï¼Œç¦æ­¢é‡Šæ”¾
 		::LeaveCriticalSection(&m_csListLock);
 
 		return FALSE;
@@ -68,7 +68,7 @@ BOOL CBufferQueue::Close()
 	m_nUnitCount = 0;
 	m_nCurrentCount = 0;
 
-	::LeaveCriticalSection(&m_csListLock);		// ³ØÄÚ»º³åÈ«²¿Ïú»ÙÍê±Ï£¬ÍË³öÁÙ½ç
+	::LeaveCriticalSection(&m_csListLock);		// æ± å†…ç¼“å†²å…¨éƒ¨é”€æ¯å®Œæ¯•ï¼Œé€€å‡ºä¸´ç•Œ
 
 	return TRUE;
 }
@@ -85,22 +85,22 @@ int	CBufferQueue::GetBusyCount() const
 
 LPVOID	CBufferQueue::AllocBuffer(BOOL bForceAlloc)
 {
-	LPBYTE		lpBuffer = NULL;	// »º³åÇø
-	POSITION	posHead = NULL;		// Á´±íÍ·
-	POSITION	posTail = NULL;		// Á´±íÎ²
+	LPBYTE		lpBuffer = NULL;	// ç¼“å†²åŒº
+	POSITION	posHead = NULL;		// é“¾è¡¨å¤´
+	POSITION	posTail = NULL;		// é“¾è¡¨å°¾
 
 	_ASSERT(m_nUnitCount > 0 && m_nBytesPreUnit > 0);
 
-	::EnterCriticalSection(&m_csListLock);				// ½øÈë·ÖÅäÁÙ½ç
-	posHead = m_listFreeUnit.GetHeadPosition();			// ¼ì²éÁ´±íÊÇ·ñÎª¿Õ
-	posTail = m_listFreeUnit.GetTailPosition();			// Á´±íÎ²Ò²Òª¼ì²é
+	::EnterCriticalSection(&m_csListLock);				// è¿›å…¥åˆ†é…ä¸´ç•Œ
+	posHead = m_listFreeUnit.GetHeadPosition();			// æ£€æŸ¥é“¾è¡¨æ˜¯å¦ä¸ºç©º
+	posTail = m_listFreeUnit.GetTailPosition();			// é“¾è¡¨å°¾ä¹Ÿè¦æ£€æŸ¥
 
-	if (posHead != NULL && posHead != posTail)			// Á´±í·Ç¿ÕÇÒÍ·Î²²»Í¬
+	if (posHead != NULL && posHead != posTail)			// é“¾è¡¨éç©ºä¸”å¤´å°¾ä¸åŒ
 		lpBuffer = m_listFreeUnit.RemoveHead();
-	else if (posHead != NULL && posHead == posTail)		// Ö»ÓĞÒ»¸ö¿ÕÏĞ
+	else if (posHead != NULL && posHead == posTail)		// åªæœ‰ä¸€ä¸ªç©ºé—²
 		lpBuffer = m_listFreeUnit.RemoveHead();
-	else{												// Á´±íÎŞ¿ÕÏĞ
-		if (bForceAlloc){								// ÔÊĞíÇ¿ÖÆ·ÖÅä
+	else{												// é“¾è¡¨æ— ç©ºé—²
+		if (bForceAlloc){								// å…è®¸å¼ºåˆ¶åˆ†é…
 			lpBuffer = new BYTE[m_nBytesPreUnit];
 			m_nCurrentCount++;
 		}

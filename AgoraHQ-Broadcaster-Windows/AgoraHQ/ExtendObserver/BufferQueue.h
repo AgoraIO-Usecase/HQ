@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <atlcoll.h>
 
@@ -24,13 +24,13 @@ public:
 	void	FreeAllBusyBlock();
 
 private:
-	int			m_nUnitCount;		// µ¥Ôª³õÊ¼Öµ
-	int			m_nCurrentCount;	// µ±Ç°¿éÊıÄ¿
+	int			m_nUnitCount;		// å•å…ƒåˆå§‹å€¼
+	int			m_nCurrentCount;	// å½“å‰å—æ•°ç›®
 	SIZE_T		m_nBytesPreUnit;
 
-	CAtlList<LPBYTE>	m_listFreeUnit;	// ÏĞÖÃµ¥Ôª
-	CAtlList<LPBYTE>	m_listBusyUnit;	// ·ÇÏĞÖÃµ¥Ôª
+	CAtlList<LPBYTE>	m_listFreeUnit;	// é—²ç½®å•å…ƒ
+	CAtlList<LPBYTE>	m_listBusyUnit;	// éé—²ç½®å•å…ƒ
 
-	CRITICAL_SECTION	m_csListLock;	// Ã¦±íËø
+	CRITICAL_SECTION	m_csListLock;	// å¿™è¡¨é”
 };
 

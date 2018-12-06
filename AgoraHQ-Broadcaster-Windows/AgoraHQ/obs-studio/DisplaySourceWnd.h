@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define WM_SHOWMODECHANGED	WM_USER+300
 #define WM_SHOWBIG			WM_USER+301

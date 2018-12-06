@@ -1,4 +1,4 @@
-// BasicProperties.cpp : implementation file
+ï»¿// BasicProperties.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -73,7 +73,7 @@ BOOL CBasicProperties::OnInitDialog()
 	os_utf8_to_wcs_ptr(name, strlen(name)*sizeof(wchar_t), &wcs);
 
 	CString strTitle;
-	strTitle.Format(_T("ÊôÐÔ %s"), wcs);
+	strTitle.Format(_T("å±žæ€§ %s"), wcs);
 	SetWindowText(strTitle);
 
 	CRect	rcClient;
@@ -220,7 +220,7 @@ void CBasicProperties::Cleanup()
 
 BOOL CBasicProperties::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
-	if (WM_CREATE_PREVIEW == message)//´´½¨preview
+	if (WM_CREATE_PREVIEW == message)//åˆ›å»ºpreview
 	{ 
 		obs_display_add_draw_callback(preview->GetDisplay(), 
 			CBasicProperties::DrawPreview, this);

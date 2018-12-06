@@ -1,4 +1,4 @@
-// AGVideoWnd.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// AGVideoWnd.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -39,10 +39,10 @@ END_MESSAGE_MAP()
 
 
 
-// CDisplaySourceWnd ÏûÏ¢´¦Àí³ÌĞò
+// CDisplaySourceWnd æ¶ˆæ¯å¤„ç†ç¨‹åº
 BOOL CDisplaySourceWnd::OnEraseBkgnd(CDC* pDC)
 {
-	// TODO:  ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
+	// TODO:  åœ¨æ­¤æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç å’Œ/æˆ–è°ƒç”¨é»˜è®¤å€¼
 	CRect		rcClient;
 	CPoint		ptDraw;
 	IMAGEINFO	imgInfo;
@@ -124,7 +124,7 @@ void CDisplaySourceWnd::SetFrameRateInfo(int nReceiveFrameRate)
 
 void CDisplaySourceWnd::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO:  ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
+	// TODO:  åœ¨æ­¤æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç å’Œ/æˆ–è°ƒç”¨é»˜è®¤å€¼
 
 	::SendMessage(GetParent()->GetSafeHwnd(), WM_SHOWBIG, (WPARAM)this, (LPARAM)m_nUID);
 
@@ -134,7 +134,7 @@ void CDisplaySourceWnd::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CDisplaySourceWnd::OnRButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO:  ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
+	// TODO:  åœ¨æ­¤æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç å’Œ/æˆ–è°ƒç”¨é»˜è®¤å€¼
 
 	CWnd::OnRButtonDown(nFlags, point);
 }
@@ -145,7 +145,7 @@ int CDisplaySourceWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	// TODO:  ÔÚ´ËÌí¼ÓÄú×¨ÓÃµÄ´´½¨´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ‚¨ä¸“ç”¨çš„åˆ›å»ºä»£ç 
 //	m_wndInfo.Create(NULL, NULL, WS_CHILD | WS_VISIBLE, CRect(0, 0, 192, 28), this, IDC_STATIC);
 
 	return 0;
@@ -199,7 +199,7 @@ void CDisplaySourceWnd::OnSize(UINT nType, int cx, int cy)
 		obs_display_resize(display, rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
 	}
 
-	//·¢ĞÅºÅ¸ø¶ÔÓ¦´°¿Ú
+	//å‘ä¿¡å·ç»™å¯¹åº”çª—å£
 	if (receiveWnd != NULL)
 		::PostMessage(receiveWnd, WM_DISPLAY_PREVIEW, 0, 0);
 }
@@ -214,8 +214,8 @@ void CDisplaySourceWnd::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CDisplaySourceWnd::OnPaint()
 {
     CPaintDC dc(this); // device context for painting
-    // TODO:  ÔÚ´Ë´¦Ìí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂë
-    // ²»Îª»æÍ¼ÏûÏ¢µ÷ÓÃ CWnd::OnPaint()
+    // TODO:  åœ¨æ­¤å¤„æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç 
+    // ä¸ä¸ºç»˜å›¾æ¶ˆæ¯è°ƒç”¨ CWnd::OnPaint()
 
 
     return CWnd::OnPaint();
@@ -239,7 +239,7 @@ void CDisplaySourceWnd::CreateDisplay()
 	//QTToGSWindow(winId(), info.window);
 	info.window.hwnd = m_hWnd;
 	display = obs_display_create(&info);
-	//·¢ÏûÏ¢´´½¨
+	//å‘æ¶ˆæ¯åˆ›å»º
 
 	if (display && receiveWnd != NULL)
 		::PostMessage(receiveWnd, WM_CREATE_PREVIEW, 0, 0);

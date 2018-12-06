@@ -1,5 +1,5 @@
-
-// AgoraHQDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿
+// AgoraHQDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -33,19 +33,19 @@
 
 #define EVENT_TIMER_INVITEREMOTE 1
 
-// ÓÃÓÚÓ¦ÓÃ³ÌĞò¡°¹ØÓÚ¡±²Ëµ¥ÏîµÄ CAboutDlg ¶Ô»°¿ò
+// ç”¨äºåº”ç”¨ç¨‹åºâ€œå…³äºâ€èœå•é¡¹çš„ CAboutDlg å¯¹è¯æ¡†
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_ABOUTBOX };
 
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
-// ÊµÏÖ
+// å®ç°
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -63,7 +63,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CAgoraHQDlg ¶Ô»°¿ò
+// CAgoraHQDlg å¯¹è¯æ¡†
 
 
 CAgoraHQDlg::CAgoraHQDlg(CWnd* pParent /*=NULL*/)
@@ -160,15 +160,15 @@ BEGIN_MESSAGE_MAP(CAgoraHQDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CAgoraHQDlg ÏûÏ¢´¦Àí³ÌĞò
+// CAgoraHQDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 BOOL CAgoraHQDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ½«¡°¹ØÓÚ...¡±²Ëµ¥ÏîÌí¼Óµ½ÏµÍ³²Ëµ¥ÖĞ¡£
+	// å°†â€œå…³äº...â€èœå•é¡¹æ·»åŠ åˆ°ç³»ç»Ÿèœå•ä¸­ã€‚
 
-	// IDM_ABOUTBOX ±ØĞëÔÚÏµÍ³ÃüÁî·¶Î§ÄÚ¡£
+	// IDM_ABOUTBOX å¿…é¡»åœ¨ç³»ç»Ÿå‘½ä»¤èŒƒå›´å†…ã€‚
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -186,12 +186,12 @@ BOOL CAgoraHQDlg::OnInitDialog()
 		}
 	}
 
-	// ÉèÖÃ´Ë¶Ô»°¿òµÄÍ¼±ê¡£  µ±Ó¦ÓÃ³ÌĞòÖ÷´°¿Ú²»ÊÇ¶Ô»°¿òÊ±£¬¿ò¼Ü½«×Ô¶¯
-	//  Ö´ĞĞ´Ë²Ù×÷
-	SetIcon(m_hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(m_hIcon, FALSE);		// ÉèÖÃĞ¡Í¼±ê
+	// è®¾ç½®æ­¤å¯¹è¯æ¡†çš„å›¾æ ‡ã€‚  å½“åº”ç”¨ç¨‹åºä¸»çª—å£ä¸æ˜¯å¯¹è¯æ¡†æ—¶ï¼Œæ¡†æ¶å°†è‡ªåŠ¨
+	//  æ‰§è¡Œæ­¤æ“ä½œ
+	SetIcon(m_hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(m_hIcon, FALSE);		// è®¾ç½®å°å›¾æ ‡
 
-	// TODO:  ÔÚ´ËÌí¼Ó¶îÍâµÄ³õÊ¼»¯´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ é¢å¤–çš„åˆå§‹åŒ–ä»£ç 
 	SetBackgroundColor(RGB(0xff,0xff,0xff),TRUE);
 
 	AfxGetUrlService()->GetUrlCallback()->SetMsgReceiver(m_hWnd);
@@ -203,7 +203,7 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	getChannelName();
 	m_strAppId = gHQConfig.getAppId();
 	if ("" == m_strAppId){
-		AfxMessageBox(_T("APPID Îª¿Õ.ÇëÖØĞÂÅäÖÃ"));
+		AfxMessageBox(_T("APPID ä¸ºç©º.è¯·é‡æ–°é…ç½®"));
 		std::string iniFilePath = gHQConfig.getFilePah();
 		gHQConfig.setAppId("");
 		ShellExecute(NULL, _T("open"), s2cs(iniFilePath), NULL, NULL, SW_SHOW);
@@ -214,7 +214,7 @@ BOOL CAgoraHQDlg::OnInitDialog()
 	initCtrl();
 	initAgoraMediaRtc();
 	InitOBSPreview();
-	return TRUE;  // ³ı·Ç½«½¹µãÉèÖÃµ½¿Ø¼ş£¬·ñÔò·µ»Ø TRUE
+	return TRUE;  // é™¤éå°†ç„¦ç‚¹è®¾ç½®åˆ°æ§ä»¶ï¼Œå¦åˆ™è¿”å› TRUE
 }
 
 // OBS for ExtCapture
@@ -243,7 +243,7 @@ void CAgoraHQDlg::EnableOBSCtrl(bool bEnable)
 
 BOOL CAgoraHQDlg::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
-	if (WM_CREATE_PREVIEW == message)//´´½¨preview
+	if (WM_CREATE_PREVIEW == message)//åˆ›å»ºpreview
 	{
 		obs_display_add_draw_callback(m_wndLocal.GetDisplay(), CAgoraHQDlg::RenderMain, this);
 	}
@@ -304,25 +304,25 @@ void CAgoraHQDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// Èç¹ûÏò¶Ô»°¿òÌí¼Ó×îĞ¡»¯°´Å¥£¬ÔòĞèÒªÏÂÃæµÄ´úÂë
-//  À´»æÖÆ¸ÃÍ¼±ê¡£  ¶ÔÓÚÊ¹ÓÃÎÄµµ/ÊÓÍ¼Ä£ĞÍµÄ MFC Ó¦ÓÃ³ÌĞò£¬
-//  Õâ½«ÓÉ¿ò¼Ü×Ô¶¯Íê³É¡£
+// å¦‚æœå‘å¯¹è¯æ¡†æ·»åŠ æœ€å°åŒ–æŒ‰é’®ï¼Œåˆ™éœ€è¦ä¸‹é¢çš„ä»£ç 
+//  æ¥ç»˜åˆ¶è¯¥å›¾æ ‡ã€‚  å¯¹äºä½¿ç”¨æ–‡æ¡£/è§†å›¾æ¨¡å‹çš„ MFC åº”ç”¨ç¨‹åºï¼Œ
+//  è¿™å°†ç”±æ¡†æ¶è‡ªåŠ¨å®Œæˆã€‚
 
 void CAgoraHQDlg::OnPaint()
 {
-	CPaintDC dc(this); // ÓÃÓÚ»æÖÆµÄÉè±¸ÉÏÏÂÎÄ
+	CPaintDC dc(this); // ç”¨äºç»˜åˆ¶çš„è®¾å¤‡ä¸Šä¸‹æ–‡
 	if (IsIconic())
 	{
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Ê¹Í¼±êÔÚ¹¤×÷Çø¾ØĞÎÖĞ¾ÓÖĞ
+		// ä½¿å›¾æ ‡åœ¨å·¥ä½œåŒºçŸ©å½¢ä¸­å±…ä¸­
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
-		// »æÖÆÍ¼±ê
+		// ç»˜åˆ¶å›¾æ ‡
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -377,8 +377,8 @@ void CAgoraHQDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 }
 
-//µ±ÓÃ»§ÍÏ¶¯×îĞ¡»¯´°¿ÚÊ±ÏµÍ³µ÷ÓÃ´Ëº¯ÊıÈ¡µÃ¹â±ê
-//ÏÔÊ¾¡£
+//å½“ç”¨æˆ·æ‹–åŠ¨æœ€å°åŒ–çª—å£æ—¶ç³»ç»Ÿè°ƒç”¨æ­¤å‡½æ•°å–å¾—å…‰æ ‡
+//æ˜¾ç¤ºã€‚
 HCURSOR CAgoraHQDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
@@ -388,7 +388,7 @@ HCURSOR CAgoraHQDlg::OnQueryDragIcon()
 
 void CAgoraHQDlg::OnBnClickedButtonHqConfig()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 	if (NULL == m_pDlgConfig){
 		m_pDlgConfig = new CDlgConfig;
 		m_pDlgConfig->Create(CDlgConfig::IDD);
@@ -400,12 +400,12 @@ void CAgoraHQDlg::OnBnClickedButtonHqConfig()
 
 void CAgoraHQDlg::OnBnClickedButtonMediaParam()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 }
 
 void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 	CString strParam;
 	m_btnJoinChannel.GetWindowTextW(strParam);
 	if (_T("JoinChannel") == strParam){
@@ -483,7 +483,7 @@ void CAgoraHQDlg::LeaveChannel_Agora()
 #if 0
 void CAgoraHQDlg::OnBnClickedButtonJoinchannel()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 	CString strParam;
 	m_btnJoinChannel.GetWindowTextW(strParam);
 	if (_T("JoinChannel") == strParam){
@@ -550,7 +550,7 @@ void CAgoraHQDlg::initCtrl()
 	if("1" == appcertEnable){
 		m_strAppCertificatId = gHQConfig.getAppCertificateId();
 		if ("" == m_strAppCertificatId){
-			AfxMessageBox(_T("ÆôÓÃChannelKey ,appCertificatID ²»ÄÜÎª¿Õ"));
+			AfxMessageBox(_T("å¯ç”¨ChannelKey ,appCertificatID ä¸èƒ½ä¸ºç©º"));
 			::PostQuitMessage(0);
 			return;
 		}
@@ -1087,7 +1087,7 @@ LRESULT CAgoraHQDlg::onInviteCallBackAccept(WPARAM wParam, LPARAM lParam)
 
 void CAgoraHQDlg::OnBnClickedButtonInvitemedia()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 	if (nullptr == m_pDlgInputParam){
 		m_pDlgInputParam = new CDlgInput();
 		m_pDlgInputParam->Create(CDlgInput::IDD);
@@ -1103,7 +1103,7 @@ void CAgoraHQDlg::OnBnClickedButtonInvitemedia()
 
 void CAgoraHQDlg::OnBnClickedButtonSettimebonus()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
+	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
 	if (nullptr == m_pDlgSetTimeBonus){
 		m_pDlgSetTimeBonus = new CDlgSetTimeBonus();
 		m_pDlgSetTimeBonus->Create(CDlgSetTimeBonus::IDD);
@@ -1306,7 +1306,7 @@ bool CAgoraHQDlg::InitService()
 	// 	if (LoadService())
 	// 		return true;
 
-	//³õÊ¼»¯service sbd
+	//åˆå§‹åŒ–service sbd
 	obs_data_t* settings = obs_data_create();
 	obs_data_set_default_string(settings, "type", "rtmp_custom");//sbd
 	obs_data_set_default_string(settings, "server", "rtmp://vid-218.push.fastweb.broadcastapp.agora.io/live/");
@@ -1333,15 +1333,15 @@ bool CAgoraHQDlg::LoadService()
 
 	obs_data_t *data = obs_data_create_from_json_file_safe(serviceJsonPath,
 		"bak");
-	//add by sbd ÉèÖÃÄ¬ÈÏÍÆÁ÷ĞÅÏ¢
+	//add by sbd è®¾ç½®é»˜è®¤æ¨æµä¿¡æ¯
 	if (data == nullptr)
 	{
 		std::string servicePath = "./" + app_name + "/service.json";
 		data = obs_data_create_from_json_file_safe(servicePath.c_str(), "bak");
 	}
-	//ÉèÖÃÄ¬ÈÏµÄStreamĞÅÏ¢
+	//è®¾ç½®é»˜è®¤çš„Streamä¿¡æ¯
 	obs_data_set_default_string(data, "type", "rtmp_custom");//sbd
-	obs_data_set_default_string(data, "server", "rtmp://vid-218.push.fastweb.broadcastapp.agora.io/live/");//ÉèÖÃÍÆÁ÷µØÖ·
+	obs_data_set_default_string(data, "server", "rtmp://vid-218.push.fastweb.broadcastapp.agora.io/live/");//è®¾ç½®æ¨æµåœ°å€
 	obs_data_set_default_string(data, "key", "abcijkmnldefzyx12344321");
 	type = obs_data_get_string(data, "type");
 	// end
@@ -1357,7 +1357,7 @@ bool CAgoraHQDlg::LoadService()
 	obs_data_release(settings);
 	obs_data_release(data);
 
-	return !!service;//·Ç0Öµ×ª»»³É1,¶ø0Öµ»¹ÊÇ0¡£
+	return !!service;//é0å€¼è½¬æ¢æˆ1,è€Œ0å€¼è¿˜æ˜¯0ã€‚
 }
 
 
@@ -1510,7 +1510,7 @@ bool CAgoraHQDlg::InitBasicConfigDefaults()
 		scale_cy = uint32_t(double(cy) / scale);
 	}
 
-	//ÉèÖÃÊä³ö·Ö±æÂÊint obs_output_x = 640;
+	//è®¾ç½®è¾“å‡ºåˆ†è¾¨ç‡int obs_output_x = 640;
 	scale_cx = obs_output_x;
 	scale_cy = obs_output_y;
 	config_set_default_uint(basicConfig, "Video", "OutputCX", scale_cx);
@@ -1610,10 +1610,10 @@ void CAgoraHQDlg::ResetOutputs()
 
 
 		if (outputHandler->replayBuffer) {
-			//replayBuffer °´Å¥
+			//replayBuffer æŒ‰é’®
 		}
 
-		//sysTray´¦Àí
+		//sysTrayå¤„ç†
 	}
 	else {
 		outputHandler->Update();
@@ -1689,7 +1689,7 @@ void  CAgoraHQDlg::ClearSceneData()
 	blog(LOG_INFO, "All scene data cleared");
 	blog(LOG_INFO, "------------------------------------------------");
 }
-//Ìí¼ÓÒôÆµÔ´
+//æ·»åŠ éŸ³é¢‘æº
 void  CAgoraHQDlg::CreateFirstRunSources()
 {
 	bool hasDesktopAudio = HasAudioDevices(theApp.OutputAudioSource());
@@ -1909,7 +1909,7 @@ void CAgoraHQDlg::CreateDefaultScene(bool firstStart)
 	//	ui->transitionDuration->setValue(300);
 	SetTransition(fadeTransition);
 
-	//´´½¨scene Î¨Ò»Ò»¸ö
+	//åˆ›å»ºscene å”¯ä¸€ä¸€ä¸ª
 	/*obs_scene_t*/
 	obs_scene_t* scene = obs_scene_create(Str("Basic.Scene"));
 	const char* test = Str("Basic.Scene");
@@ -1936,7 +1936,7 @@ bool CAgoraHQDlg::StartStreaming()
 
 	if (!outputHandler->StartStreaming(service)) {
 
-		AfxMessageBox(_T("obsÍÆÁ÷Ê§°Ü"));
+		AfxMessageBox(_T("obsæ¨æµå¤±è´¥"));
 		return false;
 	}
 
@@ -2545,7 +2545,7 @@ void CAgoraHQDlg::TransitionFullyStopped()
 {
 }
 
-//ÉèÖÃÖ÷´°¿ÚäÖÈ¾
+//è®¾ç½®ä¸»çª—å£æ¸²æŸ“
 void CAgoraHQDlg::SetTransition(OBSSource transition)
 {
 	obs_source_t *oldTransition = obs_get_output_source(0);
@@ -2604,7 +2604,7 @@ void CAgoraHQDlg::RenderMain(void *data, uint32_t cx, uint32_t cy)
 		window->previewCX, window->previewCY);
 
 	//window->DrawBackdrop(float(ovi.base_width), float(ovi.base_height));
-	//Ô¤ÀÀ´®Á÷
+	//é¢„è§ˆä¸²æµ
 	if (window->IsPreviewProgramMode()) {
 		OBSScene scene = window->GetCurrentScene();
 		obs_source_t *source = obs_scene_get_source(scene);

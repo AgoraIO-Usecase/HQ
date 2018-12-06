@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "obs.hpp"
 #include "DisplaySourceWnd.h"

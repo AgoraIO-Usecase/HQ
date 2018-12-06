@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "DisplaySourceWnd.h"
 #include <graphics/vec2.h>
 #include <graphics/matrix4.h>
@@ -23,7 +23,7 @@ enum class ItemHandle : uint32_t {
 	BottomRight = ITEM_BOTTOM | ITEM_RIGHT
 };
 
-//Ö÷ÒªÊÇÎªÏìÓ¦ËùÓĞµÄ´°¿ÚÏûÏ¢´¦Àí
+//ä¸»è¦æ˜¯ä¸ºå“åº”æ‰€æœ‰çš„çª—å£æ¶ˆæ¯å¤„ç†
 class CBasicPreviewWnd : public CDisplaySourceWnd //CWnd
 {
 	DECLARE_DYNAMIC(CBasicPreviewWnd)

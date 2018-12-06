@@ -140,6 +140,25 @@ CString s2cs(const std::string &str)
 	return CString(str.c_str());
 }
 
+CString utf82cs(char* utf8)
+{
+	CString str = _T("");
+
+	if (utf8 != NULL)
+	{
+		int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
+		std::wstring strW;
+
+		strW.resize(len);
+
+		MultiByteToWideChar(CP_UTF8, 0, utf8, -1, (LPWSTR)strW.data(), len);
+
+		str = strW.c_str();
+	}
+
+	return str;
+}
+
 std::string cs2s(const CString &str)
 {
 	CString sTemp(str);

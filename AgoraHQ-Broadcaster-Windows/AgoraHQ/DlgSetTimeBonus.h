@@ -1,21 +1,21 @@
-#pragma once
+ï»¿#pragma once
 
 
-// CDlgSetTimeBonus ¶Ô»°¿ò
+// CDlgSetTimeBonus å¯¹è¯æ¡†
 
 class CDlgSetTimeBonus : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDlgSetTimeBonus)
 
 public:
-	CDlgSetTimeBonus(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CDlgSetTimeBonus(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CDlgSetTimeBonus();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_DIALOG_SETTIMEBONUS };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	

@@ -1,4 +1,4 @@
-// AGButton.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// AGButton.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -52,7 +52,7 @@ END_MESSAGE_MAP()
 
 
 
-// CAGButton ÏûÏ¢´¦Àí³ÌĞò
+// CAGButton æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 BOOL CAGButton::SetBackImage(UINT nIDResource, COLORREF crMask)
 {
@@ -126,7 +126,7 @@ void CAGButton::EnableFrameEffect(BOOL bEnable)
 
 void CAGButton::PreSubclassWindow()
 {
-	// TODO:  ÔÚ´ËÌí¼Ó×¨ÓÃ´úÂëºÍ/»òµ÷ÓÃ»ùÀà
+	// TODO:  åœ¨æ­¤æ·»åŠ ä¸“ç”¨ä»£ç å’Œ/æˆ–è°ƒç”¨åŸºç±»
 	ModifyStyle(0, BS_OWNERDRAW);
 
 	CButton::PreSubclassWindow();
@@ -289,7 +289,7 @@ void CAGButton::DrawFrame(LPDRAWITEMSTRUCT lpDrawItemStruct, UINT nStat)
 
 void CAGButton::OnMouseMove(UINT nFlags, CPoint point)
 {
-	// TODO:  ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
+	// TODO:  åœ¨æ­¤æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç å’Œ/æˆ–è°ƒç”¨é»˜è®¤å€¼
 	if (!m_bHover){
 		m_bHover = TRUE;
 		Invalidate(FALSE);
@@ -313,7 +313,7 @@ void CAGButton::OnMouseMove(UINT nFlags, CPoint point)
 
 void CAGButton::OnMouseLeave()
 {
-	// TODO:  ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
+	// TODO:  åœ¨æ­¤æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç å’Œ/æˆ–è°ƒç”¨é»˜è®¤å€¼
 	m_bHover = FALSE;
 	m_bMouseTrack = FALSE;
 	Invalidate(FALSE);
@@ -323,7 +323,7 @@ void CAGButton::OnMouseLeave()
 
 BOOL CAGButton::OnEraseBkgnd(CDC* pDC)
 {
-    // TODO:  ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
+    // TODO:  åœ¨æ­¤æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç å’Œ/æˆ–è°ƒç”¨é»˜è®¤å€¼
 
     return TRUE;
 }
