@@ -1,4 +1,4 @@
-﻿// AGButton.cpp : 实现文件
+// AGButton.cpp : 实现文件
 //
 
 #include "stdafx.h"

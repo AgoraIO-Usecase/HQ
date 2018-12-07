@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 // CDlgAnswer 对话框

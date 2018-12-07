@@ -1,4 +1,4 @@
-﻿// DlgInput.cpp : 实现文件
+// DlgInput.cpp : 实现文件
 //
 
 #include "stdafx.h"

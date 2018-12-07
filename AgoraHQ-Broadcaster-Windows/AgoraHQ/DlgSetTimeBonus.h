@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 // CDlgSetTimeBonus 对话框

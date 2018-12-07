@@ -1,4 +1,4 @@
-﻿// DlgConfig.cpp : 实现文件
+// DlgConfig.cpp : 实现文件
 //
 
 #include "stdafx.h"

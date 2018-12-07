@@ -1,4 +1,4 @@
-﻿// DlgSetTimeBonus.cpp : 实现文件
+// DlgSetTimeBonus.cpp : 实现文件
 //
 
 #include "stdafx.h"

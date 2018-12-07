@@ -98,7 +98,8 @@ void CDShowCameraDlg::OnBnClickedOk()
 
 
 void CDShowCameraDlg::AddProperty(obs_property_t *property)
-{	CBasicProperties::AddProperty(property);
+{
+	CBasicProperties::AddProperty(property);
 
 	if (!obs_property_enabled(property)) {
 		

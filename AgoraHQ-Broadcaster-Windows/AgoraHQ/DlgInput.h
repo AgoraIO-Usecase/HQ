@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 // CDlgInput 对话框

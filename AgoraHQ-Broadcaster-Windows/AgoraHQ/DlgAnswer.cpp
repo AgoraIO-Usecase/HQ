@@ -1,4 +1,4 @@
-﻿// DlgAnswer.cpp : 实现文件
+// DlgAnswer.cpp : 实现文件
 //
 
 #include "stdafx.h"

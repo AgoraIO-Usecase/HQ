@@ -80,14 +80,14 @@ bool CCurlService::http_request(std::string url, std::string data, std::string m
 			throw false;
 		}
 
-		curl_easy_setopt(pSession, CURLOPT_CONNECTTIMEOUT, 5); //Á¬½Ó³¬Ê±
-		curl_easy_setopt(pSession, CURLOPT_TIMEOUT, 10);//»ñÈ¡Êı¾İ³¬Ê±
+		curl_easy_setopt(pSession, CURLOPT_CONNECTTIMEOUT, 5); //è¿æ¥è¶…æ—¶
+		curl_easy_setopt(pSession, CURLOPT_TIMEOUT, 10);//è·å–æ•°æ®è¶…æ—¶
 		
-		//È¡ÏûÇëÇóÑéÖ¤
+		//å–æ¶ˆè¯·æ±‚éªŒè¯
 		curl_easy_setopt(pSession, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_easy_setopt(pSession, CURLOPT_SSL_VERIFYPEER, FALSE);
 
-		// ÉèÖÃÎÄ¼ş¶ÁÈ¡µÄ»Øµ÷º¯Êı;
+		// è®¾ç½®æ–‡ä»¶è¯»å–çš„å›è°ƒå‡½æ•°;
 		//
 		std::string json_res;
 		json_res.clear();
@@ -130,7 +130,7 @@ bool CCurlService::http_request(std::string url, std::string data, std::string m
 
 		js_res = json_res;
 		OutputDebugStringA(json_res.c_str());
-		//½âÎöjson
+		//è§£æjson
 // 		Json::CharReaderBuilder reader_builder;
 // 		Json::CharReader* reader(reader_builder.newCharReader());
 // 		JSONCPP_STRING errs;

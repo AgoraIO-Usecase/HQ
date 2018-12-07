@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 // CDlgAnswerResultStatics 对话框

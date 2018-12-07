@@ -104,7 +104,7 @@ CAgoraObject *CAgoraObject::GetAgoraObject(LPCTSTR lpVendorKey)
 	if(m_lpAgoraEngine == NULL)
 		m_lpAgoraEngine = createAgoraRtcEngine();
 
-	// Èç¹ûVendorKeyÎª¿ÕÔòÖ±½Ó·µ»Ø¶ÔÏó
+	// å¦‚æœVendorKeyä¸ºç©ºåˆ™ç›´æ¥è¿”å›å¯¹è±¡
 	if (!m_strAppID.IsEmpty())
 	{
 		return m_lpAgoraObject;

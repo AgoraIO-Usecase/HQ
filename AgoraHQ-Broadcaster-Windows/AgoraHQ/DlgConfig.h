@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 
 // CDlgConfig 对话框

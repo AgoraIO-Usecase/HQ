@@ -18,16 +18,16 @@ namespace HQ_LANG{
 	static bool bLanguage = false;
 	namespace ZH_CN{
 
-		const TCHAR* const KError_Room_Not_Found = _T("ÓÎÏ··¿¼ä´´½¨Ê§°Ü");
-		const TCHAR* const KError_Game_closed_already = _T("±¾ÂÖ´Î´ğÌâÒÑÍ£Ö¹£¬ÎğÖØ¸´Ìá½»¡°Í£Ö¹´ğÌâ¡±²Ù×÷");
+		const TCHAR* const KError_Room_Not_Found = _T("æ¸¸æˆæˆ¿é—´åˆ›å»ºå¤±è´¥");
+		const TCHAR* const KError_Game_closed_already = _T("æœ¬è½®æ¬¡ç­”é¢˜å·²åœæ­¢ï¼Œå‹¿é‡å¤æäº¤â€œåœæ­¢ç­”é¢˜â€æ“ä½œ");
 		const TCHAR* const KError_Incorrect_quiz_id = _T("");
 		const TCHAR* const KError_Game_closed = _T("");
 		const TCHAR* const KError_Cannot_play = _T("");
 		const TCHAR* const KError_Answer_given = _T("");
-		const TCHAR* const KError_Quiz_going_on = _T("±¾ÂÖ´Î´ğÌâÎ´½áÊø£¬ÇëÏÈµã»÷¡°Í£Ö¹´ğÌâ¡±ºó£¬ÔÙ¿ªÊ¼ÏÂÒ»ÂÖ´Î´ğÌâ");
-		const TCHAR* const KError_No_more_quiz = _T("±¾¾ÖÓÎÏ·ËùÓĞÌâÄ¿¾ùÒÑÏÂ·¢×÷´ğ");
-		const TCHAR* const KInfo_Reset = _T("ÖØÖÃÌâ¿â³É¹¦,ÏÂÒ»²½Ñ¡ÔñSendQuestion");
-		const TCHAR* const KError_NetBad = _T("ÍøÂçÎ´Á¬½Ó,Çë¼ì²éÍøÂçÉèÖÃ");
+		const TCHAR* const KError_Quiz_going_on = _T("æœ¬è½®æ¬¡ç­”é¢˜æœªç»“æŸï¼Œè¯·å…ˆç‚¹å‡»â€œåœæ­¢ç­”é¢˜â€åï¼Œå†å¼€å§‹ä¸‹ä¸€è½®æ¬¡ç­”é¢˜");
+		const TCHAR* const KError_No_more_quiz = _T("æœ¬å±€æ¸¸æˆæ‰€æœ‰é¢˜ç›®å‡å·²ä¸‹å‘ä½œç­”");
+		const TCHAR* const KInfo_Reset = _T("é‡ç½®é¢˜åº“æˆåŠŸ,ä¸‹ä¸€æ­¥é€‰æ‹©SendQuestion");
+		const TCHAR* const KError_NetBad = _T("ç½‘ç»œæœªè¿æ¥,è¯·æ£€æŸ¥ç½‘ç»œè®¾ç½®");
 	}
 
 	namespace UK{
@@ -38,7 +38,7 @@ namespace HQ_LANG{
 		const TCHAR* const KError_Game_closed = _T("");
 		const TCHAR* const KError_Cannot_play = _T("");
 		const TCHAR* const KError_Answer_given = _T("");
-		const TCHAR* const KError_Quiz_going_on = _T("The current round of question has not completed yet. Please click ¡°Stop questions¡±to complete the current round, before send new questions");
+		const TCHAR* const KError_Quiz_going_on = _T("The current round of question has not completed yet. Please click â€œStop questionsâ€to complete the current round, before send new questions");
 		const TCHAR* const KError_No_more_quiz = _T("All questions completed");
 		const TCHAR* const KInfo_Reset = _T("Reset Question Success.,the Next step is SendQuestion");
 		const TCHAR* const KError_NetBad = _T("The network does not work properly. Please check the network setting.");
@@ -126,7 +126,7 @@ enum COURSE_TYPE
 	MIN_COURSE_TYPE = 0,
 	OPEN_COURSE_TYPE,
 };
-/*{gid: "·¿ºÅ", encrypt: "Èô¼ÓÃÜÔòv1,²»È»²»ĞèÒª´«", lang: "0ÎªÓ¢ÎÄ£¬1Î»ÖĞÎÄ"}*/
+/*{gid: "æˆ¿å·", encrypt: "è‹¥åŠ å¯†åˆ™v1,ä¸ç„¶ä¸éœ€è¦ä¼ ", lang: "0ä¸ºè‹±æ–‡ï¼Œ1ä½ä¸­æ–‡"}*/
 typedef struct tagGetChannelRequest
 {
 	tagGetChannelRequest()
@@ -144,6 +144,6 @@ typedef struct tagInviteStatus
 {
 	bool        responded;
 	bool        accept;
-	std::string mediaUID;//Á¬Âóuid
-	std::string uid; //remoteSigAccount,Ô­À´ÊÇaccount
+	std::string mediaUID;//è¿éº¦uid
+	std::string uid; //remoteSigAccount,åŸæ¥æ˜¯account
 }InviteStatus, *PInviteStatus, *LPInviteStatus;

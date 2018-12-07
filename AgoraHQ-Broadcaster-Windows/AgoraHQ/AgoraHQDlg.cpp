@@ -1,4 +1,4 @@
-﻿
+
 // AgoraHQDlg.cpp : 实现文件
 //
 
@@ -560,7 +560,8 @@ void CAgoraHQDlg::initCtrl()
 	CBitmap	bmpNetQuality;
 	bmpNetQuality.LoadBitmap(IDB_NETWORK_QUALITY);
 	m_imgNetQuality.Create(32, 32, ILC_COLOR24 | ILC_MASK, 6, 1);
-	m_imgNetQuality.Add(&bmpNetQuality, RGB(0xFF, 0, 0xFF));	m_btnMediaParam.ShowWindow(SW_HIDE);
+	m_imgNetQuality.Add(&bmpNetQuality, RGB(0xFF, 0, 0xFF));
+	m_btnMediaParam.ShowWindow(SW_HIDE);
 
 	m_btnJoinChannel.EnableWindow(FALSE);
 	m_btnInviteRemote.EnableWindow(FALSE);
@@ -1347,7 +1348,8 @@ bool CAgoraHQDlg::LoadService()
 	// end
 
 	obs_data_t *settings = obs_data_get_obj(data, "settings");
-	obs_data_t *hotkey_data = obs_data_get_obj(data, "hotkeys");
+	obs_data_t *hotkey_data = obs_data_get_obj(data, "hotkeys");
+
 	service = obs_service_create(type, "default_service", settings,
 		hotkey_data);
 	//obs_hotkeys_save_service(service);//add by sbd

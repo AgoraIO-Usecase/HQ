@@ -31,11 +31,11 @@ void CFileIO::openLog(const std::string &filepath, int fileFlage /*= OPEN_ALWAYS
 	if (INVALID_HANDLE_VALUE == fileHandle_)
 	{
 		fileHandle_ = nullptr;
-		printf("文件创建失败!!!!!!\n");
+		printf("鏂囦欢鍒涘缓澶辫触!!!!!!\n");
 		int retCode = GetLastError();
 		if (ERROR_ALREADY_EXISTS == retCode)
 		{
-			printf("文件已经存在,创建文件失败!!!!\n");
+			printf("鏂囦欢宸茬粡瀛樺湪,鍒涘缓鏂囦欢澶辫触!!!!\n");
 		}
 	}
 
@@ -56,11 +56,11 @@ void CFileIO::openMedia(const std::string &filepath, int fileFlage /*= CREATE_AL
 	if (INVALID_HANDLE_VALUE == fileHandle_)
 	{
 		fileHandle_ = nullptr;
-		printf("文件创建失败!!!!!!\n");
+		printf("鏂囦欢鍒涘缓澶辫触!!!!!!\n");
 		int retCode = GetLastError();
 		if (ERROR_ALREADY_EXISTS == retCode)
 		{
-			printf("文件已经存在,创建文件失败!!!!\n");
+			printf("鏂囦欢宸茬粡瀛樺湪,鍒涘缓鏂囦欢澶辫触!!!!\n");
 		}
 	}
 }
@@ -102,7 +102,7 @@ int CFileIO::write(std::string bufferStr)
 		bufferStr += "\r\n";
 	}
 	if (isLog_ && 100 == filelimitLine_)
-	{//清空操作
+	{//娓呯┖鎿嶄綔
 		SetFilePointer(fileHandle_, 0, nullptr, FILE_BEGIN);
 		SetEndOfFile(fileHandle_);
 		filelimitLine_ = 0;
