@@ -1,4 +1,4 @@
-﻿// BasicProperties.cpp : implementation file
+// BasicProperties.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -164,7 +164,8 @@ void CBasicProperties::OnClickCancel()
 // 	if (view->DeferUpdate())
 // 		obs_data_apply(settings, oldSettings);
 // 	else
-// 		obs_source_update(source, oldSettings);
+// 		obs_source_update(source, oldSettings);
+
 }
 void CBasicProperties::OnClickDefault()
 {

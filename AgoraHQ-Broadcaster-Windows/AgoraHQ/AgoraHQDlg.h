@@ -212,7 +212,8 @@ public:
 	void          ClearSceneData();
 	void          AddScene(OBSSource source);
 	void SetCurrentScene(obs_scene_t *scene, bool force = false,
-		bool direct = false);
+		bool direct = false);
+
 	void SetCurrentScene(OBSSource scene, bool force = false,
 		bool direct = false);
 

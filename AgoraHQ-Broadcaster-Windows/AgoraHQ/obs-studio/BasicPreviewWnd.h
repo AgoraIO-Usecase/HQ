@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DisplaySourceWnd.h"
 #include <graphics/vec2.h>
 #include <graphics/matrix4.h>

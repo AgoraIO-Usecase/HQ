@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "audio-encoders.hpp"
 #include "AgoraHQ.h"
 #include "AgoraHQDlg.h"

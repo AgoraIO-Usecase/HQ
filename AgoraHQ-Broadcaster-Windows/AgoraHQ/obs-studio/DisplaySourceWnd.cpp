@@ -1,4 +1,4 @@
-﻿// AGVideoWnd.cpp : 实现文件
+// AGVideoWnd.cpp : 实现文件
 //
 
 #include "stdafx.h"
