@@ -1,12 +1,8 @@
 const logger = require("./logger").get("hq");
 const config = require("./config");
-const cc_id = config.cc_id;
-const socks_host = config.socks_proxy_host;
-const socks_port = config.socks_proxy_port;
-const QuizFactory = require("./QuizFactory");
 const request = require("request");
-const Agent = require('socks5-http-client/lib/Agent');
-const sig_appid = config.agora_appid;
+const agora_appid = config.agora_appid;
+const AgoraRtmSDK = require('agora-node-rtm').default
 let cipher = null;
 try {
     cipher = require("./Encrypt");
@@ -15,47 +11,39 @@ try {
 }
 
 
-function parseResult(err, resultText) {
-    if (err) {
-        logger.error(`request failed: ${err}`);
-    } else {
-        let result = JSON.parse(resultText);
-        logger.info(`request: ${resultText}`);
-        if (result.code === 200) {
-            return result;
-        }
-    }
-    return null;
-}
-
-function proxy(options) {
-    if (socks_host) {
-        logger.info(`using proxy`);
-        options.agentClass = Agent;
-        options.socksHost = socks_host;
-        options.socksPort = socks_port;
-    }
-    return options;
-}
-
 class GameMaker {
     constructor() {
         this.__games = [];
-        this.sig = null;
+        this.rtm = new AgoraRtmSDK();
+        this.serverName = "";
     }
 
-    add(game) {
-        return new Promise((resolve, reject) => {
-            let g = this.get(game.gid);
-            if (g) {
-                g.quizSet = game.quizSet;
-                g.reset();
-                resolve();
-                return;
-            }
 
-            this.__games.push(game);
-        });
+    init() {
+        let serverName = `server-${Math.floor(Math.random()*1000)}`
+        this.serverName = serverName
+        return this.rtm.login(agora_appid, serverName)
+    };
+
+    add(game) {
+        let g = this.get(game.gid);
+        if (g) {
+            g.quizSet = game.quizSet;
+            g.reset();
+            return Promise.resolve();
+        } else {
+            return new Promise((resolve, reject) => {
+                let channel = this.rtm.createChannel(game.gid)
+                channel.join().then(() => {
+                    game.channel = channel
+                    game.rtm = this.rtm
+                    this.__games.push(game);
+                    resolve()
+                }).catch(e => {
+                    reject(e)
+                })
+            })
+        }
     };
 
     get(gid) {
@@ -64,41 +52,10 @@ class GameMaker {
         });
         return game.length > 0 ? game[0] : null;
     };
-
-    init() {
-        return Promise.resolve();
-    };
-
-    handle(action, options) {
-        return new Promise((resolve, reject) => {
-            if (action === "reset") {
-                this.handleReset(options);
-            }
-        });
-    }
-
-
-    handleReset(options) {
-        let gid = options.gid || "";
-        if (!gid) {
-            reject("gid_needed");
-            return;
-        }
-
-        let game = this.get(gid);
-        if (!game) {
-            reject("room_not_found");
-            return;
-        }
-
-        game.reset();
-        resolve();
-    }
 }
 
 class Game {
     constructor(gid, name, quizSet, encrypt) {
-        let game = this;
         this.gid = gid || `${parseInt(Math.random() * 1000000)}`;
         this.name = name;
         this.quizSet = quizSet || [];
@@ -106,10 +63,11 @@ class Game {
         this.open = false;
         this.live = false;
         this.players = {};
-        this.sig_session = null;
         this.timeout = 20;
         this.encrypt = encrypt || null;
         this.inviting = null;
+        this.rtm = null;
+        this.channel = null;
 
         if (quizSet.length === 0) {
             logger.warn(`game ${gid} has an empty quiz set`);
@@ -128,38 +86,34 @@ class Game {
     }
 
     hasNext() {
-        let game = this;
-        return game.sequence < game.quizSet.length;
+        return this.sequence < this.quizSet.length;
     };
 
     nextQuiz() {
-        let game = this;
-        return game.quizSet[game.sequence];
+        return this.quizSet[this.sequence];
     };
 
     publish() {
-        let game = this;
         return new Promise((resolve, reject) => {
-            if (game.open) {
+            if (this.open) {
                 reject("quiz_going_on");
                 return;
             }
-            if (!game.hasNext()) {
+            if (!this.hasNext()) {
                 reject("no_more_quiz");
                 return;
             }
-            game.publishNextQuiz().then(result => {
+            this.publishNextQuiz().then(result => {
                 resolve(result);
             });
         });
     }
 
     canplay(uid) {
-        let game = this;
-        if (game.sequence === 0) {
+        if (this.sequence === 0) {
             return { result: true };
         }
-        let player = game.players[uid];
+        let player = this.players[uid];
         if (!player) {
             logger.info(`not a player ${uid}`);
             return { result: false, err: `not a player ${uid}` };
@@ -174,62 +128,50 @@ class Game {
     };
 
     closeQuiz() {
-        let game = this;
-        logger.info(`quiz closed for ${game.gid}`);
-        game.open = false;
-        return game.summaryResult(game.sequence++);
+        logger.info(`quiz closed for ${this.gid}`);
+        this.open = false;
+        return this.summaryResult(this.sequence++);
     };
 
+    broadcast(msg) {
+        this.channel && this.channel.sendMessage(msg)
+    }
+
     publishNextQuiz() {
-        let game = this;
-        game.open = true;
+        this.open = true;
         return new Promise((resolve, reject) => {
-            let quiz = Object.assign({}, game.nextQuiz());
+            let quiz = Object.assign({}, this.nextQuiz());
             let encrypted_quiz = null;
             delete quiz.answer;
-            quiz.total = game.quizSet.length;
-            quiz.timeout = game.timeout;
-            if (cipher.supported.includes(game.encrypt)) {
-                encrypted_quiz = cipher.encrypt("v1", JSON.stringify(quiz), game.gid);
+            quiz.total = this.quizSet.length;
+            quiz.timeout = this.timeout;
+            if (cipher.supported.includes(this.encrypt)) {
+                encrypted_quiz = cipher.encrypt("v1", JSON.stringify(quiz), this.gid);
             }
             let raw_quiz = { type: "quiz", data: quiz };
-            encrypted_quiz = encrypted_quiz ? { type: "quiz", data: encrypted_quiz, encrypt: game.encrypt } : { type: "quiz", data: quiz, encrypt: "null" };
+            encrypted_quiz = encrypted_quiz ? { type: "quiz", data: encrypted_quiz, encrypt: this.encrypt } : { type: "quiz", data: quiz, encrypt: "null" };
             raw_quiz = JSON.stringify(raw_quiz);
             encrypted_quiz = JSON.stringify(encrypted_quiz);
-            var options = {
-                uri: `http://hq-im.agoraio.cn:8000/signaling/v1/${sig_appid}/sendChannelMessage`,
-                method: 'POST',
-                json: { "m": encrypted_quiz, "channel": game.gid }
-            };
-            proxy(options);
-            logger.info(`sending quiz ${quiz} to ${game.gid}`)
-            logger.info(`sending quiz ${encrypted_quiz} to ${game.gid}`)
-            request(options, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    resolve(raw_quiz);
-                } else {
-                    reject(error);
-                }
-            });
+            this.broadcast(encrypted_quiz)
+            logger.info(`sending quiz ${encrypted_quiz} to ${this.gid}`)
+            resolve(raw_quiz);
         });
     };
 
     joinGame(uid, force){
-        let game = this;
-        let player = game.players[uid];
+        let player = this.players[uid];
         if(player && !force){
             logger.error(`user ${uid} already exists`);
             return player;
         }
         player = {alive: true, answers: {}};
-        game.players[uid] = player;
+        this.players[uid] = player;
         return player;
     };
 
     relive(uid) {
-        let game = this;
         logger.info(`player ${uid} try to revive himself...`)
-        let canplay = game.canplay(uid);
+        let canplay = this.canplay(uid);
         logger.info(`can player ${uid} play? ${canplay.result}`);
         if (canplay.result) {
             logger.info(`player ${uid} revive not needed`)
@@ -240,20 +182,18 @@ class Game {
     };
 
     answerCommited(uid) {
-        let game = this;
-        let player = game.players[uid];
+        let player = this.players[uid];
         if(!player){
             return false;
         }
-        return player.answers[game.sequence] !== undefined;
+        return player.answers[this.sequence] !== undefined;
     };
 
     commitanswer(uid, result) {
-        let game = this;
-        let question = game.quizSet[game.sequence];
+        let question = this.quizSet[this.sequence];
         let resultSize = question.options.length;
         let answer = parseInt(result);
-        let player = game.players[uid];
+        let player = this.players[uid];
 
         if(!player){
             logger.info(`not a player ${uid}`);
@@ -266,21 +206,20 @@ class Game {
         }
 
         logger.info(`anwser collected from ${uid}, ${answer}`);
-        player.answers[game.sequence] = answer;
+        player.answers[this.sequence] = answer;
     };
 
 
     summaryResult(sequence) {
-        let game = this;
         return new Promise((resolve, reject) => {
             let results = {};
-            let quiz = game.quizSet[sequence];
+            let quiz = this.quizSet[sequence];
             let options = quiz.options;
-            let answer = game.quizSet[sequence].answer;
+            let answer = this.quizSet[sequence].answer;
             let rightUids = [];
             let wrongUids = [];
             let resultSpread = {};
-            let players = game.players;
+            let players = this.players;
 
             for (let i = 0; i < options.length; i++) {
                 resultSpread[i] = 0;
@@ -301,7 +240,7 @@ class Game {
                 (resultSpread[commited] !== undefined) ? resultSpread[commited]++ : resultSpread[-1]++;
             });
 
-            if (sequence === game.quizSet.length - 1) {
+            if (sequence === this.quizSet.length - 1) {
                 logger.info("=========================FINAL ROUND==========================");
             } else {
                 logger.info(`=========================QUIZ ${sequence + 1}==========================`)
@@ -320,7 +259,7 @@ class Game {
                     spread: resultSpread
                 }
             });
-            if (sequence === game.quizSet.length - 1) {
+            if (sequence === this.quizSet.length - 1) {
                 data = JSON.stringify({
                     type: "result",
                     data: {
@@ -333,58 +272,36 @@ class Game {
                     }
                 })
             }
-            let request_options = {
-                uri: `http://hq-im.agoraio.cn:8000/signaling/v1/${sig_appid}/sendChannelMessage`,
-                method: 'POST',
-                json: { "m": data, "channel": game.gid }
-            };
-            proxy(request_options);
-            request(request_options, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    resolve(JSON.parse(data));
-                } else {
-                    reject(error);
-                }
-            });
+            this.broadcast(data)
+            resolve(JSON.parse(data));
         });
     };
 
     inviteRequest(invitee) {
-        let game = this;
         logger.info(`try to inivite ${invitee}`);
         return new Promise((resolve, reject) => {
-            game.inviteEnd().then(() => {
+            this.inviteEnd().then(() => {
                 let invite_msg = {
                     type: "inviteRequest",
                     data: {
                         uid: invitee
                     }
                 }
-                let request_options = {
-                    uri: `http://hq-im.agoraio.cn:8000/signaling/v1/${sig_appid}/sendMessageTo`,
-                    method: 'POST',
-                    json: { "m": JSON.stringify(invite_msg), "uid": invitee }
+
+                this.rtm.sendMessageToPeer(invitee, JSON.stringify(invite_msg))
+
+                this.inviting = {
+                    responded: false,
+                    uid: invitee
                 };
-                proxy(request_options);
-                request(request_options, function (error, response, body) {
-                    if (!error && response.statusCode == 200) {
-                        game.inviting = {
-                            responded: false,
-                            uid: invitee
-                        };
-                        resolve();
-                    } else {
-                        reject(error);
-                    }
-                });
+                resolve();
             });
         });
     };
 
     inviteEnd() {
-        let game = this;
-        logger.info(`try to end inivite ${JSON.stringify(game.inviting)}`);
-        if (!game.inviting) {
+        logger.info(`try to end inivite ${JSON.stringify(this.inviting)}`);
+        if (!this.inviting) {
             logger.info(`no inviting exists`);
             return Promise.resolve();
         } else {
@@ -392,29 +309,17 @@ class Game {
                 let invite_msg = {
                     type: "inviteEnd",
                     data: {
-                        uid: game.inviting.uid
+                        uid: this.inviting.uid
                     }
                 }
-                let request_options = {
-                    uri: `http://hq-im.agoraio.cn:8000/signaling/v1/${sig_appid}/sendMessageTo`,
-                    method: 'POST',
-                    json: { "m": JSON.stringify(invite_msg), "uid": game.inviting.uid }
-                };
-                proxy(request_options);
-                request(request_options, function (error, response, body) {
-                    if (!error && response.statusCode == 200) {
-                        logger.info(`invite end for ${game.inviting.uid} successfully sent`);
-                        resolve();
-                    } else {
-                        reject(error);
-                    }
-                });
+                this.rtm.sendMessageToPeer(invitee, JSON.stringify(invite_msg))
+                logger.info(`invite end for ${this.inviting.uid} successfully sent`);
+                resolve();
             });
         }
     };
 
     inviteResponse(invitee, accept, mediaUid) {
-        let game = this;
         if (!this.inviting){
             logger.info(`no invite exist`);
         } else if (invitee !== this.inviting.uid) {
@@ -422,7 +327,7 @@ class Game {
         } else {
             logger.info(`invite response received from ${invitee}, send back to ${this.gid}`);
             // server.sig.messageInstantSend(this.gid, JSON.stringify({ type: "inviteResponse", data: { accept: accept, mediaUid: mediaUid, uid: invitee } }));
-            game.inviting = { responded: true, accept: accept, mediaUid: mediaUid, uid: invitee };
+            this.inviting = { responded: true, accept: accept, mediaUid: mediaUid, uid: invitee };
         }
     }
 }

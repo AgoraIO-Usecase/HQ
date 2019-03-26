@@ -37,22 +37,17 @@ function initProcess(application) {
     });
 }
 
-let server = null;
 
-if (cluster.isMaster) {
-    //master node
-    const api = require("./modules/ApiRestful");
-    initProcess(app);
-    let maker = new HQ.GameMaker();
-    let init = maker.init();
-    init.then(() => {
-        api(maker, app);
-        http_server.listen(process.env.PORT || 10000);
-    }).catch((e) => {
-        logger.error(e);
-    });
-} else {
-}
+const api = require("./modules/ApiRestful");
+initProcess(app);
+let maker = new HQ.GameMaker();
+maker.init().then(() => {
+    logger.info(`game maker initialized`)
+    api(maker, app);
+    http_server.listen(process.env.PORT || 10000);
+}).catch((e) => {
+    logger.error(e);
+});
 
 
 module.exports = http_server;
