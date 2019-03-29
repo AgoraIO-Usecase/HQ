@@ -1,14 +1,14 @@
 
-// AgoraHQ.h : PROJECT_NAME åº”ç”¨ç¨‹åºçš„ä¸»å¤´æ–‡ä»¶
+// AgoraHQ.h : PROJECT_NAME Ó¦ÓÃ³ÌĞòµÄÖ÷Í·ÎÄ¼ş
 //
 
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "åœ¨åŒ…å«æ­¤æ–‡ä»¶ä¹‹å‰åŒ…å«â€œstdafx.hâ€ä»¥ç”Ÿæˆ PCH æ–‡ä»¶"
+	#error "ÔÚ°üº¬´ËÎÄ¼şÖ®Ç°°üº¬¡°stdafx.h¡±ÒÔÉú³É PCH ÎÄ¼ş"
 #endif
 
-#include "resource.h"		// ä¸»ç¬¦å·
+#include "resource.h"		// Ö÷·ûºÅ
 class CUrlServiceCallback;
 // OBS for ExtCapture
 
@@ -28,7 +28,7 @@ const std::string app_name = "AgoraHQOBS";
 class CAgoraHQDlg;
 // OBS end
 // CAgoraHQApp: 
-// æœ‰å…³æ­¤ç±»çš„å®ç°ï¼Œè¯·å‚é˜… AgoraHQ.cpp
+// ÓĞ¹Ø´ËÀàµÄÊµÏÖ£¬Çë²ÎÔÄ AgoraHQ.cpp
 //
 
 class CAgoraHQApp : public CWinApp
@@ -36,11 +36,11 @@ class CAgoraHQApp : public CWinApp
 public:
 	CAgoraHQApp();
 
-// é‡å†™
+// ÖØĞ´
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-// å®ç°
+// ÊµÏÖ
 
 	DECLARE_MESSAGE_MAP()
 public:

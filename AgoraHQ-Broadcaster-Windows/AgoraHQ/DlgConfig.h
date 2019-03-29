@@ -1,7 +1,7 @@
 #pragma once
 
 
-// CDlgConfig å¯¹è¯æ¡†
+// CDlgConfig ¶Ô»°¿ò
 
 #include "AgoraCameraManager.h"
 class CDlgConfig : public CDialogEx
@@ -9,16 +9,16 @@ class CDlgConfig : public CDialogEx
 	DECLARE_DYNAMIC(CDlgConfig)
 
 public:
-	CDlgConfig(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
+	CDlgConfig(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
 	virtual ~CDlgConfig();
 	int getVideoIndex();
 	void saveCameraID();
 
-// å¯¹è¯æ¡†æ•°æ®
+// ¶Ô»°¿òÊı¾İ
 	enum { IDD = IDD_DIALOG_CONFIG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
 	virtual BOOL OnInitDialog();
 
 	DECLARE_MESSAGE_MAP()

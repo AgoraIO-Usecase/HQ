@@ -30,7 +30,7 @@ private:
 
 	//bool parse_course(Json::Value jsCourse);
 private:
-	int init_error_code = CURL_LAST; //curl_global_initè¿”å›é”™è¯¯ç 
+	int init_error_code = CURL_LAST; //curl_global_init·µ»Ø´íÎóÂë
 
 	static CCurlService* curl_service;
 

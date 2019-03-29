@@ -1,4 +1,4 @@
-// AGVideoWnd.cpp : å®ç°æ–‡ä»¶
+// AGVideoWnd.cpp : ÊµÏÖÎÄ¼ş
 //
 
 #include "stdafx.h"
@@ -237,7 +237,7 @@ END_MESSAGE_MAP()
 
 
 
-// CBasicPreviewWnd æ¶ˆæ¯å¤„ç†ç¨‹åº
+// CBasicPreviewWnd ÏûÏ¢´¦Àí³ÌĞò
 BOOL CBasicPreviewWnd::OnEraseBkgnd(CDC* pDC)
 {
 	return TRUE;
@@ -1121,7 +1121,7 @@ void CBasicPreviewWnd::GetStretchHandleData(const vec2 &pos)
 
 void CBasicPreviewWnd::OnRButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç å’Œ/æˆ–è°ƒç”¨é»˜è®¤å€¼
+	// TODO:  ÔÚ´ËÌí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂëºÍ/»òµ÷ÓÃÄ¬ÈÏÖµ
 	::SendMessage(GetParent()->GetSafeHwnd(), WM_SHOWMODECHANGED, (WPARAM)this, (LPARAM)m_nUID);
 
 	CMenu menu;
@@ -1152,8 +1152,8 @@ int CBasicPreviewWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
-	CDisplaySourceWnd::SetParent(GetParent());//displayåˆ›å»ºæˆåŠŸé€šçŸ¥çˆ¶çª—å£
-	// TODO:  åœ¨æ­¤æ·»åŠ æ‚¨ä¸“ç”¨çš„åˆ›å»ºä»£ç 
+	CDisplaySourceWnd::SetParent(GetParent());//display´´½¨³É¹¦Í¨Öª¸¸´°¿Ú
+	// TODO:  ÔÚ´ËÌí¼ÓÄú×¨ÓÃµÄ´´½¨´úÂë
 //	m_wndInfo.Create(NULL, NULL, WS_CHILD | WS_VISIBLE, CRect(0, 0, 192, 28), this, IDC_STATIC);
 
 	return 0;
@@ -1176,8 +1176,8 @@ void CBasicPreviewWnd::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CBasicPreviewWnd::OnPaint()
 {
     CPaintDC dc(this); // device context for painting
-    // TODO:  åœ¨æ­¤å¤„æ·»åŠ æ¶ˆæ¯å¤„ç†ç¨‹åºä»£ç 
-    // ä¸ä¸ºç»˜å›¾æ¶ˆæ¯è°ƒç”¨ CWnd::OnPaint()
+    // TODO:  ÔÚ´Ë´¦Ìí¼ÓÏûÏ¢´¦Àí³ÌĞò´úÂë
+    // ²»Îª»æÍ¼ÏûÏ¢µ÷ÓÃ CWnd::OnPaint()
 
     if (m_bBackground) {
         CRect		rcClient;

@@ -1,5 +1,5 @@
 
-// AgoraHQDlg.h : å¤´æ–‡ä»¶
+// AgoraHQDlg.h : Í·ÎÄ¼ş
 //
 
 #pragma once
@@ -9,7 +9,7 @@ class CDlgAnswer;
 class CDlgConfig;
 class CDlgInput;
 class CDlgSetTimeBonus;
-// CAgoraHQDlg å¯¹è¯æ¡†
+// CAgoraHQDlg ¶Ô»°¿ò
 
 //OBS for ExtCapture
 #include "ExtendObserver/ExtendAudioFrameObserver.h"
@@ -41,21 +41,21 @@ std::string GetDefaultVideoSavePath();
 
 class CAgoraHQDlg : public CDialogEx
 {
-// æ„é€ 
+// ¹¹Ôì
 public:
-	CAgoraHQDlg(CWnd* pParent = NULL);	// æ ‡å‡†æ„é€ å‡½æ•°
+	CAgoraHQDlg(CWnd* pParent = NULL);	// ±ê×¼¹¹Ôìº¯Êı
 	virtual ~CAgoraHQDlg();
-// å¯¹è¯æ¡†æ•°æ®
+// ¶Ô»°¿òÊı¾İ
 	enum { IDD = 102 };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV æ”¯æŒ
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV Ö§³Ö
 
-// å®ç°
+// ÊµÏÖ
 protected:
 	HICON m_hIcon;
 
-	// ç”Ÿæˆçš„æ¶ˆæ¯æ˜ å°„å‡½æ•°
+	// Éú³ÉµÄÏûÏ¢Ó³Éäº¯Êı
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
@@ -212,8 +212,7 @@ public:
 	void          ClearSceneData();
 	void          AddScene(OBSSource source);
 	void SetCurrentScene(obs_scene_t *scene, bool force = false,
-		bool direct = false);
-
+		bool direct = false);
 	void SetCurrentScene(OBSSource scene, bool force = false,
 		bool direct = false);
 
@@ -256,7 +255,7 @@ private:
 	volatile bool previewProgramMode = false;
 	//obs_scene_t  *scene;
 	OBSScene default_scene;
-	//è®¾ç½®è§†é¢‘è¾“å‡ºå‚æ•°
+	//ÉèÖÃÊÓÆµÊä³ö²ÎÊı
 	int obs_output_x = 640;
 	int obs_output_y = 360;
 	int obs_videoBitrate = 400;

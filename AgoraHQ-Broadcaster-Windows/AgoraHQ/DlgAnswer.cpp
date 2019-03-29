@@ -1,4 +1,4 @@
-// DlgAnswer.cpp : å®ç°æ–‡ä»¶
+// DlgAnswer.cpp : ÊµÏÖÎÄ¼ş
 //
 
 #include "stdafx.h"
@@ -13,7 +13,7 @@
 #include "CustomMsg.h"
 #include "UrlService/URLData.h"
 using namespace HQ_LANG;
-// CDlgAnswer å¯¹è¯æ¡†
+// CDlgAnswer ¶Ô»°¿ò
 
 IMPLEMENT_DYNAMIC(CDlgAnswer, CDialogEx)
 
@@ -85,7 +85,7 @@ BEGIN_MESSAGE_MAP(CDlgAnswer, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CDlgAnswer æ¶ˆæ¯å¤„ç†ç¨‹åº
+// CDlgAnswer ÏûÏ¢´¦Àí³ÌĞò
 BOOL CDlgAnswer::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -187,7 +187,7 @@ void CDlgAnswer::OnTimer(UINT_PTR nIDEvent)
 }
 void CDlgAnswer::OnBnClickedCheckA()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	m_ckAnswerA.SetCheck(TRUE);
 	bool bStatusA = m_ckAnswerA.GetCheck();
 	if (bStatusA){
@@ -200,7 +200,7 @@ void CDlgAnswer::OnBnClickedCheckA()
 
 void CDlgAnswer::OnBnClickedCheckB()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 	
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë	
 	m_ckAnswerB.SetCheck(TRUE);
 	bool bStatusB = m_ckAnswerB.GetCheck();
 	if (bStatusB){
@@ -213,7 +213,7 @@ void CDlgAnswer::OnBnClickedCheckB()
 
 void CDlgAnswer::OnBnClickedCheckC()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	m_ckAnswerC.SetCheck(TRUE);
 	bool bStatusC = m_ckAnswerC.GetCheck();
 	if (bStatusC){
@@ -226,7 +226,7 @@ void CDlgAnswer::OnBnClickedCheckC()
 
 void CDlgAnswer::OnBnClickedCheckD()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	m_ckAnswerD.SetCheck(TRUE);
 	bool bStatusD = m_ckAnswerD.GetCheck();
 	if (bStatusD){
@@ -239,7 +239,7 @@ void CDlgAnswer::OnBnClickedCheckD()
 //publish_method
 void CDlgAnswer::OnBnClickedButtonGetquestion()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	m_btnUpdateQuestion.EnableScalar(FALSE);
 
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
@@ -260,7 +260,7 @@ void CDlgAnswer::OnBnClickedButtonGetquestion()
 
 void CDlgAnswer::OnBnClickedButtonStartMark()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	m_btnStartAnswer.EnableScalar(FALSE);
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
 
@@ -275,13 +275,13 @@ void CDlgAnswer::OnBnClickedButtonStartMark()
 
 	m_btnStopAnswer.EnableScalar(TRUE);
 
-	// TO DO å¼€å§‹æ ‡è®°æœ¬åœ°ç”»é¢.
+	// TO DO ¿ªÊ¼±ê¼Ç±¾µØ»­Ãæ.
 }
 
 //stop_answer_method
 void CDlgAnswer::OnBnClickedButtonStopanswer()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	m_btnStopAnswer.EnableScalar(FALSE);
 	m_btnUpdateQuestion.EnableScalar(TRUE);
 	m_ctlNoticeInfo.SetWindowTextW(_T(""));
@@ -298,7 +298,7 @@ void CDlgAnswer::OnBnClickedButtonStopanswer()
 //reset_method
 void CDlgAnswer::OnBnClickedButtonReset()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	m_btnUpdateQuestion.EnableScalar(FALSE);
 	m_btnStartAnswer.EnableScalar(FALSE);
 	m_btnStopAnswer.EnableScalar(FALSE);
@@ -316,7 +316,7 @@ void CDlgAnswer::OnBnClickedButtonReset()
 
 void CDlgAnswer::OnBnClickedButtonSetbonuses()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 }
 
 //
@@ -669,7 +669,7 @@ void CDlgAnswer::switchNewQuestion(const tagQuestionAnswer &newQuestion)
 	m_nQuestionId = newQuestion.questionId;
 	char chQuestionTitle[2048] = { '\0' };
 	sprintf_s(chQuestionTitle, "%d: %s", m_nQuestionId + 1, newQuestion.strQuestion.data());
-	m_trlQuestion.SetWindowTextW(utf82cs(chQuestionTitle));
+	m_trlQuestion.SetWindowTextW(s2cs(chQuestionTitle));
 	{
 		m_ckAnswerA.ShowWindow(SW_HIDE);
 		m_ckAnswerB.ShowWindow(SW_HIDE);
@@ -678,23 +678,19 @@ void CDlgAnswer::switchNewQuestion(const tagQuestionAnswer &newQuestion)
 	}
 	if (1 <= newQuestion.vecQuestionAnswers.size()){
 		m_ckAnswerA.ShowWindow(SW_SHOW);
-		std::string s = newQuestion.vecQuestionAnswers[0];
-		m_ckAnswerA.SetWindowTextW(utf82cs(const_cast<char*>(s.c_str())));
+		m_ckAnswerA.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[0]));
 	}
 	if (2 <= newQuestion.vecQuestionAnswers.size()){
 		m_ckAnswerB.ShowWindow(SW_SHOW);
-		std::string s = newQuestion.vecQuestionAnswers[1];
-		m_ckAnswerB.SetWindowTextW(utf82cs(const_cast<char*>(s.c_str())));
+		m_ckAnswerB.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[1]));
 	}
 	if (3 <= newQuestion.vecQuestionAnswers.size()){
 		m_ckAnswerC.ShowWindow(SW_SHOW);
-		std::string s = newQuestion.vecQuestionAnswers[2];
-		m_ckAnswerC.SetWindowTextW(utf82cs(const_cast<char*>(s.c_str())));
+		m_ckAnswerC.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[2]));
 	}
 	if (4 == newQuestion.vecQuestionAnswers.size()){
 		m_ckAnswerD.ShowWindow(SW_SHOW);
-		std::string s = newQuestion.vecQuestionAnswers[3];
-		m_ckAnswerD.SetWindowTextW(utf82cs(const_cast<char*>(s.c_str())));
+		m_ckAnswerD.SetWindowTextW(s2cs(newQuestion.vecQuestionAnswers[3]));
 	}
 }
 
@@ -871,7 +867,7 @@ LRESULT CDlgAnswer::onSetDataTimeBonus(WPARAM wParam, LPARAM lParam)
 bool CDlgAnswer::error_info(WPARAM wParam, LPARAM lParam)
 {
 	bool bSuccess = static_cast<bool>(wParam);
-	if (!bSuccess) //é”™è¯¯
+	if (!bSuccess) //´íÎó
 	{
 		char* szError = (char*)lParam;
 		if (szError)
@@ -1158,7 +1154,7 @@ LRESULT CDlgAnswer::onHttpInviteStatus(WPARAM wParam, LPARAM lParam)
 			return false;
 		}
 	}
-	//å¦‚æœè¯·æ±‚æˆåŠŸ
+	//Èç¹ûÇëÇó³É¹¦
 	if (doc["data"]["responded"].GetBool())
 	{
 		KillTimer(invite_status_timer_event_id);

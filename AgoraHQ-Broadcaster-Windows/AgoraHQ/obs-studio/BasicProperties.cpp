@@ -73,7 +73,7 @@ BOOL CBasicProperties::OnInitDialog()
 	os_utf8_to_wcs_ptr(name, strlen(name)*sizeof(wchar_t), &wcs);
 
 	CString strTitle;
-	strTitle.Format(_T("å±žæ€§ %s"), wcs);
+	strTitle.Format(_T("ÊôÐÔ %s"), wcs);
 	SetWindowText(strTitle);
 
 	CRect	rcClient;
@@ -164,8 +164,7 @@ void CBasicProperties::OnClickCancel()
 // 	if (view->DeferUpdate())
 // 		obs_data_apply(settings, oldSettings);
 // 	else
-// 		obs_source_update(source, oldSettings);
-
+// 		obs_source_update(source, oldSettings);
 }
 void CBasicProperties::OnClickDefault()
 {
@@ -221,7 +220,7 @@ void CBasicProperties::Cleanup()
 
 BOOL CBasicProperties::OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
-	if (WM_CREATE_PREVIEW == message)//åˆ›å»ºpreview
+	if (WM_CREATE_PREVIEW == message)//´´½¨preview
 	{ 
 		obs_display_add_draw_callback(preview->GetDisplay(), 
 			CBasicProperties::DrawPreview, this);

@@ -1,4 +1,4 @@
-// DlgAnswerResultStatics.cpp : å®ç°æ–‡ä»¶
+// DlgAnswerResultStatics.cpp : ÊµÏÖÎÄ¼ş
 //
 
 #include "stdafx.h"
@@ -7,7 +7,7 @@
 #include "afxdialogex.h"
 #include "commonFun.h"
 
-// CDlgAnswerResultStatics å¯¹è¯æ¡†
+// CDlgAnswerResultStatics ¶Ô»°¿ò
 
 IMPLEMENT_DYNAMIC(CDlgAnswerResultStatics, CDialogEx)
 
@@ -34,7 +34,7 @@ BEGIN_MESSAGE_MAP(CDlgAnswerResultStatics, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CDlgAnswerResultStatics æ¶ˆæ¯å¤„ç†ç¨‹åº
+// CDlgAnswerResultStatics ÏûÏ¢´¦Àí³ÌĞò
 BOOL CDlgAnswerResultStatics::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -70,14 +70,14 @@ BOOL CDlgAnswerResultStatics::OnInitDialog()
 
 void CDlgAnswerResultStatics::OnBnClickedButtonSave()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	CDialogEx::OnOK();
 }
 
 
 void CDlgAnswerResultStatics::OnBnClickedButtonCancle()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	CDialogEx::OnCancel();
 }
 
@@ -157,7 +157,7 @@ void CDlgAnswerResultStatics::setContext(const std::vector<tagListOfWinners> &ve
 	for (std::vector<tagListOfWinners>::const_iterator it = vecListOfWinners.begin(); vecListOfWinners.end() != it; it++){
 		 int nRow = m_ltrListofWinners.InsertItem(nCount, _T(""));
 		CString sPlayerId = s2cs(int2str(it->nPlayerId));
-		CString sPlayerName = utf82cs(const_cast<char*>(it->strPlayerName.c_str()));//s2cs(it->strPlayerName);
+		CString sPlayerName = s2cs(it->strPlayerName);
 		m_ltrListofWinners.SetItemText(nRow, 0, sPlayerId);
 		m_ltrListofWinners.SetItemText(nRow, 1, sPlayerName);
 		nCount++;

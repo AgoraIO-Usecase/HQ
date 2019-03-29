@@ -1,6 +1,6 @@
 #pragma once
 
-#define WM_URL_MSG(code) (WM_USER + 0x500 + code) //48‰∏™
+#define WM_URL_MSG(code) (WM_USER + 0x500 + code) //48∏ˆ
 
 #define URL_REQUEST_CHANNEL      0x00000001
 #define URL_PUBLISH              0x00000002
@@ -13,7 +13,7 @@
 // #define WND_CLOSE_CAMERA         0x00000001
 // #define WND_OPEN_CAMERA          0x00000002
 // 
-// ËÆæÁΩÆÁïåÈù¢Ê∂àÊÅØ
+// …Ë÷√ΩÁ√Êœ˚œ¢
 // #define WM_SETTING_TIMER_MIC_RECORD (WM_USER + 0x546)
 // #define WM_SETTING_TIMER_MIC_PLAY_RECORD (WM_USER + 0x547)
 // #define WM_SETTING_CLEAR_ALLCACHE (WM_USER +0x548)

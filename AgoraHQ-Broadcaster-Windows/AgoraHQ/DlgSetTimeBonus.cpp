@@ -1,4 +1,4 @@
-// DlgSetTimeBonus.cpp : å®ç°æ–‡ä»¶
+// DlgSetTimeBonus.cpp : ÊµÏÖÎÄ¼ş
 //
 
 #include "stdafx.h"
@@ -8,7 +8,7 @@
 #include "commonFun.h"
 #include "SignalInstance.h"
 
-// CDlgSetTimeBonus å¯¹è¯æ¡†
+// CDlgSetTimeBonus ¶Ô»°¿ò
 
 IMPLEMENT_DYNAMIC(CDlgSetTimeBonus, CDialogEx)
 
@@ -36,7 +36,7 @@ BEGIN_MESSAGE_MAP(CDlgSetTimeBonus, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CDlgSetTimeBonus æ¶ˆæ¯å¤„ç†ç¨‹åº
+// CDlgSetTimeBonus ÏûÏ¢´¦Àí³ÌĞò
 BOOL CDlgSetTimeBonus::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();

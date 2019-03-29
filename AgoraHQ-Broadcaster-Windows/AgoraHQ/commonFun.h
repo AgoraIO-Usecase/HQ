@@ -35,7 +35,6 @@ int str2int(const std::string &str);
 int str2long(const std::string &str);
 float str2float(const std::string &str);
 CString s2cs(const std::string &str);
-CString utf82cs( char* utf8);
 std::string cs2s(const CString &str);
 
 std::string getTime();

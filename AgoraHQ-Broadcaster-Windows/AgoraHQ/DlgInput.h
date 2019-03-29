@@ -1,22 +1,22 @@
 #pragma once
 
 
-// CDlgInput å¯¹è¯æ¡†
+// CDlgInput ¶Ô»°¿ò
 
 class CDlgInput : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDlgInput)
 
 public:
-	CDlgInput(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
+	CDlgInput(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
 	virtual ~CDlgInput();
 
 	void showWindow(eTagMsgtype type);
-// å¯¹è¯æ¡†æ•°æ®
+// ¶Ô»°¿òÊı¾İ
 	enum { IDD = IDD_DIALOG_INPUT };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
 	virtual BOOL OnInitDialog();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 

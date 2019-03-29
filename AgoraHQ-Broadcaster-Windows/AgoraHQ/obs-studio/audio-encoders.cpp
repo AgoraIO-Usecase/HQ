@@ -1,4 +1,4 @@
-ï»¿#include "stdafx.h"
+#include "stdafx.h"
 
 #include "audio-encoders.hpp"
 //#include "obs-app.hpp"
@@ -6,14 +6,14 @@
 #include "AgoraHQ.h"
 #include "AgoraHQDlg.h"
 using namespace std;
-//AACç¼–ç å™¨
+//AAC±àÂëÆ÷
 static const string encoders[] = {
 	"ffmpeg_aac",
 	"mf_aac",
 	"libfdk_aac",
 	"CoreAudio_AAC",
 };
-//é»˜è®¤ç¼–ç å™¨ffmpeg_aac
+//Ä¬ÈÏ±àÂëÆ÷ffmpeg_aac
 static const string &fallbackEncoder = encoders[0];
 
 static const char *NullToEmpty(const char *str)

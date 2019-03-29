@@ -1,4 +1,4 @@
-// DlgConfig.cpp : å®ç°æ–‡ä»¶
+// DlgConfig.cpp : ÊµÏÖÎÄ¼ş
 //
 
 #include "stdafx.h"
@@ -8,7 +8,7 @@
 #include "commonFun.h"
 
 
-// CDlgConfig å¯¹è¯æ¡†
+// CDlgConfig ¶Ô»°¿ò
 
 IMPLEMENT_DYNAMIC(CDlgConfig, CDialogEx)
 
@@ -52,7 +52,7 @@ BEGIN_MESSAGE_MAP(CDlgConfig, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CDlgConfig æ¶ˆæ¯å¤„ç†ç¨‹åº
+// CDlgConfig ÏûÏ¢´¦Àí³ÌĞò
 BOOL CDlgConfig::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -80,7 +80,7 @@ void CDlgConfig::saveCameraID()
 
 void CDlgConfig::OnBnClickedButtonConfigSave()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	CString strParam;
 	m_edAppId.GetWindowTextW(strParam);
 	gHQConfig.setAppId(cs2s(strParam));
@@ -117,7 +117,7 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 		CameraManager.SetCurDevice(s2cs(strDeviceIdUtf8));
 	}
 
-	if (IDOK == AfxMessageBox(_T("Whether to reboot the HQ Broadcast programï¼ˆY-Yesï¼›N-Noï¼‰"), MB_OKCANCEL)){
+	if (IDOK == AfxMessageBox(_T("Whether to reboot the HQ Broadcast program£¨Y-Yes£»N-No£©"), MB_OKCANCEL)){
 
 		PostQuitMessage(0);
 		WinExec("restart.bat", SW_HIDE);
@@ -131,7 +131,7 @@ void CDlgConfig::OnBnClickedButtonConfigSave()
 
 void CDlgConfig::OnBnClickedButtonConfigCancle()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	CameraManager.TestCameraDevice(nullptr, FALSE);
 	CDlgConfig::OnCancel();
 }
@@ -313,7 +313,7 @@ void CDlgConfig::uninitCtrl()
 
 void CDlgConfig::OnBnClickedButtonVideotest()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 
 	if (pRtcEngine){
 		if (CameraManager.IsTesting()){
@@ -332,7 +332,7 @@ void CDlgConfig::OnBnClickedButtonVideotest()
 
 void CDlgConfig::OnCbnSelchangeComboCamera()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 
 	int nCurSel = m_comCamera.GetCurSel();
 	if (CB_ERR != nCurSel){
@@ -349,7 +349,7 @@ void CDlgConfig::OnCbnSelchangeComboCamera()
 
 void CDlgConfig::OnCbnSelchangeComboRegion()
 {
-	// TODO:  åœ¨æ­¤æ·»åŠ æ§ä»¶é€šçŸ¥å¤„ç†ç¨‹åºä»£ç 
+	// TODO:  ÔÚ´ËÌí¼Ó¿Ø¼şÍ¨Öª´¦Àí³ÌĞò´úÂë
 	int nCursel = m_comRegion.GetCurSel();
 	m_comLanguage.SetCurSel(nCursel);
 }

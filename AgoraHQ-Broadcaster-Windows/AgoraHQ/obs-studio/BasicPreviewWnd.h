@@ -23,7 +23,7 @@ enum class ItemHandle : uint32_t {
 	BottomRight = ITEM_BOTTOM | ITEM_RIGHT
 };
 
-//涓昏鏄负鍝嶅簲鎵�鏈夌殑绐楀彛娑堟伅澶勭悊
+//主要是为响应所有的窗口消息处理
 class CBasicPreviewWnd : public CDisplaySourceWnd //CWnd
 {
 	DECLARE_DYNAMIC(CBasicPreviewWnd)
