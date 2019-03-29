@@ -1,6 +1,8 @@
 package agora.io.agorahq.logicworker;
 
-public interface ISignalEventHandler {
+import io.agora.rtm.ErrorInfo;
+
+public interface IRtmEventHandler {
     /**
      * signaling login success
      */
@@ -10,7 +12,7 @@ public interface ISignalEventHandler {
      * signaling error
      * @param error error code
      */
-    void onError(int error);
+    void onError(ErrorInfo error);
 
     /**
      * received channel message
@@ -18,7 +20,7 @@ public interface ISignalEventHandler {
      * @param msgId current message id
      * @param msg msg content
      */
-    void onChannelMessageReceived(final String channel, final long msgId, final String msg);
+    void onChannelMessageReceived(final String channel, final String msg);
 
     /**
      * received message from person, we called it p2p
@@ -26,5 +28,5 @@ public interface ISignalEventHandler {
      * @param msgId
      * @param msg
      */
-    void onMessageReceivedFrom(final String account, final long msgId, final String msg);
+    void onMessageReceivedFrom(final String account, final String msg);
 }

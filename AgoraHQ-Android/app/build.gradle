@@ -30,5 +30,4 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport:latest.release'
 
     implementation 'org.slf4j:slf4j-api:1.7.21'
-    implementation project(path: ':agora-hq-sig-sdk')
 }

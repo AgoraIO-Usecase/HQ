@@ -16,7 +16,7 @@ import android.widget.Toast;
 import agora.io.agorahq.GlobalApplication;
 import agora.io.agorahq.bean.GameInfo;
 import agora.io.agorahq.logicworker.MediaHandlerImpl;
-import agora.io.agorahq.logicworker.SignalHandlerImpl;
+import agora.io.agorahq.logicworker.RtmListenerImpl;
 import agora.io.agorahq.logicworker.WorkThread;
 import agora.io.agorahq.utils.Constants;
 import io.agora.rtc.RtcEngine;
@@ -63,8 +63,8 @@ public abstract class BaseActivity extends Activity{
         return ((GlobalApplication) getApplication()).getGlobalGameInfo();
     }
 
-    protected SignalHandlerImpl signalHandler() {
-        return ((GlobalApplication) getApplication()).getWorkThread().signalingHandler();
+    protected RtmListenerImpl rtmHandler() {
+        return ((GlobalApplication) getApplication()).getWorkThread().rtmHandler();
     }
 
     public final void showShortToast(final String msg) {

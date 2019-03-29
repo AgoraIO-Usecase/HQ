@@ -8,14 +8,13 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.json.JSONException;
-
 import agora.io.agorahq.utils.Constants;
-import agora.io.agorahq.utils.HttpUtil;
 import agora.io.agorahq.utils.LogUtil;
 import agora.io.agorahq.utils.SignalTokenGeneraterUtil;
 import io.agora.rtc.RtcEngine;
-import io.agora.signaling.hq.AgoraHQSigSDK;
+import io.agora.rtm.ErrorInfo;
+import io.agora.rtm.ResultCallback;
+import io.agora.rtm.RtmClient;
 
 public class WorkThread extends Thread {
     private final static String TAG = Constants.TAG_PR + WorkThread.class.getSimpleName();
@@ -28,8 +27,8 @@ public class WorkThread extends Thread {
     private RtcEngine mRtcEngine;
     private MediaHandlerImpl mMediaHandler;
 
-    private AgoraHQSigSDK mSignalingEngine;
-    private SignalHandlerImpl mSignalHandler;
+    private RtmClient mRtmClient;
+    private RtmListenerImpl mRtmHandler;
 
     private LogUtil mLogger;
 
@@ -37,14 +36,14 @@ public class WorkThread extends Thread {
         return mMediaHandler;
     }
 
-    public SignalHandlerImpl signalingHandler() {
-        return mSignalHandler;
+    public RtmListenerImpl rtmHandler() {
+        return mRtmHandler;
     }
 
     public WorkThread(Context ctx) {
         this.mContext = ctx;
         this.mMediaHandler = new MediaHandlerImpl(ctx);
-        this.mSignalHandler = new SignalHandlerImpl(ctx);
+        this.mRtmHandler = new RtmListenerImpl(ctx);
         this.mLogger = LogUtil.newInstance();
     }
 
@@ -183,19 +182,20 @@ public class WorkThread extends Thread {
         return mRtcEngine;
     }
 
-    public AgoraHQSigSDK ensureSignalingReady() {
-        if (mSignalingEngine == null) {
+    public RtmClient ensureRtmReady() {
+        if (mRtmClient == null) {
             if (TextUtils.isEmpty(Constants.AGORA_SIGNALING_APPID)) {
                 throw new RuntimeException("NEED TO use your App ID, get your own ID at https://dashboard.agora.io/");
             }
             try {
-                mSignalingEngine = new AgoraHQSigSDK(mContext, Constants.AGORA_SIGNALING_APPID);
+//                mSignalingEngine = new AgoraHQSigSDK(mContext, Constants.AGORA_SIGNALING_APPID);
+                mRtmClient = RtmClient.createInstance(Constants.AGORA_SIGNALING_APPID, mRtmHandler.mRtmClientListener);
             } catch (Exception e) {
                 throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
             }
         }
 
-        return mSignalingEngine;
+        return mRtmClient;
     }
 
     public void exit() {
@@ -225,8 +225,19 @@ public class WorkThread extends Thread {
             return;
         }
 
-        ensureSignalingReady();
-        mSignalingEngine.login(account, channelName, getToken(account), mSignalHandler.mSignalEventHandler);
+        ensureRtmReady();
+        mRtmClient.login(null, account, new ResultCallback<Void>() {
+            @Override
+            public void onSuccess(Void responseInfo) {
+
+            }
+
+            @Override
+            public void onFailure(ErrorInfo errorInfo) {
+
+            }
+        });
+//        mSignalingEngine.login(account, channelName, getToken(account), mSignalHandler.mSignalEventHandler);
     }
 
     private String getToken(String account) {
@@ -248,10 +259,10 @@ public class WorkThread extends Thread {
             return;
         }
 
-        ensureSignalingReady();
+        ensureRtmReady();
 
         long messageId = System.currentTimeMillis();
-        mSignalingEngine.sendChannelMessage(messageId, message);
+//        mSignalingEngine.sendChannelMessage(messageId, message);
         mLogger.log( messageId+ "---" + message);
     }
 
@@ -261,7 +272,7 @@ public class WorkThread extends Thread {
             return;
         }
 
-        ensureSignalingReady();
-        mSignalingEngine.logout();
+        ensureRtmReady();
+        mRtmClient.logout(null);
     }
 }

@@ -34,7 +34,7 @@ import agora.io.agorahq.bean.PlayState;
 import agora.io.agorahq.bean.Question;
 import agora.io.agorahq.bean.Reset;
 import agora.io.agorahq.logicworker.IMediaEventHandler;
-import agora.io.agorahq.logicworker.ISignalEventHandler;
+import agora.io.agorahq.logicworker.IRtmEventHandler;
 import agora.io.agorahq.logicworker.ServerLogic;
 import agora.io.agorahq.ui.AnswerBoardDialog;
 import agora.io.agorahq.ui.ChatMessageAdapter;
@@ -47,8 +47,9 @@ import agora.io.agorahq.utils.LogUtil;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
+import io.agora.rtm.ErrorInfo;
 
-public class GameActivity extends BaseActivity implements IMediaEventHandler, ISignalEventHandler, QuestionBoardDialog.DialogListener, View.OnClickListener, AnswerBoardDialog.AnswerBoardFinishedListener {
+public class GameActivity extends BaseActivity implements IMediaEventHandler, IRtmEventHandler, QuestionBoardDialog.DialogListener, View.OnClickListener, AnswerBoardDialog.AnswerBoardFinishedListener {
     private QuestionBoardDialog mQuestionBoardDialog;
     private AnswerBoardDialog mAnswerBoardDialog;
 
@@ -205,7 +206,7 @@ public class GameActivity extends BaseActivity implements IMediaEventHandler, IS
     // <------------------------------------- FUNCTION BLOCK ---------------------------------->
     public void initEngine() {
         mediaHanlder().addMediaEventHandler(this);
-        signalHandler().addSignalingEventHandler(this);
+        rtmHandler().addSignalingEventHandler(this);
 
         worker().joinChannel(gameInfo().getUser().getChannelName());
         worker().loginSignaling(gameInfo().getUser().getSignalAccount(), gameInfo().getUser().getChannelName());
@@ -393,17 +394,23 @@ public class GameActivity extends BaseActivity implements IMediaEventHandler, IS
     public void onLoginSuccess() {
         checkRemotePlayStatus();
 
-        mLogUtils.log("on signaling login success-->");
+        mLogUtils.log("on rtm login success-->");
+    }
+
+    @Override
+    public void onError(ErrorInfo error) {
+        mLogUtils.log("on rtm error-->" + error);
+
     }
 
     @Override
     public void onError(int error) {
-        mLogUtils.log("on signaling error-->" + error);
+        mLogUtils.log("on media error-->" + error);
 
     }
 
     @Override
-    public void onChannelMessageReceived(String channel, long msgId, String msg) {
+    public void onChannelMessageReceived(String channel, String msg) {
         try {
             Object o = HQJson2StrUtil.json2Str(this, msg);
             if (o instanceof ChatMessage) {
@@ -457,7 +464,7 @@ public class GameActivity extends BaseActivity implements IMediaEventHandler, IS
     }
 
     @Override
-    public void onMessageReceivedFrom(String account, long msgId, String msg) {
+    public void onMessageReceivedFrom(String account, String msg) {
 
     }
 
