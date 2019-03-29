@@ -2,7 +2,7 @@ const logger = require("./logger").get("hq");
 const config = require("./config");
 const request = require("request");
 const agora_appid = config.agora_appid;
-const AgoraRtmSDK = require('agora-node-rtm').default
+const AgoraRtmSDK = require('../rtm/dist/index').default
 let cipher = null;
 try {
     cipher = require("./Encrypt");

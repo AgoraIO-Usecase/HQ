@@ -1,0 +1,6 @@
+[submodule "HQ-Server-Nodejs/Agora-RTM-Nodejs"]
+	path = HQ-Server-Nodejs/Agora-RTM-Nodejs
+	url = https://github.com/AgoraIO-Community/Agora-RTM-Nodejs.git
+[submodule "HQ-Server-Nodejs/rtm"]
+	path = HQ-Server-Nodejs/rtm
+	url = https://github.com/AgoraIO-Community/Agora-RTM-Nodejs.git
