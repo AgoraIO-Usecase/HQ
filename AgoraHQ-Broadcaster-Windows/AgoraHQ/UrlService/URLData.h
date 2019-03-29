@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 const std::string server_url = "http://123.155.153.87:10000";
-const std::string server_url_en = "http://76.231.168.66:10000";
+const std::string server_url_en = "http://52.8.94.243:10000";
 const std::string request_channel_method = "/v1/requestChannel";
 const std::string reset_method = "/v1/reset";
 const std::string publish_method = "/v1/publish";
