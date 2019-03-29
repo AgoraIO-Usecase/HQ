@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import AgoraHQSigKit
+import AgoraRtmKit
 
 class MainViewController: UIViewController{
 
@@ -19,7 +19,8 @@ class MainViewController: UIViewController{
     @IBOutlet weak var backCardView: UIView!
     @IBOutlet weak var setButton: UIButton!
     var userStatus = false
-    var agoraHQSigKit : AgoraHQSigKit!
+    var agoraRtm : AgoraRtmKit!
+    var agoraChannel : AgoraRtmChannel!
     var backgroundLayer : CAGradientLayer?
     var modifyView : UIView?
     var inputTextField : UITextField?
@@ -31,12 +32,10 @@ class MainViewController: UIViewController{
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if agoraHQSigKit == nil {
-            agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
-        }
-        
         self.view.insertSubview(backgroundView, at: 0)
-        agoraHQSigKit?.delegate = self
+        if agoraRtm == nil {
+            agoraRtm = AgoraRtmKit(appId: KeyCenter.AppId, delegate: nil)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -56,7 +55,10 @@ class MainViewController: UIViewController{
         case "startgame":
             let GameRoomVC = segue.destination as! GameRoomViewController
             GameRoomVC.channelName = self.channelNameTextField.text
-            GameRoomVC.agoraHQSigKit = self.agoraHQSigKit
+            GameRoomVC.agoraRtm = self.agoraRtm
+            GameRoomVC.agoraRtm.agoraRtmDelegate = GameRoomVC
+            GameRoomVC.agoraChannel = self.agoraChannel
+            GameRoomVC.agoraChannel.channelDelegate = GameRoomVC
         default:
             return
         }
@@ -89,7 +91,24 @@ class MainViewController: UIViewController{
     @IBAction func doStartButtonPressed(_ sender: UIButton) {
         let time = NSDate().timeIntervalSince1970 + 3600
         let token = KeyCenter.AppcertificateID.isEmpty ? "_no_need_token" : compTokenBy(appID: KeyCenter.AppId, certificate: KeyCenter.AppcertificateID, account: UserDefaults.standard.string(forKey: "name")!, expirtdTime: UInt32(time))
-        agoraHQSigKit.login(UserDefaults.standard.string(forKey: "name")!, token: token, channel: self.channelNameTextField.text)
+//        agoraHQSigKit.login(UserDefaults.standard.string(forKey: "name")!, token: token, channel: self.channelNameTextField.text)
+        agoraRtm.login(byToken: nil, user: UserDefaults.standard.string(forKey: "name")!) {[weak self] (err:AgoraRtmLoginErrorCode) in
+            if(err != .ok) {
+                AlertUtil.showAlert(message: "Agora Rtm login error: \(err)")
+                return
+            }
+            
+            self?.agoraChannel = self?.agoraRtm.createChannel(withId: self?.channelNameTextField.text ?? "", delegate: nil)
+            self?.agoraChannel.join(completion: { [weak self] (err:AgoraRtmJoinChannelErrorCode) in
+                if(err != .ok){
+                    AlertUtil.showAlert(message: "Agora Rtm join channel error: \(err)")
+                    return
+                }
+                
+                print("=========================join agora sig channel success===============")
+                self?.performSegue(withIdentifier: "startgame", sender: self)
+            })
+        }
         print("==================================", UserDefaults.standard.string(forKey: "name")!)
     }
     
@@ -199,17 +218,7 @@ class MainViewController: UIViewController{
     }
 }
 
-// MARK: - AgoraHQSigDelegate
-extension MainViewController: AgoraHQSigDelegate{
-    func agoraHQSigDidLoginSuccess(_ agoraHQSig: AgoraHQSigKit!) {
-        print("=========================join agora sig channel success===============")
-        
-        self.performSegue(withIdentifier: "startgame", sender: self)
-    }
-    
-    func agoraHQSig(_ agoraHQSi: AgoraHQSigKit!, didOccurError error: Error!) {
-        AlertUtil.showAlert(message: NSLocalizedString("Login failed, please try again", comment: "login failed"))
-    }
+extension MainViewController: AgoraRtmDelegate {
 }
 
 extension MainViewController: UITextFieldDelegate {

@@ -32,7 +32,7 @@ let selectedColor = UIColor(hex: 0x56C4F8, alpha: 1)
 
 let buttonColor = UIColor(hex: 0xE9E9EC, alpha: 1)
 
-let server = NSLocalizedString("http://76.231.168.66:10000", comment: "")
+let server = NSLocalizedString("http://52.8.94.243:10000", comment: "")
 
 let answerUrl = server + "/v1/answer"
 

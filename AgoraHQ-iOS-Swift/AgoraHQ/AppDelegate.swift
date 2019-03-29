@@ -8,7 +8,7 @@
 
 import UIKit
 import AVFoundation
-import AgoraHQSigKit
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

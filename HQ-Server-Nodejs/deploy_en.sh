@@ -1,7 +1,7 @@
 #!/bin/sh
 #copy client static files
 
-deployDir=/home/test-pc/HQ-PHASE-3
+deployDir=/home/devops/HQ-PHASE-4
 ServerName=${@:$OPTIND:1}
 
 # Rev="$(git rev-parse HEAD)"

@@ -8,7 +8,7 @@
 
 import UIKit
 import AgoraRtcEngineKit
-import AgoraHQSigKit
+import AgoraRtmKit
 
 struct Message {
     let name: String!
@@ -75,7 +75,8 @@ class GameRoomViewController: UIViewController {
     // AgoraEngine
     var rtcEngine: AgoraRtcEngineKit!
     var rtcCheatEngine: AgoraRtcEngineKit?
-    var agoraHQSigKit: AgoraHQSigKit!
+    var agoraRtm: AgoraRtmKit!
+    var agoraChannel: AgoraRtmChannel!
     
     var questionView: QuestionView!
     var timer: Timer!
@@ -161,11 +162,6 @@ class GameRoomViewController: UIViewController {
         super.viewDidLoad()
         
         self.view.insertSubview(backgroundView, at: 0)
-        
-        if agoraHQSigKit == nil {
-            agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
-        }
-        agoraHQSigKit.delegate = self
         
         decryptKey = channelName
         
@@ -529,12 +525,6 @@ extension GameRoomViewController {
         }
     }
     
-    func joinSigChannel() {
-        agoraHQSigKit = AgoraHQSigKit(appId: KeyCenter.AppId)
-        agoraHQSigKit?.delegate = self
-        
-    }
-    
     func leaveChannel() {
         setIdleTimerActive(true)
         hostView?.removeFromSuperview()
@@ -542,7 +532,7 @@ extension GameRoomViewController {
         if rtcCheatEngine != nil {
             rtcCheatEngine?.leaveChannel(nil)
         }
-        agoraHQSigKit.logout()
+        agoraRtm.logout()
         self.dismiss(animated: true, completion: nil)
     }
 }
@@ -751,19 +741,11 @@ extension GameRoomViewController: AgoraRtcEngineDelegate {
     }
 }
 
-// MARK: - AgoraHQSigDelegate
-extension GameRoomViewController: AgoraHQSigDelegate{
-    func agoraHQSigDidLoginSuccess(_ agoraHQSig: AgoraHQSigKit!) {
-        print("=========================join agora sig channel success===============")
-    }
-    
-    func agoraHQSig(_ agoraHQSi: AgoraHQSigKit!, didOccurError error: Error!) {
-        AlertUtil.showAlert(message: "Agora Sig error: \(error!)")
-    }
-    
-    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedChannelMessage channel: String!, message: String!, messageId: Int64) {
-        print("=============",message!,"===============")
-        let data = message.data(using: String.Encoding.utf8)
+extension GameRoomViewController: AgoraRtmChannelDelegate {
+    func channel(_ channel: AgoraRtmChannel, messageReceived message: AgoraRtmMessage, from member: AgoraRtmMember) {
+        let msgText = message.text
+        print("=============",msgText,"===============")
+        let data = msgText.data(using: String.Encoding.utf8)
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
             if jsonData["type"] as! String == "quiz" {
@@ -824,11 +806,16 @@ extension GameRoomViewController: AgoraHQSigDelegate{
             AlertUtil.showAlert(message: "Receive message error: \(error)")
             print("Error: \(error)")
         }
+
     }
-    
-    func agoraHQSig(_ agoraHQSig: AgoraHQSigKit!, didReceivedMessageFromAccount account: String!, message: String!, messageId: Int64) {
-        print("=============",message!,"===============")
-        let data = message.data(using: String.Encoding.utf8)
+}
+
+// MARK: - AgoraHQSigDelegate
+extension GameRoomViewController: AgoraRtmDelegate{
+    func rtmKit(_ kit: AgoraRtmKit, messageReceived message: AgoraRtmMessage, fromPeer peerId: String) {
+        let msgText = message.text
+        print("=============",msgText,"===============")
+        let data = msgText.data(using: String.Encoding.utf8)
         do {
             let jsonData: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
             if jsonData["type"] as! String == "inviteRequest" {
@@ -961,7 +948,8 @@ extension GameRoomViewController: UITextFieldDelegate {
         guard let message = chatMessgaeTestField.text else { return false }
 
         let messageJson = "{\"type\":\"chat\",\"data\":\"\(message)\",\"name\":\"\(UserDefaults.standard.string(forKey: "name")!)\"}"
-        agoraHQSigKit.sendChannelMessage(messageJson, messageId: self.msgId)
+        agoraChannel.send(AgoraRtmMessage(text: messageJson))
+//        msgId += 1
         
         let chatMsg = UserDefaults.standard.string(forKey: "name")! + ": " + message
         let msgContent = NSMutableAttributedString(string: chatMsg)
