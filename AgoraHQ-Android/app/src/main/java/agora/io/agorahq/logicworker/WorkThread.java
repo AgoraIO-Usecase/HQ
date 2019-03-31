@@ -12,9 +12,7 @@ import agora.io.agorahq.utils.Constants;
 import agora.io.agorahq.utils.LogUtil;
 import agora.io.agorahq.utils.SignalTokenGeneraterUtil;
 import io.agora.rtc.RtcEngine;
-import io.agora.rtm.ErrorInfo;
-import io.agora.rtm.ResultCallback;
-import io.agora.rtm.RtmClient;
+import io.agora.rtm.*;
 
 public class WorkThread extends Thread {
     private final static String TAG = Constants.TAG_PR + WorkThread.class.getSimpleName();
@@ -29,6 +27,7 @@ public class WorkThread extends Thread {
 
     private RtmClient mRtmClient;
     private RtmListenerImpl mRtmHandler;
+    private RtmChannel mRtmChannel;
 
     private LogUtil mLogger;
 
@@ -216,7 +215,7 @@ public class WorkThread extends Thread {
         return mRtcEngine;
     }
 
-    public void loginSignaling(String account, String channelName) {
+    public void loginSignaling(String account, final String channelName) {
         if (Thread.currentThread() != this) {
             Message msg = Message.obtain();
             msg.obj = new String[]{account, channelName};
@@ -229,12 +228,13 @@ public class WorkThread extends Thread {
         mRtmClient.login(null, account, new ResultCallback<Void>() {
             @Override
             public void onSuccess(Void responseInfo) {
-
+                mRtmChannel = mRtmClient.createChannel(channelName, mRtmHandler.mRtmChannelListener);
+                mRtmChannel.join(mRtmHandler.channelJoinResult);
             }
 
             @Override
             public void onFailure(ErrorInfo errorInfo) {
-
+                mLogger.log( "login failed: " + errorInfo);
             }
         });
 //        mSignalingEngine.login(account, channelName, getToken(account), mSignalHandler.mSignalEventHandler);
@@ -248,7 +248,7 @@ public class WorkThread extends Thread {
                 SignalTokenGeneraterUtil.getExpiredTime());
     }
 
-    public void sendSignalChannelMessage(String message) {
+    public void sendSignalChannelMessage(final String message) {
         if (Thread.currentThread() != this) {
             Message msg = Message.obtain();
             msg.obj = message;
@@ -262,8 +262,22 @@ public class WorkThread extends Thread {
         ensureRtmReady();
 
         long messageId = System.currentTimeMillis();
+        if(mRtmChannel != null) {
 //        mSignalingEngine.sendChannelMessage(messageId, message);
-        mLogger.log( messageId+ "---" + message);
+            RtmMessage msg = mRtmClient.createMessage();
+            msg.setText(message);
+            mRtmChannel.sendMessage(msg, new ResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void responseInfo) {
+                    mLogger.log( "sent channel message ---" + message);
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+                    mLogger.log( "sent channel message failed: ---" + errorInfo);
+                }
+            });
+        }
     }
 
     public void signalLogout() {

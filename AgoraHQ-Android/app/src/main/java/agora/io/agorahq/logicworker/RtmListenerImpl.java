@@ -25,7 +25,7 @@ public class RtmListenerImpl {
         return mHandler.remove(0).equals(handler);
     }
 
-    ResultCallback<Void> loginResult = new ResultCallback<Void>() {
+    ResultCallback<Void> channelJoinResult = new ResultCallback<Void>() {
         @Override
         public void onSuccess(Void responseInfo) {
             if (mHandler.size() != 0) {
